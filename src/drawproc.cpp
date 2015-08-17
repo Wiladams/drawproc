@@ -278,8 +278,8 @@ void size(const size_t lwidth, const size_t lheight)
 
 	pixelFrame.x = 0;
 	pixelFrame.y = 0;
-	pixelFrame.width = width;
-	pixelFrame.height = height;
+	pixelFrame.width = (float)width;
+	pixelFrame.height = (float)height;
 
 	initFont();
 
@@ -752,7 +752,7 @@ void lineloop(const size_t nPts, const int *pts)
 
 void point(const int x, const int y)
 {
-	if (!pb_rect_contains_point(pixelFrame, x, y))
+	if (!pixelFrame.containsPoint(x, y))
 		return;
 
 	if (gstrokeWeight <= 1) {
@@ -806,8 +806,7 @@ void rect(const int a, const int b, const int c, const int d)
 	}
 
 	// find the intersection of the rectangle and the pixelframe
-	pb_rect crect;
-	pb_rect_intersection(crect, pixelFrame, { x1, y1, rwidth, rheight });
+	pb_rect crect = pixelFrame.intersection({ x1, y1, rwidth, rheight });
 
 	if ((crect.width == 0) || (crect.height == 0))
 		return;
@@ -1045,7 +1044,7 @@ bool triangulate_process(const Vector2dVector &contour)
 		}
 	}
 
-	delete V;
+	delete [] V;
 
 	return true;
 }

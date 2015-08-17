@@ -5,7 +5,8 @@
 int findTopmostVertex(coord *verts, const int numVerts)
 {
 	real ymin(32767);
-	int vmin;
+	int vmin = 0;
+
 	coord *vertPtr = verts;
 
 	for (int i = 0; i < numVerts; i++){

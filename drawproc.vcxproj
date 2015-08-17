@@ -73,6 +73,7 @@
     <ClCompile Include="src\guistyle.cpp" />
     <ClCompile Include="src\linearalgebra.cpp" />
     <ClCompile Include="src\pbm.cpp" />
+    <ClCompile Include="src\pb_rect.cpp" />
     <ClCompile Include="src\pixelbuffer.cpp" />
     <ClCompile Include="src\raster_rgba.cpp" />
     <ClCompile Include="src\raster_rgba_polygon.cpp" />
@@ -87,6 +88,7 @@
     <ClInclude Include="src\graphicc.h" />
     <ClInclude Include="src\guistyle.h" />
     <ClInclude Include="src\linearalgebra.h" />
+    <ClInclude Include="src\pb_rect.h" />
     <ClInclude Include="src\raster_rgba.h" />
     <ClInclude Include="src\drawproc.h" />
     <ClInclude Include="src\vec3.h" />

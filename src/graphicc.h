@@ -41,13 +41,20 @@ limitations under the License.
 
 #define BGR_DOMINANT 1
 
+#include "constants.h"
+
+#include "pb_rect.h"
+#include "Point3D.h"
 
 typedef float	float32;
 typedef double	float64;
 typedef float32 real;
 typedef float coord;
 
-#include "constants.h"
+typedef real real2[2];
+typedef real real3[3];
+typedef real real4[4];
+
 
 inline bool isBigEndian() {int t = 1;return (*(char*)&t == 0);}
 
@@ -58,16 +65,11 @@ inline real RADIANS(const real degrees) { return (real)(G_DTOR * degrees); }
 #define min3(a,b,c) __min(__min(a,b),c)
 #define max3(a,b,c) __max(__max(a,b),c)
 
-//static inline float MIN2(float a, float b){ return a < b ? a : b; }
-//static inline float MAX2(float a, float b){ return a > b ? a : b; }
-
-//static inline float MIN3(float a, float b, float c){ return MIN2(MIN2(a, b), c); }
-//static inline float MAX3(float a, float b, float c){ return MAX2(MAX2(a, b), c); }
 
 // map a value (a) from between rlo <= a <= rhi to  shi <= b <= slo
 inline double MAP(double a, double rlo, double rhi, double slo, double shi) { return slo + (a - rlo) * (shi - slo) / (rhi - rlo); }
-//inline double CLAMP(double a, double rlo, double rhi){ return a < rlo ? rlo : (a>rhi ? rhi : a); }
-inline double CLAMP(double a, double rlo, double rhi){ return __min(__max(a, rlo), rhi); }
+inline double CLAMP(double a, double rlo, double rhi){ return a < rlo ? rlo : (a>rhi ? rhi : a); }
+//inline double CLAMP(double a, double rlo, double rhi){ return __min(__max(a, rlo), rhi); }
 
 // turn a division by 255 into something 
 // much cheaper to calculate
@@ -87,11 +89,6 @@ inline int sgn(real val) { return ((0 < val) - (val < 0)); }
 #pragma warning(disable: 4201)  // nonstandard extension used : nameless struct/union
 #endif
 
-/*
-enum pixellayouts {
-	rgba
-};
-*/
 
 #ifdef BGR_DOMINANT
 inline uint32_t RGBA(const int r, const int g, const int b, const int a) 
@@ -122,82 +119,9 @@ typedef struct {
 	};
 } pix_rgba;
 
-// pixel buffer rectangle
-typedef struct pb_rect_t {
-	coord x, y;
-	coord width, height;
-} pb_rect;
 
-inline bool pb_rect_contains_point(const pb_rect &rct, const coord x, const coord y)
-{
-	if ((x < rct.x) || (y < rct.y))
-		return false;
 
-	if ((x >= rct.x + rct.width) || (y >= rct.y + rct.height))
-		return false;
 
-	return true;
-}
-
-inline bool pb_rect_contains_rect(const pb_rect &container, const pb_rect &other)
-{
-	if (!pb_rect_contains_point(container, other.x, other.y))
-	{
-		return false;
-	}
-
-	if (!pb_rect_contains_point(container, other.x + other.width - 1, other.y + other.height - 1))
-	{
-		return false;
-	}
-
-	return true;
-}
-
-// return the intersection of rectangles a and b
-// if there is no intersection, one or both of width and height
-// will be == zero
-inline void pb_rect_intersection(pb_rect &c, const pb_rect &a, const pb_rect &b)
-{
-	coord x = a.x > b.x ? a.x : b.x;
-	coord y = a.y > b.y ? a.y : b.y;
-	coord right = ((a.x + a.width) < (b.x + b.width)) ? (a.x + a.width) : (b.x + b.width);
-	coord bottom = ((a.y + a.height) < (b.y + b.height)) ? (a.y + a.height) : (b.y + b.height);
-
-	coord width = ((right - x) > 0) ? (right - x) : 0;
-	coord height = ((bottom - y) > 0) ? (bottom - y) : 0;
-
-	c.x = x;
-	c.y = y;
-	c.width = width;
-	c.height = height;
-}
-
-// returns whether two rectangles intersect
-// if the intersection would result in a rectangle with zero
-// width or height, the answer is 'false'
-inline bool pb_rect_intersect(const pb_rect &a, const pb_rect &b)
-{
-	return (a.x < (b.x + b.width - 1)) &&
-		(b.x < (a.x + a.width - 1)) &&
-		(a.y < (b.y + b.height - 1)) &&
-		(b.y < (a.y + a.height - 1));
-}
-
-inline void pb_rect_clear(pb_rect &rect)
-{
-	memset(&rect, 0, sizeof(pb_rect));
-}
-
-typedef real real2[2];
-typedef real real3[3];
-typedef real real4[4];
-
-typedef struct {
-	coord x;
-	coord y;
-	coord z;
-} Pt3;
 
 
 

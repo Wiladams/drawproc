@@ -94,7 +94,8 @@ bool clipLine(const pb_rect &bounds, int &x0, int &y0, int &x1, int &y1)
 		else {
 			// failed both tests, so calculate the line segment to clip
 			// from an outside point to an intersection with clip edge
-			double x, y;
+			double x = 0;
+			double y=0;
 
 			// At least one endpoint is outside the clip rectangle; pick it.
 			OutCode outcodeOut = outcode0 ? outcode0 : outcode1;
@@ -441,16 +442,16 @@ inline void Plot4EllipsePoints(pb_rgba *pb, const uint32_t cx, const uint32_t cy
 	unsigned int lowy = cy - y;
 	unsigned int maxy = cy + y;
 
-	if (pb_rect_contains_point(pb->frame, maxx, maxy))
+	if (pb->frame.containsPoint(maxx, maxy))
 		pb_rgba_cover_pixel(pb, cx + x, cy + y, color);
 	
-	if (pb_rect_contains_point(pb->frame, lowx, maxy))
+	if (pb->frame.containsPoint(lowx, maxy))
 		pb_rgba_cover_pixel(pb, cx - x, cy + y, color);
 	
-	if (pb_rect_contains_point(pb->frame, lowx, lowy))
+	if (pb->frame.containsPoint(lowx, lowy))
 		pb_rgba_cover_pixel(pb, cx - x, cy - y, color);
 	
-	if (pb_rect_contains_point(pb->frame, maxx, lowy))
+	if (pb->frame.containsPoint(maxx, lowy))
 		pb_rgba_cover_pixel(pb, cx + x, cy - y, color);
 }
 

@@ -101,17 +101,17 @@ bool InitializeInstance()
 
 	// Get pointers to client setup and loop routines
 	HMODULE modH = GetModuleHandle(NULL);
-	printf("modH: 0x%x\n", modH);
+	printf("modH: 0x%p\n", modH);
 
 	SetupHandler procAddr = (SetupHandler)GetProcAddress(modH, "setup");
-	printf("proc Address: 0x%x\n", procAddr);
+	printf("proc Address: 0x%p\n", procAddr);
 
 	if (procAddr != NULL) {
 		setSetupRoutine(procAddr);
 	}
 
 	LoopHandler loopAddr = (LoopHandler)GetProcAddress(modH, "draw");
-	printf("loop Addr: 0x%x\n", loopAddr);
+	printf("loop Addr: 0x%p\n", loopAddr);
 
 	if (loopAddr != NULL) {
 		setLoopRoutine(loopAddr);

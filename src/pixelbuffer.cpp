@@ -52,7 +52,7 @@ int pb_rgba_free(pb_rgba *fb)
 	}
 
 	fb->data = (unsigned char *)0;
-	pb_rect_clear(fb->frame);
+	fb->frame.clear();
 
 	return 0;
 }
