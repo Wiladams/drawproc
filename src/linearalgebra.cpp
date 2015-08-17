@@ -48,13 +48,7 @@ void realn_sub(const int dim, real *c, const real *a, const real *b)
 	}
 }
 
-void realn_mul_scalar(const int dim, real *c, const real *a, const real scalar)
-{
-	for (int i = 0; i < dim; i++)
-	{
-		c[i] = a[i] * scalar;
-	}
-}
+
 
 void realn_mul_realn(const size_t dim, real *c, const real *a, const real *b)
 {
@@ -63,6 +57,12 @@ void realn_mul_realn(const size_t dim, real *c, const real *a, const real *b)
 	}
 }
 
+void realn_mul_scalar(const int dim, real *c, const real *a, const real scalar)
+{
+	for (int idx = 0; idx < dim; idx++){
+		c[idx] = a[idx] * scalar;
+	}
+}
 
 void realn_div_scalar(const int dim, real *c, const real *a, const real scalar)
 {

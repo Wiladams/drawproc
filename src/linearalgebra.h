@@ -19,7 +19,7 @@ limitations under the License.
 #ifndef linearalgebra_h
 #define linearalgebra_h
 
-#include "graphicc.h"
+#include "dproc_config.h"
 
 typedef struct _mat2 {
 	real m11, m12;
@@ -39,8 +39,6 @@ typedef struct _mat4 {
 	real m31, m32, m33, m34;
 	real m41, m42, m43, m44;
 } mat4;
-
-typedef real mat4x4[4][4];
 
 
 #ifdef __cplusplus
@@ -103,7 +101,7 @@ void mat3_set_columns(mat3 &rotation, const real3 col1, const real3 col2, const 
 
 // Matrix 4x4
 // c = transpose(a)
-void mat4_transpose(mat4 &c, const mat4 &a);
+//void mat4_transpose(mat4 &c, const mat4 &a);
 
 // identity, also Kronecker delta
 void mat4_set_identity(mat4 &c);

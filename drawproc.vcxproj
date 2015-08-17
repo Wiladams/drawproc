@@ -72,6 +72,7 @@
     <ClCompile Include="src\font.cpp" />
     <ClCompile Include="src\guistyle.cpp" />
     <ClCompile Include="src\linearalgebra.cpp" />
+    <ClCompile Include="src\Matrix.cpp" />
     <ClCompile Include="src\pbm.cpp" />
     <ClCompile Include="src\pb_rect.cpp" />
     <ClCompile Include="src\pixelbuffer.cpp" />
@@ -84,10 +85,14 @@
     <ClInclude Include="src\agg_embedded_raster_fonts.h" />
     <ClInclude Include="src\animwin32.h" />
     <ClInclude Include="src\bezier.h" />
+    <ClInclude Include="src\dproc_config.h" />
+    <ClInclude Include="src\dproc_constants.h" />
     <ClInclude Include="src\dproc_clock.h" />
     <ClInclude Include="src\graphicc.h" />
     <ClInclude Include="src\guistyle.h" />
+    <ClInclude Include="src\key_scancodes.h" />
     <ClInclude Include="src\linearalgebra.h" />
+    <ClInclude Include="src\Matrix.h" />
     <ClInclude Include="src\pb_rect.h" />
     <ClInclude Include="src\raster_rgba.h" />
     <ClInclude Include="src\drawproc.h" />

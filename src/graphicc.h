@@ -16,23 +16,13 @@ limitations under the License.
 
 #pragma once
 
-#if defined(BUILD_AS_DLL)
-  #if defined(GRC_CORE) || defined(GRC_LIB)
-    #define GRC_API		__declspec(dllexport)
-  #else
-    #define GRC_API		__declspec(dllimport)
-  #endif
-#else
-  #define GRC_API		extern
-	#ifdef _WIN32
-	//#pragma comment(lib,"graphicc.lib")
-	#endif
-#endif
-
-
-
 #ifndef graphicc_h
 #define graphicc_h
+
+#include "dproc_config.h"
+#include "dproc_constants.h"
+
+
 
 #include <stdint.h>
 #include <string.h>
@@ -41,19 +31,11 @@ limitations under the License.
 
 #define BGR_DOMINANT 1
 
-#include "constants.h"
+
 
 #include "pb_rect.h"
 #include "Point3D.h"
 
-typedef float	float32;
-typedef double	float64;
-typedef float32 real;
-typedef float coord;
-
-typedef real real2[2];
-typedef real real3[3];
-typedef real real4[4];
 
 
 inline bool isBigEndian() {int t = 1;return (*(char*)&t == 0);}
