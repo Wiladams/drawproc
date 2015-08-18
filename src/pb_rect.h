@@ -2,8 +2,8 @@
 
 // pixel buffer rectangle
 struct pb_rect {
-	float x, y;
-	float width, height;
+	int x, y;
+	int width, height;
 
 	bool containsPoint(const float x, const float y);
 	bool containsRect(const pb_rect &other);
