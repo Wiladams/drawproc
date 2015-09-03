@@ -7,6 +7,11 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#ifdef _MSC_VER
+// This is here so that we can simply use a 'main()' 
+//#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+#endif
+
 #define MAX_LOADSTRING 100
 
 // Forward declarations of functions included in this code module:

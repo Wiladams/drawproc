@@ -9,13 +9,6 @@
 #include <tchar.h>
 #include <windows.h>
 
-#ifdef _WIN32
-//#pragma comment(lib,"drawproc.lib")
-#ifdef _MSC_VER
-// This is here so that we can simply use a 'main()' 
-#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
-#endif
-#endif
 
 #include "dproc_config.h"
 

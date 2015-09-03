@@ -61,8 +61,8 @@ void setup() {
 	//frameRate(60);
 
 	// Size of canvas (width,height)
-	//size(940, 78);
-	size(1280, 1080);
+	size(940, 78);
+	//size(1280, 1080);
 
 	// Stroke/line/border thickness
 	strokeWeight(1);

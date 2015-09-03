@@ -7,7 +7,6 @@
 
 #include "agg_embedded_raster_fonts.h"
 
-//#pragma comment(lib,"drawproc.lib")
 
 #define radians RADIANS
 
@@ -140,11 +139,12 @@ extern RECTMODE grectMode;
 extern RECTMODE gellipseMode;
 
 // Initialization
-DPROC_API void init();
+//DPROC_API void init();
+
+
+
 DPROC_API void noLoop();
 DPROC_API void loop();
-
-
 
 // time
 DPROC_API uint64_t millis();
@@ -156,9 +156,9 @@ DPROC_API void size(const size_t width, const size_t height);
 
 // Mouse
 // Mouse
-extern int mouseX;
-extern int mouseY;
-extern bool isMousePressed;
+DPROC_API extern int mouseX;
+DPROC_API extern int mouseY;
+DPROC_API extern bool isMousePressed;
 // pmouseX
 // pmouseY
 // mouseButton

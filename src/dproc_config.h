@@ -8,7 +8,6 @@
 
 #define DPROC_EXPORT		__declspec(dllexport)
 
-//#pragma comment(lib,"graphicc.lib")
 
 
 
