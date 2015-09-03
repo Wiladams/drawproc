@@ -1,15 +1,16 @@
+#pragma once
+
 #if defined(BUILD_AS_DLL)
-#if defined(GRC_CORE) || defined(GRC_LIB)
-#define GRC_API		__declspec(dllexport)
+  #define DPROC_API		__declspec(dllexport)
 #else
-#define GRC_API		__declspec(dllimport)
+  #define DPROC_API		__declspec(dllimport)
 #endif
-#else
-#define GRC_API		extern
-#ifdef _WIN32
+
+#define DPROC_EXPORT		__declspec(dllexport)
+
 //#pragma comment(lib,"graphicc.lib")
-#endif
-#endif
+
+
 
 #ifdef _MSC_VER
 #include <intrin.h>

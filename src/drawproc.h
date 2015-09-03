@@ -1,9 +1,5 @@
 #pragma once
 
-//#define BGR_DOMINANT 1
-
-#include "animwin32.h"
-
 #include "graphicc.h"
 #include "linearalgebra.h"
 #include "raster_rgba.h"
@@ -11,31 +7,37 @@
 
 #include "agg_embedded_raster_fonts.h"
 
+//#pragma comment(lib,"drawproc.lib")
+
 #define radians RADIANS
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+// These should be implemented by a module to be loaded
+DPROC_EXPORT void draw();
+DPROC_EXPORT void setup();
+
 typedef void (*EventObserverHandler)();
 
 
 // IO Event Handlers
-DPROC_API void keyPressed();
-DPROC_API void keyReleased();
-DPROC_API void keyTyped();
+DPROC_EXPORT void keyPressed();
+DPROC_EXPORT void keyReleased();
+DPROC_EXPORT void keyTyped();
 
-DPROC_API void mouseClicked();
-DPROC_API void mouseDragged();
-DPROC_API void mouseMoved(); 
-DPROC_API void mousePressed();
-DPROC_API void mouseReleased();
+DPROC_EXPORT void mouseClicked();
+DPROC_EXPORT void mouseDragged();
+DPROC_EXPORT void mouseMoved();
+DPROC_EXPORT void mousePressed();
+DPROC_EXPORT void mouseReleased();
 
 #ifdef __cplusplus
 }
 #endif
 
-void redraw();
+DPROC_API void redraw();
 
 /*
 Drawing API
@@ -121,8 +123,11 @@ struct PImage
 
 
 // Global variables
-extern size_t width;
-extern size_t height;
+DPROC_API extern size_t width;
+DPROC_API extern size_t height;
+
+
+
 
 extern pb_rgba *gpb;
 extern pb_rect pixelFrame;
@@ -135,15 +140,17 @@ extern RECTMODE grectMode;
 extern RECTMODE gellipseMode;
 
 // Initialization
-void init();
-void noLoop();
-void loop();
+DPROC_API void init();
+DPROC_API void noLoop();
+DPROC_API void loop();
+
+
 
 // time
-uint64_t millis();
+DPROC_API uint64_t millis();
 
 // Drawing API
-void size(const size_t width, const size_t height);
+DPROC_API void size(const size_t width, const size_t height);
 
 
 
@@ -174,90 +181,90 @@ extern bool isKeyPressed;
 // keyTyped()
 
 // Setting colors
-void colorMode(const COLORMODE mode, const float max1=-1, const float max2=-1, const float max3=-1, const float maxA=-1);
-COLOR color(const float v1, const float v2=-1, const float v3=-1, const float alpha=-1);
+DPROC_API void colorMode(const COLORMODE mode, const float max1 = -1, const float max2 = -1, const float max3 = -1, const float maxA = -1);
+DPROC_API COLOR color(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
 
-void background(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
-void background(const COLOR value);
-void backgroundImage(pb_rgba *bg);
+DPROC_API void background(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
+DPROC_API void background(const COLOR value);
+DPROC_API void backgroundImage(pb_rgba *bg);
 //void clear();
 
 //void colorMode();
-void noFill();
-void fill(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
-void fill(const COLOR value);
+DPROC_API void noFill();
+DPROC_API void fill(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
+DPROC_API void fill(const COLOR value);
 
-void noStroke();
-void stroke(const COLOR value);
-void stroke(const float v1, const float v2 = -1, const float v3 = -1, const float alpha=-1);
+DPROC_API void noStroke();
+DPROC_API void stroke(const COLOR value);
+DPROC_API void stroke(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
 
 // attributes
-void ellipseMode(const RECTMODE mode);
-void noSmooth();
-void rectMode(const RECTMODE mode);
-void smooth();
-//void strokeCap();
-//void strokeJoin();
-void strokeWeight(const float weight);
+DPROC_API void ellipseMode(const RECTMODE mode);
+DPROC_API void noSmooth();
+DPROC_API void rectMode(const RECTMODE mode);
+DPROC_API void smooth();
+//DPROC_API void strokeCap();
+//DPROC_API void strokeJoin();
+DPROC_API void strokeWeight(const float weight);
 
 
 // 2D primitives
-void bezier(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3, const int segments=60);
-void ellipse(const float a, const float b, const float c, const float d);
-void line(const int x1, const int y1, const int x2, const int y2);
-void lineloop(const size_t nPtr, const int *pts);
-void point(const int x, const int y);
-void rect(const int a, const int b, const int c, const int d);
-void quad(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3, const int x4, const int y4);
-void triangle(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3);
-void polygon(int nverts, int *a);
+DPROC_API void bezier(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3, const int segments = 60);
+DPROC_API void ellipse(const float a, const float b, const float c, const float d);
+DPROC_API void line(const int x1, const int y1, const int x2, const int y2);
+DPROC_API void lineloop(const size_t nPtr, const int *pts);
+DPROC_API void point(const int x, const int y);
+DPROC_API void rect(const int a, const int b, const int c, const int d);
+DPROC_API void quad(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3, const int x4, const int y4);
+DPROC_API void triangle(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3);
+DPROC_API void polygon(int nverts, int *a);
 
 // Text
 extern font_t gfont;
 
 // createFont
-// loadFont()
-void setFont(const uint8_t *fontdata);
-void text(const char *str, const int x, const int y);
-//void textFont(font_t *font);
-void textAlign(const int alignX=TX_LEFT, const int alignY = TX_BOTTOM);
-// textLeading()
-// textMode()
-void textSize(const int size);
-// textWidth()
-// textAscent()
-// textDescent()
+// DPROC_API loadFont()
+DPROC_API void setFont(const uint8_t *fontdata);
+DPROC_API void text(const char *str, const int x, const int y);
+//DPROC_API void textFont(font_t *font);
+DPROC_API void textAlign(const int alignX = TX_LEFT, const int alignY = TX_BOTTOM);
+// DPROC_API textLeading()
+// DPROC_API textMode()
+DPROC_API void textSize(const int size);
+// DPROC_API textWidth()
+// DPROC_API textAscent()
+// DPROC_API textDescent()
 
 // Shape
-void beginShape(const int shapeKind = GR_POLYGON);
-void vertex(const int x, const int y);
-void bezierVertex(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3);
-void endShape(const int kindOfClose = STROKE);
+DPROC_API void beginShape(const int shapeKind = GR_POLYGON);
+DPROC_API void vertex(const int x, const int y);
+DPROC_API void bezierVertex(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3);
+DPROC_API void endShape(const int kindOfClose = STROKE);
 
 // Images
-void image(const PImage *img, const float a, const float b, const float c=-1, const float d=-1);
-PImage * loadImage(const char *filename, const char *extension = nullptr);
+DPROC_API void image(const PImage *img, const float a, const float b, const float c = -1, const float d = -1);
+DPROC_API PImage * loadImage(const char *filename, const char *extension = nullptr);
 
 // Math
-double random(const float low, const float high);
-double random(const float high);
-inline double sq(const double value) { return value*value; }
+DPROC_API double random(const float low, const float high);
+DPROC_API double random(const float high);
+DPROC_API inline double sq(const double value) { return value*value; }
 
 // Coordinate transformation
-void applyMatrix();
-void popMatrix();
-void printMatrix();
-void pushMatrix();
-void resetMatrix();
-void rotate(const float angle, const coord x, const coord y, const coord z);
-void rotateX(const float anglex);
-void rotateY(const float angley);
-void rotateZ(const float anglez);
-void scale(const float a, const float b, const float c);
-void shearX();
-void shearY();
-void shearZ();
-void translate(const coord x, const coord y, const coord z = 0);
+DPROC_API void applyMatrix();
+DPROC_API void popMatrix();
+DPROC_API void printMatrix();
+DPROC_API void pushMatrix();
+DPROC_API void resetMatrix();
+DPROC_API void rotate(const float angle, const coord x, const coord y, const coord z);
+DPROC_API void rotateX(const float anglex);
+DPROC_API void rotateY(const float angley);
+DPROC_API void rotateZ(const float anglez);
+DPROC_API void scale(const float a, const float b, const float c);
+DPROC_API void shearX();
+DPROC_API void shearY();
+DPROC_API void shearZ();
+DPROC_API void translate(const coord x, const coord y, const coord z = 0);
 
 
 #define pRed		COLOR(255, 0, 0, 255)

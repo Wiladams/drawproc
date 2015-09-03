@@ -10,6 +10,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "colorMode", "examples\color
 		{F4203E3C-12F2-463F-B187-C6DDD8660BAF} = {F4203E3C-12F2-463F-B187-C6DDD8660BAF}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BannerSketch", "examples\BannerSketch\BannerSketch.vcxproj", "{775611F9-5577-4432-A591-C52B400C27D7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F4203E3C-12F2-463F-B187-C6DDD8660BAF} = {F4203E3C-12F2-463F-B187-C6DDD8660BAF}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -24,6 +29,10 @@ Global
 		{1B7B8A5B-AC41-4294-AE1C-7708F0B14493}.Debug|Win32.Build.0 = Debug|Win32
 		{1B7B8A5B-AC41-4294-AE1C-7708F0B14493}.Release|Win32.ActiveCfg = Release|Win32
 		{1B7B8A5B-AC41-4294-AE1C-7708F0B14493}.Release|Win32.Build.0 = Release|Win32
+		{775611F9-5577-4432-A591-C52B400C27D7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{775611F9-5577-4432-A591-C52B400C27D7}.Debug|Win32.Build.0 = Debug|Win32
+		{775611F9-5577-4432-A591-C52B400C27D7}.Release|Win32.ActiveCfg = Release|Win32
+		{775611F9-5577-4432-A591-C52B400C27D7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

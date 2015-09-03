@@ -1,4 +1,5 @@
 
+#include "animwin32.h"
 #include "drawproc.h"
 #include "bezier.h"
 
@@ -250,22 +251,23 @@ void initFont()
 
 void initInput()
 {
-	HMODULE modH = GetModuleHandle(NULL);
+	//HMODULE modH = GetModuleHandle(NULL);
+	HMODULE clientModule = getClientModule();
 
 	// Keyboard handling routines
-	setOnKeyPressedHandler((EventObserverHandler)GetProcAddress(modH, "keyPressed"));
-	setOnKeyReleasedHandler((EventObserverHandler)GetProcAddress(modH, "keyReleased"));
-	setOnKeyTypedHandler((EventObserverHandler)GetProcAddress(modH, "keyTyped"));
+	setOnKeyPressedHandler((EventObserverHandler)GetProcAddress(clientModule, "keyPressed"));
+	setOnKeyReleasedHandler((EventObserverHandler)GetProcAddress(clientModule, "keyReleased"));
+	setOnKeyTypedHandler((EventObserverHandler)GetProcAddress(clientModule, "keyTyped"));
 
 	setKeyboardHandler(keyHandler);
 
 
 	// Mouse Handling Routines
-	setOnMousePressedHandler((EventObserverHandler)GetProcAddress(modH, "mouseClicked"));
-	setOnMousePressedHandler((EventObserverHandler)GetProcAddress(modH, "mousePressed"));
-	setOnMouseReleasedHandler((EventObserverHandler)GetProcAddress(modH, "mouseReleased"));
-	setOnMouseMovedHandler((EventObserverHandler)GetProcAddress(modH, "mouseMoved"));
-	setOnMouseDraggedHandler((EventObserverHandler)GetProcAddress(modH, "mouseDragged"));
+	setOnMousePressedHandler((EventObserverHandler)GetProcAddress(clientModule, "mouseClicked"));
+	setOnMousePressedHandler((EventObserverHandler)GetProcAddress(clientModule, "mousePressed"));
+	setOnMouseReleasedHandler((EventObserverHandler)GetProcAddress(clientModule, "mouseReleased"));
+	setOnMouseMovedHandler((EventObserverHandler)GetProcAddress(clientModule, "mouseMoved"));
+	setOnMouseDraggedHandler((EventObserverHandler)GetProcAddress(clientModule, "mouseDragged"));
 
 	setMouseHandler(mouseHandler);
 }

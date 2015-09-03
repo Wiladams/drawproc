@@ -14,6 +14,7 @@ LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 
 // Global Windows Variables:
 HINSTANCE hInst;								// current instance
+HMODULE clientModule;
 
 char szTitle[] = "Window";					// The title bar text
 char szWindowClass[] = "animwin";			// the main window class name
@@ -94,23 +95,28 @@ double seconds()
 	return dproc_clock_seconds(gClock);
 }
 
+HMODULE getClientModule()
+{
+	return clientModule;
+}
 
 // Internal to animwin32
-bool InitializeInstance()
+bool InitializeInstance(const char *moduleName)
 {
 
 	// Get pointers to client setup and loop routines
-	HMODULE modH = GetModuleHandle(NULL);
-	printf("modH: 0x%p\n", modH);
+	clientModule = LoadLibrary(moduleName);
 
-	SetupHandler procAddr = (SetupHandler)GetProcAddress(modH, "setup");
+	printf("modH: 0x%p\n", clientModule);
+
+	SetupHandler procAddr = (SetupHandler)GetProcAddress(clientModule, "setup");
 	printf("proc Address: 0x%p\n", procAddr);
 
 	if (procAddr != NULL) {
 		setSetupRoutine(procAddr);
 	}
 
-	LoopHandler loopAddr = (LoopHandler)GetProcAddress(modH, "draw");
+	LoopHandler loopAddr = (LoopHandler)GetProcAddress(clientModule, "draw");
 	printf("loop Addr: 0x%p\n", loopAddr);
 
 	if (loopAddr != NULL) {
@@ -371,7 +377,11 @@ void eventLoop(HWND hWnd)
 
 int main(int argc, char **argv)
 {
-	if (!InitializeInstance())
+	if (argc < 2) {
+		return 1;
+	}
+
+	if (!InitializeInstance(argv[1]))
 	{
 		printf("Must specify setup() or draw()\n");
 		return 1;

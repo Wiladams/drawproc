@@ -10,20 +10,22 @@
 #include <windows.h>
 
 #ifdef _WIN32
-#pragma comment(lib,"drawproc.lib")
+//#pragma comment(lib,"drawproc.lib")
 #ifdef _MSC_VER
 // This is here so that we can simply use a 'main()' 
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 #endif
 
+#include "dproc_config.h"
 
-#define DPROC_API		__declspec(dllexport)
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+HMODULE getClientModule();
 
 
 // These can be called by client code
@@ -31,7 +33,7 @@ void * GetPixelBuffer(const int width, const int height);
 void * SetWindowSize(const int width, const int height);
 
 void quit();
-double seconds();
+DPROC_API double seconds();
 void resettime();
 
 void setDrawInLoop(bool);
@@ -42,10 +44,6 @@ typedef void(*LoopHandler)();
 typedef void(*SetupHandler)();
 typedef void(*CallToHandler)(); 
 
-// These should be implemented by the client
-DPROC_API void draw();
-DPROC_API void loop(); 
-DPROC_API void setup();
 
 // These can be called by the client, but not
 // strictly necessary

@@ -26,37 +26,37 @@ limitations under the License.
 extern "C" {
 #endif
 
-bool clipLine(const pb_rect &bounds, int &x0, int &y0, int &x1, int &y1);
+DPROC_API bool clipLine(const pb_rect &bounds, int &x0, int &y0, int &x1, int &y1);
 
-void raster_rgba_span(pb_rgba *pb, const uint32_t x, const uint32_t y, const size_t len, const uint32_t *data);
+DPROC_API void raster_rgba_span(pb_rgba *pb, const uint32_t x, const uint32_t y, const size_t len, const uint32_t *data);
 
 // SRCCOPY
-int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, const uint32_t value);
-int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, const uint32_t value);
-void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, const uint32_t value);
+DPROC_API int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, const uint32_t value);
+DPROC_API int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, const uint32_t value);
+DPROC_API void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, const uint32_t value);
 
-void raster_rgba_hline_fade(pb_rgba *pb, int x1, int color1, int x2, int color2, int y);
-void raster_rgba_vline_fade(pb_rgba *pb, int y1, int color1, int y2, int color2, int x);
+DPROC_API void raster_rgba_hline_fade(pb_rgba *pb, int x1, int color1, int x2, int color2, int y);
+DPROC_API void raster_rgba_vline_fade(pb_rgba *pb, int y1, int color1, int y2, int color2, int x);
 
 // SRCOVER
-int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, const uint32_t color);
-void raster_rgba_line_cover(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, uint32_t color);
+DPROC_API int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, const uint32_t color);
+DPROC_API void raster_rgba_line_cover(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, uint32_t color);
 
 
 
-void raster_rgba_triangle_fill(pb_rgba *pb,
+DPROC_API void raster_rgba_triangle_fill(pb_rgba *pb,
 	const unsigned int x1, const unsigned int  y1,
 	const unsigned int  x2, const unsigned int  y2,
 	const unsigned int  x3, const unsigned int  y3,
 	int color);
 
 
-void raster_rgba_convex_polygon_fill(pb_rgba *pb, coord *verts, const int nverts, const pb_rect &clipRect, int color);
+DPROC_API void raster_rgba_convex_polygon_fill(pb_rgba *pb, coord *verts, const int nverts, const pb_rect &clipRect, int color);
 
-void raster_rgba_ellipse_fill(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color);
-void raster_rgba_ellipse_stroke(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color);
+DPROC_API void raster_rgba_ellipse_fill(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color);
+DPROC_API void raster_rgba_ellipse_stroke(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color);
 
-void raster_rgba_blit(pb_rgba *pb, const int x, const int y, const pb_rgba *src);
+DPROC_API void raster_rgba_blit(pb_rgba *pb, const int x, const int y, const pb_rgba *src);
 
 /*
 	raster_rgba_blend_alphamap
@@ -71,7 +71,7 @@ void raster_rgba_blit(pb_rgba *pb, const int x, const int y, const pb_rgba *src)
 	h - height of alphamap, in bytes
 	color - base color value
 */
-void raster_rgba_blend_alphamap(pb_rgba *pb, const int x, const int y, const unsigned char *bitmap, const int w, const int h, const uint32_t color);
+DPROC_API void raster_rgba_blend_alphamap(pb_rgba *pb, const int x, const int y, const unsigned char *bitmap, const int w, const int h, const uint32_t color);
 
 inline void raster_rgba_rect_fill(pb_rgba *pb, const int x, const int y, const int width, const int height, const uint32_t value)
 {

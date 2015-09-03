@@ -11,12 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F4203E3C-12F2-463F-B187-C6DDD8660BAF}</ProjectGuid>
-    <RootNamespace>drawproc</RootNamespace>
+    <ProjectGuid>{775611F9-5577-4432-A591-C52B400C27D7}</ProjectGuid>
+    <RootNamespace>BannerSketch</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -44,15 +44,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\repos\drawproc\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BUILD_AS_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\repos\graphicc;C:\repos\graphicc\drawproc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\repos\graphicc\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>drawproc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <Bscmake>
-      <AdditionalOptions>/DBUILD_AS_DLL %(AdditionalOptions)</AdditionalOptions>
-    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -69,39 +67,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\agg_embedded_raster_fonts.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\bezier.cpp" />
-    <ClCompile Include="src\dproc_clock.cpp" />
-    <ClCompile Include="src\font.cpp" />
-    <ClCompile Include="src\guistyle.cpp" />
-    <ClCompile Include="src\linearalgebra.cpp" />
-    <ClCompile Include="src\Matrix.cpp" />
-    <ClCompile Include="src\pbm.cpp" />
-    <ClCompile Include="src\pb_rect.cpp" />
-    <ClCompile Include="src\pixelbuffer.cpp" />
-    <ClCompile Include="src\raster_rgba.cpp" />
-    <ClCompile Include="src\raster_rgba_polygon.cpp" />
-    <ClCompile Include="src\raster_rgba_triangle.cpp" />
-    <ClCompile Include="src\drawproc.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\agg_embedded_raster_fonts.h" />
-    <ClInclude Include="src\animwin32.h" />
-    <ClInclude Include="src\bezier.h" />
-    <ClInclude Include="src\dproc_config.h" />
-    <ClInclude Include="src\dproc_constants.h" />
-    <ClInclude Include="src\dproc_clock.h" />
-    <ClInclude Include="src\graphicc.h" />
-    <ClInclude Include="src\guistyle.h" />
-    <ClInclude Include="src\key_scancodes.h" />
-    <ClInclude Include="src\linearalgebra.h" />
-    <ClInclude Include="src\Matrix.h" />
-    <ClInclude Include="src\pb_rect.h" />
-    <ClInclude Include="src\raster_rgba.h" />
-    <ClInclude Include="src\drawproc.h" />
-    <ClInclude Include="src\vec3.h" />
-    <ClInclude Include="src\vkeys.h" />
+    <ClCompile Include="bannersketch.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

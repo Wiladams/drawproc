@@ -3,6 +3,8 @@
 int drawMode = 1;
 static const int lastMode = 3;
 
+void draw();
+
 void mouseReleased()
 {
 	drawMode += 1;

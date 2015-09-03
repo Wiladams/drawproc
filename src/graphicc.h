@@ -139,12 +139,12 @@ typedef struct _pb_rgba {
 extern "C" {
 #endif
 
-GRC_API int pb_rgba_init(pb_rgba *pb, const unsigned int width, const unsigned int height);
-GRC_API int pb_rgba_free(pb_rgba *pb);
+DPROC_API int pb_rgba_init(pb_rgba *pb, const unsigned int width, const unsigned int height);
+DPROC_API int pb_rgba_free(pb_rgba *pb);
 
-GRC_API int pb_rgba_get_frame(pb_rgba *src, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, pb_rgba *pf);
+DPROC_API int pb_rgba_get_frame(pb_rgba *src, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, pb_rgba *pf);
 
-GRC_API void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y, const uint32_t value);
+DPROC_API void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y, const uint32_t value);
 
 #ifdef __cplusplus
 }
