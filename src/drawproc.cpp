@@ -42,7 +42,7 @@ int gTextAlignY;
 
 // Keyboard
 int keyCode = 0;
-int key = 0;
+int keyChar = 0;
 bool isKeyPressed = 0;
 
 // Mouse
@@ -105,14 +105,14 @@ LRESULT CALLBACK keyHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 		case WM_CHAR:
 			// Processing regular characters, after translation of various keycodes
-			key = wParam;
+			keyChar = wParam;
 
 			if (gkbdOnTypedHandler) {
 				gkbdOnTypedHandler();
 				//hWnd, message, wParam, lParam);
 			}
 
-			switch (key){
+			switch (keyChar){
 				case 0x1B:  // ESC
 					quit();
 				break;

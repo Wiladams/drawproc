@@ -1,6 +1,7 @@
 #pragma once
 
-#include "graphicc.h"
+//#include "graphicc.h"
+#include "dproc_config.h"
 
 /*
 	uint8_t * font
@@ -41,7 +42,7 @@ extern const uint8_t verdana14[];
 extern const uint8_t verdana14_bold[];
 extern const uint8_t verdana16[];
 extern const uint8_t verdana16_bold[];
-extern const uint8_t verdana17[];
-extern const uint8_t verdana17_bold[];
+DPROC_API extern const uint8_t verdana17[];
+DPROC_API extern const uint8_t verdana17_bold[];
 extern const uint8_t verdana18[];
 extern const uint8_t verdana18_bold[];

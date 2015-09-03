@@ -15,6 +15,8 @@
 #include <intrin.h>
 #endif
 
+#include <stdint.h>
+
 typedef float	float32;
 typedef double	float64;
 typedef float32 real;

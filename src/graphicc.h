@@ -228,9 +228,9 @@ extern "C" {
 extern "C" {
 #endif
 
-	int PPM_read_binary(const char *filename, pb_rgba *fb);			// will read P6
-	int write_PPM_binary(const char *filename, pb_rgba *fb);	// write a P6 file
-	int write_PPM_ascii(const char *filename, pb_rgba *fb);		// write a P3 file
+	DPROC_API int PPM_read_binary(const char *filename, pb_rgba *fb);			// will read P6
+	DPROC_API int write_PPM_binary(const char *filename, pb_rgba *fb);	// write a P6 file
+	DPROC_API int write_PPM_ascii(const char *filename, pb_rgba *fb);		// write a P3 file
 
 #ifdef __cplusplus
 }

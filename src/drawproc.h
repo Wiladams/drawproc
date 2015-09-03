@@ -128,15 +128,15 @@ DPROC_API extern size_t height;
 
 
 
-extern pb_rgba *gpb;
-extern pb_rect pixelFrame;
+DPROC_API extern pb_rgba *gpb;
+DPROC_API extern pb_rect pixelFrame;
 
 
-extern COLOR bgColor;
-extern pb_rgba *bgImage;
+DPROC_API extern COLOR bgColor;
+DPROC_API extern pb_rgba *bgImage;
 
-extern RECTMODE grectMode;
-extern RECTMODE gellipseMode;
+DPROC_API extern RECTMODE grectMode;
+DPROC_API extern RECTMODE gellipseMode;
 
 // Initialization
 //DPROC_API void init();
@@ -173,12 +173,10 @@ DPROC_API extern bool isMousePressed;
 
 
 // Keyboard
-extern int key;
-extern int keyCode;
-extern bool isKeyPressed;
-// keyPressed()
-// keyReleased()
-// keyTyped()
+DPROC_API extern int keyChar;
+DPROC_API extern int keyCode;
+DPROC_API extern bool isKeyPressed;
+
 
 // Setting colors
 DPROC_API void colorMode(const COLORMODE mode, const float max1 = -1, const float max2 = -1, const float max3 = -1, const float maxA = -1);
