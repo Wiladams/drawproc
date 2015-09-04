@@ -18,7 +18,7 @@ pb_rect pixelFrame;
 unsigned int frameCount = 0;
 
 RECTMODE grectMode = CORNER;
-RECTMODE gellipseMode = CORNER;
+RECTMODE gellipseMode = CENTER;
 
 
 // color setting
