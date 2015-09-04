@@ -18,8 +18,6 @@ extern "C" {
 DPROC_EXPORT void draw();
 DPROC_EXPORT void setup();
 
-typedef void (*EventObserverHandler)();
-
 
 // IO Event Handlers
 DPROC_EXPORT void keyPressed();
@@ -59,6 +57,7 @@ typedef enum COLORMODE {
 	COLOR_MODE_RGB,
 	COLOR_MODE_HSB
 };
+
 typedef enum RECTMODE{
 	CORNER,
 	CORNERS,
@@ -74,6 +73,7 @@ typedef enum ALIGNMENT {
 	TX_BOTTOM	= 0x40
 
 };
+
 typedef enum GEOMETRY {
 	GR_POINTS,
 	GR_LINES,
@@ -92,7 +92,6 @@ typedef enum KindOfClose {
 	CLOSE
 };
 
-typedef float coord;
 
 struct Vector2d
 {
@@ -126,8 +125,6 @@ DPROC_API extern size_t width;
 DPROC_API extern size_t height;
 
 
-
-
 DPROC_API extern pb_rgba *gpb;
 DPROC_API extern pb_rect pixelFrame;
 
@@ -140,7 +137,6 @@ DPROC_API extern RECTMODE gellipseMode;
 
 // Initialization
 //DPROC_API void init();
-
 
 
 DPROC_API void noLoop();

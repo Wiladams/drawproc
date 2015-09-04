@@ -9,13 +9,12 @@
 #define DPROC_EXPORT		__declspec(dllexport)
 
 
-
-
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
 
 #include <stdint.h>
+
 
 typedef float	float32;
 typedef double	float64;

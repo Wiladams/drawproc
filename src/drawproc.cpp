@@ -68,6 +68,8 @@ uint64_t millis()
 	return (uint64_t)seconds() * 1000;
 }
 
+typedef void(*EventObserverHandler)();
+
 static EventObserverHandler gkbdOnPressedHandler = nullptr;
 static EventObserverHandler gkbdOnReleasedHandler = nullptr;
 static EventObserverHandler gkbdOnTypedHandler = nullptr;
@@ -913,10 +915,6 @@ int pointInPolygon(int polyCorners, int polyX[], int polyY[], const int x, const
 
 
 // Draw a polygon
-
-
-
-
 
 float triangle_area(const Vector2dVector &contour)
 {
