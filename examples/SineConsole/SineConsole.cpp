@@ -18,9 +18,11 @@ float x, x2;
 void setup(){
 	size(600, 200);
 	background(127);
+	
 	// generate processing font from system font
 	//myFont = createFont("verdana", 12);
 	//textFont(myFont);
+	setFont(verdana12);
 }
 
 void draw(){

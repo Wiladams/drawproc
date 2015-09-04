@@ -350,13 +350,8 @@ void drawMouseInfo()
 		rect(keyRect.x, keyRect.y, keyRect.width, keyRect.height);
 	}
 
-	// select verdana font
-	setFont(verdana17);
-	char *infobuff = "Mouse:";
-	//char infobuff[512];
-	//sprintf_s(infobuff, 512, "Mouse X: %3d Y: %3d    Key: (%3f, %3f)(%3.0f, %3.0f)  Key Code: 0x%x", mouseX, mouseY, 
-	//	keyRect.x, keyRect.y, keyRect.width, keyRect.height,
-	//	keyCode);
+	char infobuff[512] = { '\0' };
+	sprintf_s(infobuff, sizeof(infobuff), "Mouse X: %3d Y: %3d  Key Code: 0x%x", mouseX, mouseY, keyCode);
 	fill(pBlack);
 	textAlign(TX_LEFT, TX_TOP);
 	text(infobuff, 0, height-34);
@@ -383,6 +378,9 @@ void setup()
 	
 	size(kbImage->fb.frame.width, kbImage->fb.frame.height+4+30);
 	background(pLightGray);
+
+	// select verdana font
+	setFont(verdana17);
 }
 
 
