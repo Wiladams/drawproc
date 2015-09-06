@@ -344,6 +344,11 @@ void translate(const coord x, const coord y, const coord z)
 
 
 // Math
+double dist(int x1, int y1, int x2, int y2)
+{
+	return sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
+}
+
 double random(const float low, const float high)
 {
 	double frac = (double)rand() / RAND_MAX;
@@ -1180,8 +1185,26 @@ void endShape(const int kindOfFinish)
 		} 
 		break;
 	case GR_TRIANGLE_STRIP:
+		{
+			int nTris = n - 2;
+			for (int tri = 1; tri <= nTris; tri++)
+			{
+				triangle(gShape[tri-1]._x, gShape[tri-1]._y,
+					gShape[tri]._x, gShape[tri]._y,
+					gShape[tri+1]._x, gShape[tri+1]._y);
+			}
+		}
 		break;
 	case GR_TRIANGLE_FAN:
+		{
+			int nTris = n - 2;
+			for (int tri = 1; tri <= nTris; tri++)
+			{
+				triangle(gShape[0]._x, gShape[0]._y,
+						gShape[tri]._x, gShape[tri]._y,
+						gShape[tri + 1]._x, gShape[tri + 1]._y);
+			}
+		}		
 		break;
 	}
 

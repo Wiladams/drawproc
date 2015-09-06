@@ -240,6 +240,7 @@ DPROC_API void image(const PImage *img, const float a, const float b, const floa
 DPROC_API PImage * loadImage(const char *filename, const char *extension = nullptr);
 
 // Math
+DPROC_API double dist(int x1, int y1, int x2, int y2);
 DPROC_API double random(const float low, const float high);
 DPROC_API double random(const float high);
 DPROC_API inline double sq(const double value) { return value*value; }
