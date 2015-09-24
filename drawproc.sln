@@ -44,6 +44,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Structure", "examples\Struc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Arrays", "examples\Arrays\Arrays.vcxproj", "{D0B0785E-7904-4D29-9928-74D7FAB27129}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Math", "examples\Math\Math.vcxproj", "{81CA79B1-70C1-45BA-B777-80D48A71CC04}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F4203E3C-12F2-463F-B187-C6DDD8660BAF} = {F4203E3C-12F2-463F-B187-C6DDD8660BAF}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -90,6 +95,10 @@ Global
 		{D0B0785E-7904-4D29-9928-74D7FAB27129}.Debug|Win32.Build.0 = Debug|Win32
 		{D0B0785E-7904-4D29-9928-74D7FAB27129}.Release|Win32.ActiveCfg = Release|Win32
 		{D0B0785E-7904-4D29-9928-74D7FAB27129}.Release|Win32.Build.0 = Release|Win32
+		{81CA79B1-70C1-45BA-B777-80D48A71CC04}.Debug|Win32.ActiveCfg = Debug|Win32
+		{81CA79B1-70C1-45BA-B777-80D48A71CC04}.Debug|Win32.Build.0 = Debug|Win32
+		{81CA79B1-70C1-45BA-B777-80D48A71CC04}.Release|Win32.ActiveCfg = Release|Win32
+		{81CA79B1-70C1-45BA-B777-80D48A71CC04}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

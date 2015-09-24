@@ -8,7 +8,7 @@ Do some simple mouse and keyboard tracking
 #include "guistyle.h"
 #include <stdio.h>
 
-
+#include <Windows.h>
 
 
 /*
@@ -174,11 +174,11 @@ struct keyloc locations[] = {
 	// Row 5 - SPACE
 	{ { 38, 257, 50, 31 }, KC_CONTROL },		// LCONTROL
 	{ { 91, 257, 44, 31 }, KC_LWIN },
-	{ { 140, 257, 44, 31 }, KC_SPACE },		// LALT
+	{ { 140, 257, 44, 31 }, KC_LMENU },		// LALT
 	{ { 270, 257, 202, 31 }, KC_SPACE },	// SPACE BAR
-	{ { 398, 257, 44, 31 }, KC_SPACE },		// RALT
+	{ { 398, 257, 44, 31 }, KC_RMENU },		// RALT
 	{ { 448, 257, 44, 31 }, KC_RWIN },
-	{ { 496, 257, 44, 31 }, KC_MENU },		// RMENU
+	{ { 496, 257, 44, 31 }, KC_APPS },		// Actual Menu Key
 	{ { 550, 257, 50, 31 }, KC_CONTROL },		// RCONTROL
 
 	{ { 618, 257, 32, 31 }, KC_LEFT },
@@ -268,9 +268,10 @@ void  keyReleased()
 
 }
 
+static int nkeylocs = sizeof(locations) / sizeof(locations[0]);
+
 void drawKeys()
 {
-	static int nkeylocs = sizeof(locations) / sizeof(locations[0]);
 
 	if (!gShowKeyOutlines) {
 		return;
@@ -296,6 +297,24 @@ void drawHoverKey()
 	stroke(pYellow);
 	noFill();
 	rect(hoverKey.loc.x, hoverKey.loc.y, hoverKey.loc.width, hoverKey.loc.height);
+}
+
+// Draw the pressed state of all keys
+// on the keyboard
+void drawKeyStates()
+{
+	static int KEY_IS_DOWN = 0x8000;
+
+	//fill(pLightGray);
+	fill(COLOR(163, 163, 163, 127));
+	noStroke();
+	rectMode(CENTER);
+	for (int idx = 0; idx < nkeylocs; idx++)
+	{
+		if (::GetAsyncKeyState(locations[idx].vkey) & KEY_IS_DOWN) {
+			rect(locations[idx].loc.x, locations[idx].loc.y, locations[idx].loc.width, locations[idx].loc.height);
+		}
+	}
 }
 
 void drawCrossHairs()
@@ -350,8 +369,12 @@ void drawMouseInfo()
 		rect(keyRect.x, keyRect.y, keyRect.width, keyRect.height);
 	}
 
-	char infobuff[512] = { '\0' };
-	sprintf_s(infobuff, sizeof(infobuff), "Mouse X: %3d Y: %3d  Key Code: 0x%x", mouseX, mouseY, keyCode);
+	// select verdana font
+	setFont(verdana17);
+	char infobuff[256];
+	sprintf_s(infobuff, "Mouse X: %3d Y: %3d    Key Pressed: 0x%x  Hover VKey: 0x%x", 
+		mouseX, mouseY,
+		keyCode, hoverKey.vkey);
 	fill(pBlack);
 	textAlign(TX_LEFT, TX_TOP);
 	text(infobuff, 0, height-34);
@@ -366,6 +389,7 @@ void draw()
 	drawCrossHairs();
 	drawGrid();
 	drawKeys();
+	drawKeyStates();
 	drawHoverKey();
 
 	drawMouseInfo();
@@ -378,9 +402,6 @@ void setup()
 	
 	size(kbImage->fb.frame.width, kbImage->fb.frame.height+4+30);
 	background(pLightGray);
-
-	// select verdana font
-	setFont(verdana17);
 }
 
 
