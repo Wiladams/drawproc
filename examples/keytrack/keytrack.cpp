@@ -398,7 +398,7 @@ void draw()
 void setup()
 {
 	// Adjust this path to match where the keyboard image file is
-	kbImage = loadImage("c:/repos/graphicc/Test/windows-keyboard-60-keys.ppm", nullptr);
+	kbImage = loadImage("windows-keyboard-60-keys.ppm", nullptr);
 	
 	size(kbImage->fb.frame.width, kbImage->fb.frame.height+4+30);
 	background(pLightGray);

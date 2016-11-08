@@ -33,13 +33,13 @@ pb_rect pb_rect::intersection(const pb_rect &b)
 {
 
 
-	float x = this->x > b.x ? this->x : b.x;
-	float y = this->y > b.y ? this->y : b.y;
-	float right = ((this->x + this->width) < (b.x + b.width)) ? (this->x + this->width) : (b.x + b.width);
-	float bottom = ((this->y + this->height) < (b.y + b.height)) ? (this->y + this->height) : (b.y + b.height);
+	int x = this->x > b.x ? this->x : b.x;
+	int y = this->y > b.y ? this->y : b.y;
+	int right = ((this->x + this->width) < (b.x + b.width)) ? (this->x + this->width) : (b.x + b.width);
+	int bottom = ((this->y + this->height) < (b.y + b.height)) ? (this->y + this->height) : (b.y + b.height);
 
-	float width = ((right - x) > 0) ? (right - x) : 0;
-	float height = ((bottom - y) > 0) ? (bottom - y) : 0;
+	int width = ((right - x) > 0) ? (right - x) : 0;
+	int height = ((bottom - y) > 0) ? (bottom - y) : 0;
 	
 	return{ x, y, width, height };
 /*
