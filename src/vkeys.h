@@ -3,7 +3,7 @@
 // but they are fairly universal
 
 
-typedef enum VKEYS {
+enum VKEYS {
 	/*
 		Virtual Keys, Standard Set
 	*/

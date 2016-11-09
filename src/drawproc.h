@@ -53,28 +53,28 @@ struct COLOR
 	};
 };
 
-typedef enum COLORMODE {
+typedef enum {
 	COLOR_MODE_RGB,
 	COLOR_MODE_HSB
-};
+} COLORMODE;
 
-typedef enum RECTMODE{
+typedef enum {
 	CORNER,
 	CORNERS,
 	RADIUS,
 	CENTER
-};
+} RECTMODE;
 
-typedef enum ALIGNMENT {
+typedef enum  {
 	TX_CENTER	= 0x00,
 	TX_LEFT		= 0x01,
 	TX_RIGHT	= 0x04,
 	TX_TOP		= 0x10,
 	TX_BOTTOM	= 0x40
 
-};
+} ALIGNMENT;
 
-typedef enum GEOMETRY {
+typedef enum  {
 	GR_POINTS,
 	GR_LINES,
 	GR_LINE_STRIP,
@@ -85,12 +85,12 @@ typedef enum GEOMETRY {
 	GR_TRIANGLES,
 	GR_TRIANGLE_STRIP,
 	GR_TRIANGLE_FAN
-};
+} GEOMETRY;
 
-typedef enum KindOfClose {
+typedef enum  {
 	STROKE,
 	CLOSE
-};
+} KindOfClose;
 
 
 struct Vector2d
