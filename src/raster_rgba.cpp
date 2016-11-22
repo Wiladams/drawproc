@@ -392,7 +392,7 @@ void raster_rgba_blit(pb_rgba *pb, const int x, const int y, const pb_rgba *src)
 	{
 		// for each row of the source
 		// copy to the destination
-		memcpy(dstPtr, srcPtr, src->pixelpitch * 4);
+		memcpy(dstPtr, srcPtr, src->frame.width * 4);
 		dstPtr += pb->pixelpitch;
 		srcPtr += src->pixelpitch;
 	}
