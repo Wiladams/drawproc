@@ -21,5 +21,13 @@
     <ClCompile Include="cards.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="deck.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="deck.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

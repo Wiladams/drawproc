@@ -149,11 +149,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cards.cpp" />
+    <ClCompile Include="deck.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\drawproc.vcxproj">
       <Project>{f4203e3c-12f2-463f-b187-c6ddd8660baf}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="deck.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

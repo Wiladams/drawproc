@@ -21,6 +21,16 @@ limitations under the License.
 #include <stdlib.h>
 #include <string.h>
 
+/*
+pb_rgba_init
+
+Initialize a pixel buffer with data.  This routine will allocate the data
+pointer and fill in the pixel pitch values.  After this routine returns,
+the pixel buffer is ready to be drawn onto, and blitted onto other pixel
+buffers.
+
+*/
+
 int pb_rgba_init(pb_rgba *fb, const unsigned int width, const unsigned int height)
 {
 	if (!fb) return -1;
@@ -57,6 +67,21 @@ int pb_rgba_free(pb_rgba *fb)
 	return 0;
 }
 
+/*
+pb_rgba_get_frame
+
+Given a source pixel buffer, return a sub-section of that 
+pixel buffer in the pf structure.  This does NOT make a copy
+of the data.  Rather, it just points to the source image, and 
+makes the appropriate adjustments in offsets and ownership.
+
+thi is great for those situations where you have a big image 
+that contains a group of images, and you need a sub-section, such
+as a giant image of a deck of cards, and you need the image for 
+a single card.  It would also work in cases where you have rendered
+fonts into a single image, and you need to get sub-images for individual
+glyphs.
+*/
 int pb_rgba_get_frame(pb_rgba *pb, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, pb_rgba *pf)
 {
 	// assume what's being asked for is already constrained
@@ -70,7 +95,7 @@ int pb_rgba_get_frame(pb_rgba *pb, const unsigned int x, const unsigned int y, c
 	pf->pixelpitch = pb->pixelpitch;
 	pf->bitStride = pb->bitStride;
 
-	return 0;
+	return 1;
 }
 
 void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y, const uint32_t value)
