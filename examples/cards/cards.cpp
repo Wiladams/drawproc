@@ -4,17 +4,33 @@
 
 COLOR backing = color(127, 255, 127);
 
-void setup()
-{	
-	size(960, 480);
 
-	background(backing);
 
-	//noLoop();
+void drawEntireDeck()
+{
+	PImage dstImage;
+	int xoffset = 16;
+	int yoffset = 104;
 
-	draw();
+	// blank out the background to get a clean screen to
+	// continue drawing
+	background(pRed);
+
+	int y = 4;
+	for (int suit = 1; suit <= 4; suit++) {
+		int x = 4;
+		for (int rank = 1; rank <= 13; rank++) {
+			// Get the image for the specific suit and rank
+			getImage(suit, rank, &dstImage);
+
+			// display the card image
+			image(&dstImage, x, y);
+
+			x = x + xoffset;
+		}
+		y = y + yoffset;
+	}
 }
-
 
 void drawForeground()
 {
@@ -48,6 +64,18 @@ void drawBackground()
 
 void draw()
 {
-	drawBackground();
-	drawForeground();
+	//drawBackground();
+	//drawForeground();
+	
+	drawEntireDeck();
+}
+
+void setup()
+{
+	size(960, 480);
+
+	noLoop();
+
+	// If looping, do the following
+	//draw();
 }
