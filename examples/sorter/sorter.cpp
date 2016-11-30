@@ -3,20 +3,31 @@
 #include <stdio.h>
 
 int MAX_VALUE = 480;
-static const int nElems = 1024;
-int Elems[nElems];
+int nElems = 1024;
+int *Elems = nullptr;
 
 bool showLines = false;
 
-BubbleSort sortee(Elems, nElems);
+BubbleSort *sort1 = new BubbleSort(Elems, nElems);
+SelectionSort *sort2 = new SelectionSort(Elems, nElems);
+
+sorter *sortee = sort2;
 
 void initElems()
 {
+	if (Elems != nullptr)
+	{
+		free(Elems);
+		Elems = nullptr;
+	}
+
+	Elems = (int *)malloc(sizeof(int)*nElems);
+
 	for (int idx = 0; idx < nElems; idx++)
 	{
 		Elems[idx] = random(MAX_VALUE);
 	}
-	sortee.reset();
+	sortee->reset(Elems, nElems);
 }
 
 void keyTyped()
@@ -33,30 +44,66 @@ void keyTyped()
 	}
 }
 
+void keyPressed()
+{
+	switch (keyCode)
+	{
+	case KC_UP:
+		if (nElems < 16384)
+			nElems = nElems * 2;
+		break;
+	
+	case KC_DOWN:
+		nElems = nElems / 2;
+		if (nElems < 128)
+			nElems = 128;
+		break;
+
+	case KC_RIGHT:
+		if (sortee == sort2)
+			sortee = sort1;
+		else
+			sortee = sort2;
+		
+		break;
+	case KC_LEFT:
+		if (sortee == sort1)
+			sortee = sort2;
+		else
+			sortee = sort1;
+
+		break;
+	}
+
+	initElems();
+}
+
 void drawForeground()
 {
 	char debugstr[256];
-	sprintf_s(debugstr, "showLines: %d", (int)showLines);
+	sprintf_s(debugstr, "Sort Routine: %s", sortee->name);
 
 	text(debugstr, 20, 20);
 }
 
 void draw()
 {
-	background(pWhite);
+	//background(pLightGray);
+	background(pDarkGray);
 
-	fill(0);
+	//fill(0);
+	fill(255);
 
-	stroke(pBlack);
+	stroke(pWhite);
 	strokeWeight(0.5);
 
 	// do a step in the sorter
-	sortee.step();
+	sortee->step();
 
 	// Draw the array of values scaled to fit the window
 	for (int idx = 0; idx < nElems; idx++) {
 		double mappedX = (int)MAP(idx, 0, nElems - 1, 4, width - 4-1);
-		double mappedY = (int)MAP(sortee.fElements[idx], 0, MAX_VALUE, height-4-1, 4);
+		double mappedY = (int)MAP(sortee->fElements[idx], 0, MAX_VALUE, height-4-1, 4);
 
 		point(mappedX, mappedY);
 
