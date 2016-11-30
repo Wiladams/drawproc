@@ -19,7 +19,7 @@ void initElems()
 	sortee.reset();
 }
 
-void keyPressed()
+void keyTyped()
 {
 	switch (keyChar)
 	{
@@ -27,15 +27,23 @@ void keyPressed()
 			showLines = !showLines;
 			break;
 
-		case KC_SPACE:
+		case ' ':
 			initElems();
 			break;
 	}
 }
 
+void drawForeground()
+{
+	char debugstr[256];
+	sprintf_s(debugstr, "showLines: %d", (int)showLines);
+
+	text(debugstr, 20, 20);
+}
+
 void draw()
 {
-	background(pLightGray);
+	background(pWhite);
 
 	fill(0);
 
@@ -57,6 +65,7 @@ void draw()
 		}
 	}
 
+	drawForeground();
 }
 
 void setup()

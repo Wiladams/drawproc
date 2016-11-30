@@ -273,21 +273,18 @@ void draw()
 
 
 
-
-
-
-void  keyPressed()
+void  keyReleased()
 {
-	switch (keyChar)
+	switch (keyCode)
 	{
-	case ']':
+	case KC_RIGHT:
 		currentColumn++;
 		if (currentColumn > COLUMN_COFFEE) {
 			currentColumn = COLUMN_MILK;
 		}
 		break;
 
-	case '[':
+	case KC_LEFT:
 		currentColumn--;
 		if (currentColumn < COLUMN_MILK) {
 			currentColumn = COLUMN_COFFEE;
@@ -302,3 +299,4 @@ void  keyPressed()
 	}
 
 }
+
