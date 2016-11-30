@@ -81,9 +81,14 @@ void keyPressed()
 void drawForeground()
 {
 	char debugstr[256];
-	sprintf_s(debugstr, "Sort Routine: %s", sortee->name);
+	stroke(pBlack);
+	setFont(verdana18_bold);
 
+	sprintf_s(debugstr, "%s", sortee->name);
 	text(debugstr, 20, 20);
+
+	sprintf_s(debugstr, "Items: %d", nElems);
+	text(debugstr, 20, 40);
 }
 
 void draw()
