@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="sorter.cpp" />
+    <ClCompile Include="sortroutine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\drawproc.vcxproj">

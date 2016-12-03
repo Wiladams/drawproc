@@ -14,7 +14,7 @@ void drawEntireDeck()
 
 	// blank out the background to get a clean screen to
 	// continue drawing
-	background(pRed);
+	background(pGreen);
 
 	int y = 4;
 	for (int suit = 1; suit <= 4; suit++) {
@@ -64,17 +64,17 @@ void drawBackground()
 
 void draw()
 {
-	//drawBackground();
-	//drawForeground();
+	drawBackground();
+	drawForeground();
 	
-	drawEntireDeck();
+	//drawEntireDeck();
 }
 
 void setup()
 {
 	size(960, 480);
 
-	noLoop();
+	//noLoop();
 
 	// If looping, do the following
 	//draw();

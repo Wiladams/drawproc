@@ -1,6 +1,10 @@
+
+#include <stdio.h>
+#include <vector>
+
 #include "drawproc.h"
 #include "sortroutine.h"
-#include <stdio.h>
+
 
 int MAX_VALUE = 480;
 int nElems = 1024;
@@ -8,13 +12,15 @@ int *Elems = nullptr;
 
 bool showLines = false;
 
-BubbleSort *sort1 = new BubbleSort(Elems, nElems);
-SelectionSort *sort2 = new SelectionSort(Elems, nElems);
+std::vector<sorter *> arrayOfSorts;
 
-sorter *sortee = sort2;
+int sorterIndex = 0;
 
 void initElems()
 {
+	arrayOfSorts.push_back(new BubbleSort(Elems, nElems));
+	arrayOfSorts.push_back(new SelectionSort(Elems, nElems));
+
 	if (Elems != nullptr)
 	{
 		free(Elems);
@@ -27,7 +33,7 @@ void initElems()
 	{
 		Elems[idx] = random(MAX_VALUE);
 	}
-	sortee->reset(Elems, nElems);
+	arrayOfSorts[sorterIndex]->reset(Elems, nElems);
 }
 
 void keyTyped()
@@ -60,17 +66,17 @@ void keyPressed()
 		break;
 
 	case KC_RIGHT:
-		if (sortee == sort2)
-			sortee = sort1;
+		if (sorterIndex == arrayOfSorts.size() - 1)
+			sorterIndex = 0;
 		else
-			sortee = sort2;
+			sorterIndex = sorterIndex + 1;
 		
 		break;
 	case KC_LEFT:
-		if (sortee == sort1)
-			sortee = sort2;
+		if (sorterIndex == 0)
+			sorterIndex = arrayOfSorts.size()-1;
 		else
-			sortee = sort1;
+			sorterIndex = sorterIndex - 1;
 
 		break;
 	}
@@ -84,7 +90,7 @@ void drawForeground()
 	stroke(pBlack);
 	setFont(verdana18_bold);
 
-	sprintf_s(debugstr, "%s", sortee->name);
+	sprintf_s(debugstr, "%s", arrayOfSorts[sorterIndex]->name);
 	text(debugstr, 20, 20);
 
 	sprintf_s(debugstr, "Items: %d", nElems);
@@ -103,12 +109,12 @@ void draw()
 	strokeWeight(0.5);
 
 	// do a step in the sorter
-	sortee->step();
+	arrayOfSorts[sorterIndex]->step();
 
 	// Draw the array of values scaled to fit the window
 	for (int idx = 0; idx < nElems; idx++) {
 		double mappedX = (int)MAP(idx, 0, nElems - 1, 4, width - 4-1);
-		double mappedY = (int)MAP(sortee->fElements[idx], 0, MAX_VALUE, height-4-1, 4);
+		double mappedY = (int)MAP(arrayOfSorts[sorterIndex]->fElements[idx], 0, MAX_VALUE, height-4-1, 4);
 
 		point(mappedX, mappedY);
 
@@ -126,5 +132,3 @@ void setup()
 
 	size(640, 480);
 }
-
-

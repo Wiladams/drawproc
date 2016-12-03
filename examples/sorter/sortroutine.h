@@ -3,12 +3,14 @@
 /*
 	sorter
 
-	Abstract base class representing general sorting capability.
+	Base class representing general sorting capability.
+
 	A subclass MUST implement the 'step()' method.  Each step should
 	perform enough of the sorting to make it visually interesting
 	when the results are displayed.
 */
-class sorter {
+class sorter 
+{
 public:
 	int * fElements;
 	int fNumElements;
@@ -16,37 +18,26 @@ public:
 	int stepIndex = 0;
 
 public:
-	sorter(int *elems, const int nelems) :
-		fElements(elems),
-		fNumElements(nelems) {}
-
-	virtual ~sorter() {}
-
-	virtual bool step() = 0;
-	virtual void reset(int *elems, const int nelems) 
-	{
-		fElements = elems;
-		fNumElements = nelems;
-		stepIndex = 0;
-	}
+	sorter();
+	sorter(const sorter &other);
+	sorter(int *elems, const int nelems);
 	
-	void exchange(const int a, const int b)
-	{
-		int tmp = fElements[a];
-		fElements[a] = fElements[b];
-		fElements[b] = tmp;
-	}
+	virtual ~sorter();
 
-	bool compareExchange(const int a, const int b)
-	{
-		if (fElements[a] > fElements[b]) {
-			exchange(a, b);
+	sorter & operator=(const sorter &other);
 
-			return true;
-		}
 
-		return false;
-	}
+
+	virtual bool step();
+
+	virtual void reset(int *elems, const int nelems);
+
+	
+	void exchange(const int a, const int b);
+
+
+	bool compareExchange(const int a, const int b);
+
 };
 
 

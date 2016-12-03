@@ -18,6 +18,9 @@
     <ClCompile Include="sorter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sortroutine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sortroutine.h">
