@@ -11,14 +11,15 @@ when the results are displayed.
 */
 
 
-sorter::sorter() :
+sorter::sorter(const std::string &name) :
 	fElements(nullptr),
 	fNumElements(0),
-	name(nullptr),
+	name(name),
 	stepIndex(0)
 {
 }
 
+/*
 sorter::sorter(const sorter &other) 
 {
 	fElements = other.fElements;
@@ -26,15 +27,13 @@ sorter::sorter(const sorter &other)
 	name = other.name;
 	stepIndex = other.stepIndex;
 }
-
-sorter::sorter(int *elems, const int nelems) :
-		fElements(elems),
-		fNumElements(nelems) {}
+*/
 
 sorter::~sorter() 
 {
 }
 
+/*
 sorter & sorter::operator=(const sorter &other)
 {
 	fElements = other.fElements;
@@ -44,7 +43,7 @@ sorter & sorter::operator=(const sorter &other)
 
 	return *this;
 }
-
+*/
 
 bool sorter::step() 
 { 
@@ -52,7 +51,7 @@ bool sorter::step()
 	return true;
 }
 
-void sorter::reset(int *elems, const int nelems)
+void sorter::sort(int *elems, const int nelems)
 {
 	fElements = elems;
 	fNumElements = nelems;

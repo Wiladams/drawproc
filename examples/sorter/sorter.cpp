@@ -4,6 +4,8 @@
 
 #include "drawproc.h"
 #include "sortroutine.h"
+#include "BubbleSort.h"
+#include "SelectionSort.h"
 
 
 int MAX_VALUE = 480;
@@ -18,8 +20,8 @@ int sorterIndex = 0;
 
 void initElems()
 {
-	arrayOfSorts.push_back(new BubbleSort(Elems, nElems));
-	arrayOfSorts.push_back(new SelectionSort(Elems, nElems));
+	arrayOfSorts.push_back(new BubbleSort());
+	arrayOfSorts.push_back(new SelectionSort());
 
 	if (Elems != nullptr)
 	{
@@ -33,7 +35,7 @@ void initElems()
 	{
 		Elems[idx] = random(MAX_VALUE);
 	}
-	arrayOfSorts[sorterIndex]->reset(Elems, nElems);
+	arrayOfSorts[sorterIndex]->sort(Elems, nElems);
 }
 
 void keyTyped()
@@ -90,7 +92,7 @@ void drawForeground()
 	stroke(pBlack);
 	setFont(verdana18_bold);
 
-	sprintf_s(debugstr, "%s", arrayOfSorts[sorterIndex]->name);
+	sprintf_s(debugstr, "%s", arrayOfSorts[sorterIndex]->name.c_str());
 	text(debugstr, 20, 20);
 
 	sprintf_s(debugstr, "Items: %d", nElems);
