@@ -73,9 +73,4 @@ void draw()
 void setup()
 {
 	size(960, 480);
-
-	//noLoop();
-
-	// If looping, do the following
-	//draw();
 }

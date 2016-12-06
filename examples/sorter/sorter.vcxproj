@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClCompile Include="sorter.cpp" />
     <ClCompile Include="sortroutine.cpp" />
+    <ClCompile Include="SortRoutineGrpahic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\drawproc.vcxproj">
@@ -161,6 +162,7 @@
     <ClInclude Include="BubbleSort.h" />
     <ClInclude Include="SelectionSort.h" />
     <ClInclude Include="sortroutine.h" />
+    <ClInclude Include="SortRoutineGraphic.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,6 +2,7 @@
 
 #include <string>
 
+
 /*
 	sorter
 
@@ -21,21 +22,12 @@ public:
 
 public:
 	sorter(const std::string &name);
-	//sorter(const sorter &other);
 	
 	virtual ~sorter();
 
-	//sorter & operator=(const sorter &other);
-
-
-
 	virtual bool step();
 	virtual void sort(int *elems, const int nelems);
-
 	
 	void exchange(const int a, const int b);
 	bool compareExchange(const int a, const int b);
-
 };
-
-
