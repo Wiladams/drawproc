@@ -1,22 +1,24 @@
 #pragma once
 
+#include "AView.h"
 #include "sortroutine.h"
-#include "drawproc.h"
 
-class SortRoutineGraphic
+class SortRoutineGraphic : public AView
 {
 	static const int MAX_VALUE = 480;
 	int nElems = 1024;
 	int *fElems = nullptr;
 
 	bool fShowLines = false;
+	bool fAnimate = false;
 	sorter *fSorter;
-	pb_rect fFrame;
+	pb_rect fOrigin;
 
 public:
-	SortRoutineGraphic::SortRoutineGraphic(sorter * routine, const int x, const int y, const int gWidth, const int gHeight)
-		:fSorter(routine),
-		fFrame(x, y, gWidth, gHeight)
+	SortRoutineGraphic(sorter * routine, const int x, const int y, const int gWidth, const int gHeight)
+		:AView(x, y, gWidth, gHeight),
+		fSorter(routine),
+		fOrigin(x, y, gWidth, gHeight)
 	{
 		reset();
 	}
@@ -42,4 +44,10 @@ public:
 	virtual void reset();
 	virtual void draw();
 	virtual void drawForeground();
+
+	virtual bool OnKeyPressed();
+	virtual bool OnKeyTyped();
+
+	virtual bool OnMouseEntered();
+	virtual bool OnMouseExited();
 };

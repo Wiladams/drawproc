@@ -38,24 +38,72 @@ void SortRoutineGraphic::draw()
 
 	fill(255);
 
-	stroke(pWhite);
-	strokeWeight(0.5);
+		stroke(pWhite);
+		strokeWeight(0.5);
 
-	// do a step in the sorter
-	fSorter->step();
-
-	// Draw the array of values scaled to fit the window
-	for (int idx = 0; idx < nElems; idx++) {
-		double mappedX = (int)MAP(idx, 0, nElems - 1, fFrame.x, fFrame.x+fFrame.width - 1);
-		double mappedY = (int)MAP(fSorter->fElements[idx], 0, MAX_VALUE, fFrame.y+fFrame.height - 1, fFrame.y);
-
-		point(mappedX, mappedY);
-
-		if (fShowLines) {
-			line(fFrame.x, fFrame.y+fFrame.height - 1, mappedX, mappedY);
+		if (fAnimate) {
+			// do a step in the sorter
+			if (!fSorter->step()) {
+				reset();
+			}
 		}
+
+		// Draw the array of values scaled to fit the window
+		for (int idx = 0; idx < nElems; idx++) {
+			double mappedX = (int)MAP(idx, 0, nElems - 1, fFrame.x, fFrame.x + fFrame.width - 1);
+			double mappedY = (int)MAP(fSorter->fElements[idx], 0, MAX_VALUE, fFrame.y + fFrame.height - 1, fFrame.y);
+
+			point(mappedX, mappedY);
+
+			if (fShowLines) {
+				line(fFrame.x, fFrame.y + fFrame.height - 1, mappedX, mappedY);
+			}
+		
 	}
 
 	drawForeground();
 }
 
+bool SortRoutineGraphic::OnKeyPressed()
+{
+	switch (keyCode)
+	{
+	case KC_UP:
+		increaseElements();
+	break;
+
+	case KC_DOWN:
+		decreaseElements();
+	break;
+	}
+
+	return true;
+}
+
+bool SortRoutineGraphic::OnKeyTyped()
+{
+	switch (keyChar)
+	{
+	case 'l':
+		toggleLines();
+		break;
+
+	case ' ':
+		reset();
+		break;
+	}
+
+	return true;
+}
+
+bool SortRoutineGraphic::OnMouseEntered()
+{
+	fAnimate = true;
+	return true;
+}
+
+bool SortRoutineGraphic::OnMouseExited()
+{
+	fAnimate = false;
+	return true;
+}

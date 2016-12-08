@@ -1,7 +1,9 @@
 #pragma once
 
 // pixel buffer rectangle
-struct pb_rect {
+class pb_rect 
+{
+public:
 	int x, y;
 	int width, height;
 

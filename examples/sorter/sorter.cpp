@@ -1,83 +1,65 @@
 
 #include <stdio.h>
-#include <vector>
 
 #include "drawproc.h"
-#include "sortroutine.h"
 #include "BubbleSort.h"
 #include "SelectionSort.h"
 #include "SortRoutineGraphic.h"
+#include "Aview.h"
 
-std::vector<SortRoutineGraphic *> arrayOfSorts;
-SortRoutineGraphic *srg = nullptr;
-SortRoutineGraphic *srg2 = nullptr;
+static const int appWidth = 1024;
+static const int appHeight = 768;
 
-BubbleSort * bsorter = new BubbleSort;
+AView gMainView(0, 0, appWidth, appHeight);
+
 
 void keyTyped()
 {
-	switch (keyChar)
-	{
-		case 'l':
-			srg->toggleLines();
-			srg2->toggleLines();
-			break;
-
-		case ' ':
-			srg->reset();
-			srg2->reset();
-			break;
-	}
+	gMainView.KeyTyped();
 }
 
 void keyPressed()
 {
-	switch (keyCode)
-	{
-	case KC_UP:
-		srg->increaseElements();
-		srg2->increaseElements();
-		break;
-	
-	case KC_DOWN:
-		srg->decreaseElements();
-		srg2->decreaseElements();
-		break;
-	/*
-	case KC_RIGHT:
-		if (sorterIndex == arrayOfSorts.size() - 1)
-			sorterIndex = 0;
-		else
-			sorterIndex = sorterIndex + 1;
-		
-		break;
-	case KC_LEFT:
-		if (sorterIndex == 0)
-			sorterIndex = arrayOfSorts.size()-1;
-		else
-			sorterIndex = sorterIndex - 1;
+	gMainView.KeyPressed();
+}
 
-		break;
-	*/
-	}
+void keyReleased()
+{
+	gMainView.KeyReleased();
+}
+
+void mouseClicked()
+{
+}
+
+void mouseDragged()
+{
+}
+
+void mouseMoved()
+{
+	gMainView.MouseMoved();
+}
+
+void mousePressed()
+{
+	gMainView.MousePressed();
+}
+
+void mouseReleased()
+{
+	gMainView.MouseReleased();
 }
 
 void draw()
 {
-	background(pLightGray);
-	
-	srg->draw();
-	srg->step();
-
-	srg2->draw();
-	srg2->step();
+	gMainView.draw();
 }
 
 void setup()
 {
-	size(1024, 768);
+	size(appWidth,appHeight);
 
-	srg = new SortRoutineGraphic(new BubbleSort, 0, 0, 320, 240);
-	srg2 = new SortRoutineGraphic(new SelectionSort, 324, 0, 320, 240);
-
+	gMainView.AddChild(new SortRoutineGraphic(new BubbleSort, 0, 0, 320, 240));
+	gMainView.AddChild(new SortRoutineGraphic(new SelectionSort, 324, 0, 320, 240));
 }
