@@ -27,6 +27,9 @@
     <ClCompile Include="AView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AUIApplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sortroutine.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AUIApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
