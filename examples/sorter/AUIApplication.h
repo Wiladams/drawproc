@@ -21,7 +21,11 @@ public:
 	virtual void MouseReleased();
 	virtual void MouseMoved();
 
+	virtual void Draw();
+
+	virtual void AddChild(AView *aview);
+
 public:
-	static AUIApplication *App;
+	static AUIApplication * App;
 
 };

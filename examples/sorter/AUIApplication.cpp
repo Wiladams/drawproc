@@ -1,13 +1,13 @@
 #include "AUIApplication.h"
 
-AUIApplication::AUIApplication()
-{
-	AUIApplication::App = nullptr;
-}
+AUIApplication * AUIApplication::App = nullptr;
+
 
 AUIApplication::AUIApplication(const int x, const int y, const int width, const int height)
 	:fMainView(x, y, width, height)
-{}
+{
+	size(width, height);
+}
 
 /*
 	We use a factory constructor for the Application object
@@ -23,6 +23,11 @@ AUIApplication * AUIApplication::CreateApplication(const int x, const int y, con
 	AUIApplication::App = new AUIApplication(x, y, width, height);
 
 	return App;
+}
+
+void AUIApplication::AddChild(AView *aview)
+{
+	fMainView.AddChild(aview);
 }
 
 void AUIApplication::KeyTyped()
@@ -55,6 +60,11 @@ void AUIApplication::MouseMoved()
 	fMainView.MouseMoved();
 }
 
+void AUIApplication::Draw()
+{
+	fMainView.draw();
+}
+
 /*
 	Implementation of global functions for the drawproc
 	environment.
@@ -78,7 +88,7 @@ void keyReleased()
 // Mouse Handling
 void mouseClicked()
 {
-	AUIApplication::App->MouseClicked)();
+	//AUIApplication::App->MouseClicked)();
 }
 
 void mouseMoved()
@@ -94,4 +104,10 @@ void mousePressed()
 void mouseReleased()
 {
 	AUIApplication::App->MouseReleased();
+}
+
+
+void draw()
+{
+	AUIApplication::App->Draw();
 }
