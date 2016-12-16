@@ -29,7 +29,7 @@ public:
 	virtual void drawBackground();
 	virtual void drawForeground();
 	virtual void drawChildren();	
-	virtual void draw();
+	virtual void Draw();
 
 
 	// Keyboard Handling

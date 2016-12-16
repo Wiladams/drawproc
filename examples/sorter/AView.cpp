@@ -42,13 +42,13 @@ void AView::drawBackground()
 void AView::drawChildren()
 {
 	for (int idx = 0; idx < fChildren.size(); idx++)
-		fChildren[idx]->draw();
+		fChildren[idx]->Draw();
 }
 
 void AView::drawForeground()
 {}
 
-void AView::draw()
+void AView::Draw()
 {
 	drawBackground();
 	drawChildren();

@@ -4,7 +4,7 @@ AUIApplication * AUIApplication::App = nullptr;
 
 
 AUIApplication::AUIApplication(const int x, const int y, const int width, const int height)
-	:fMainView(x, y, width, height)
+	:AView(x, y, width, height)
 {
 	size(width, height);
 }
@@ -25,45 +25,6 @@ AUIApplication * AUIApplication::CreateApplication(const int x, const int y, con
 	return App;
 }
 
-void AUIApplication::AddChild(AView *aview)
-{
-	fMainView.AddChild(aview);
-}
-
-void AUIApplication::KeyTyped()
-{
-	fMainView.KeyTyped();
-}
-
-void AUIApplication::KeyPressed()
-{
-	fMainView.KeyPressed();
-}
-
-void AUIApplication::KeyReleased()
-{
-	fMainView.KeyReleased();
-}
-
-void AUIApplication::MouseReleased()
-{
-	fMainView.MouseReleased();
-}
-
-void AUIApplication::MousePressed()
-{
-	fMainView.MousePressed();
-}
-
-void AUIApplication::MouseMoved()
-{
-	fMainView.MouseMoved();
-}
-
-void AUIApplication::Draw()
-{
-	fMainView.draw();
-}
 
 /*
 	Implementation of global functions for the drawproc
