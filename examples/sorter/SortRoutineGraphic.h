@@ -42,7 +42,7 @@ public:
 	}
 
 	virtual void reset();
-	virtual void draw();
+	virtual void drawBackground();
 	virtual void drawForeground();
 
 	virtual bool OnKeyPressed();

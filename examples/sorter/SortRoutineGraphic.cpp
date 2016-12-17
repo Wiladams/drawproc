@@ -31,7 +31,7 @@ void SortRoutineGraphic::drawForeground()
 	text(debugstr, fFrame.x+20, fFrame.y+40);
 }
 
-void SortRoutineGraphic::draw()
+void SortRoutineGraphic::drawBackground()
 {
 	fill(pDarkGray);
 	rect(fFrame.x, fFrame.y, fFrame.width, fFrame.height);

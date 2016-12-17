@@ -4,7 +4,7 @@
 #include <vector>
 
 class AView {
-public:
+protected:
 	// Attributes of the view
 	pb_rect fFrame;
 	COLOR fBackgroundColor;
@@ -17,6 +17,7 @@ public:
 	AView *fLastActiveChild = nullptr;
 	AView *fLastHoverChild = nullptr;
 
+public:
 	AView(const int x, const int y, const int pWidth, const int pHeight) 
 		: fFrame(x, y, pWidth, pHeight)
 	{}
@@ -45,9 +46,11 @@ public:
 	virtual void MousePressed();
 	virtual void MouseReleased();
 	virtual void MouseMoved();
+	virtual void MouseClicked();
 
 	virtual bool OnMousePressed();
 	virtual bool OnMouseReleased();
+	virtual bool OnMouseClicked();
 	virtual bool OnMouseMoved();
 
 	virtual bool OnMouseEntered();

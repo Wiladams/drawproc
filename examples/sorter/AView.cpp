@@ -24,7 +24,7 @@ int AView::FindChildrenAtPoint(const int x, const int y, std::vector<AView *> &c
 {
 	int numFound = 0;
 
-	for (int idx = 0; idx < fChildren.size(); idx++) {
+	for (int idx = fChildren.size()-1; idx >= 0; idx--) {
 		if (containsPoint(fChildren[idx]->fFrame, x, y)) {
 			childList.push_back(fChildren[idx]);
 			numFound = numFound + 1;
@@ -36,7 +36,7 @@ int AView::FindChildrenAtPoint(const int x, const int y, std::vector<AView *> &c
 
 void AView::drawBackground()
 {
-	background(pLightGray);
+	background(pBlack);
 }
 
 void AView::drawChildren()
@@ -146,6 +146,21 @@ void AView::MouseReleased()
 	OnMouseReleased();
 }
 
+void AView::MouseClicked()
+{
+	// go through children seeing if one of them
+	// will handle the activity
+	std::vector<AView *> childList;
+	int numFound = FindChildrenAtPoint(mouseX, mouseY, childList);
+
+	if (numFound > 0) {
+		childList.at(0)->MouseClicked();
+		return;
+	}
+
+	OnMouseClicked();
+}
+
 void AView::MouseMoved()
 {
 	// go through children seeing if one of them
@@ -192,6 +207,11 @@ bool AView::OnMousePressed()
 }
 
 bool AView::OnMouseReleased()
+{
+	return false;
+}
+
+bool AView::OnMouseClicked()
 {
 	return false;
 }

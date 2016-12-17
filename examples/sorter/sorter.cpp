@@ -7,8 +7,8 @@
 #include "SortRoutineGraphic.h"
 #include "AUIApplication.h"
 
-static const int appWidth = 1024;
-static const int appHeight = 768;
+static const int appWidth = 640;
+static const int appHeight = 480;
 
 
 AUIApplication * app = nullptr;
