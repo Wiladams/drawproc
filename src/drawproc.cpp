@@ -275,7 +275,7 @@ void initInput()
 }
 
 // size of window
-void size(const size_t lwidth, const size_t lheight)
+void createCanvas(const size_t lwidth, const size_t lheight)
 {
 	width = lwidth;
 	height = lheight;
@@ -306,6 +306,10 @@ void size(const size_t lwidth, const size_t lheight)
 	initInput();
 }
 
+void size(const size_t lwidth, const size_t lheight)
+{
+	createCanvas(lwidth, lheight);
+}
 void noLoop()
 {
 	setDrawInLoop(false);

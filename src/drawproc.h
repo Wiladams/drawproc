@@ -146,6 +146,7 @@ DPROC_API void loop();
 DPROC_API uint64_t millis();
 
 // Drawing API
+DPROC_API void createCanvas(const size_t width, const size_t height);
 DPROC_API void size(const size_t width, const size_t height);
 
 

@@ -1,6 +1,18 @@
+/*
 // Virtual key codes 
 // these are typically associated with the Windows APIs
 // but they are fairly universal
+
+	The codes here differ from those found in the key_scancodes.h
+	file in several ways.  The vkeys are very Windows specific.  These are
+	key codes that the Windows OS serves up to applications in the various 
+	Windows messages.  As these codes were in place long before USB came along
+	they don't reflect what the USB usage page indicates, but rather what 
+	Windows has traditionally offered.
+
+	Simple example, the scancode for the letter 'A' is 0x41 for vkeys, and 
+	0x04 for the USB scancode.
+*/
 
 
 enum VKEYS {

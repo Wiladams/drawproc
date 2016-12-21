@@ -29,6 +29,10 @@ limitations under the License.
 #include <stdlib.h>
 #include <math.h>
 
+// This indicates that the machine the code is running on
+// is a little endian machine, therefore, when laying out
+// the values of a pixel in terms of bytes, the blue component
+// is in the least significant byte of a 4 byte integer value.
 #define BGR_DOMINANT 1
 
 
@@ -60,12 +64,18 @@ inline double CLAMP(double a, double rlo, double rhi){ return a < rlo ? rlo : (a
 // much cheaper to calculate
 // for values between 0 and 65534
 #define div255(num) ((num + (num >> 8)) >> 8)
+
+// perform a linear interpolation between a value 'a'
+// a background value, and a foreground value, using
+// fast div255
 #define lerp255(bg, fg, a) ((uint8_t)div255((fg*a+bg*(255-a))))
 
 // returns the sign of the value
-//  < 0 --> -1
-//  > 0 -->  1
-// == 0 -->  0
+// value  < 0 --> -1
+// value  > 0 -->  1
+// value == 0 -->  0
+// this will only work in cases where 0 represents false
+// and 1 represents true
 inline int sgn(real val) { return ((0 < val) - (val < 0)); }
 
 
@@ -129,11 +139,11 @@ pixelpitch	- number of pixels between rows
 */
 
 typedef struct _pb_rgba {
-	uint8_t *		data;
-	unsigned int	pixelpitch;
-	int				bitStride;
-	int				owndata;
-	pb_rect			frame;
+	uint8_t *		data;			// pointer to the actual data
+	unsigned int	pixelpitch;		// how many pixels per row, if alias
+	int				bitStride;		// how many bits per row
+	int				owndata;		// does this struct own the data pointer
+	pb_rect			frame;			// if alias, what portion of parent
 } pb_rgba;
 
 
