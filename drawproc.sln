@@ -68,6 +68,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "checkerboard", "examples\ch
 		{F4203E3C-12F2-463F-B187-C6DDD8660BAF} = {F4203E3C-12F2-463F-B187-C6DDD8660BAF}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "magnifier", "examples\magnifier\magnifier.vcxproj", "{C13EB4F4-AEB0-4EDE-B2DB-6AA795176008}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F4203E3C-12F2-463F-B187-C6DDD8660BAF} = {F4203E3C-12F2-463F-B187-C6DDD8660BAF}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -184,6 +189,14 @@ Global
 		{BFB367C6-FF82-4B13-99D6-E3CA712EEFCA}.Release|Win32.Build.0 = Release|Win32
 		{BFB367C6-FF82-4B13-99D6-E3CA712EEFCA}.Release|x64.ActiveCfg = Release|x64
 		{BFB367C6-FF82-4B13-99D6-E3CA712EEFCA}.Release|x64.Build.0 = Release|x64
+		{C13EB4F4-AEB0-4EDE-B2DB-6AA795176008}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C13EB4F4-AEB0-4EDE-B2DB-6AA795176008}.Debug|Win32.Build.0 = Debug|Win32
+		{C13EB4F4-AEB0-4EDE-B2DB-6AA795176008}.Debug|x64.ActiveCfg = Debug|x64
+		{C13EB4F4-AEB0-4EDE-B2DB-6AA795176008}.Debug|x64.Build.0 = Debug|x64
+		{C13EB4F4-AEB0-4EDE-B2DB-6AA795176008}.Release|Win32.ActiveCfg = Release|Win32
+		{C13EB4F4-AEB0-4EDE-B2DB-6AA795176008}.Release|Win32.Build.0 = Release|Win32
+		{C13EB4F4-AEB0-4EDE-B2DB-6AA795176008}.Release|x64.ActiveCfg = Release|x64
+		{C13EB4F4-AEB0-4EDE-B2DB-6AA795176008}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
