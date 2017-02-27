@@ -1,13 +1,16 @@
 #include "drawproc.h"
 #include "checkerboard.h"
 
-checkerboard cboard(8, 8, pBlack, pWhite);
+int appWidth = 640;
+int appHeight = 480;
+
+checkerboard cboard(0,0,appWidth,appHeight, 8, 8, pBlack, pWhite);
 
 
 void draw()
 {
 	// create checkerboard background
-	cboard.Draw(gpb, width, height);
+	cboard.Draw();
 
 	// Draw some blended rectangles atop the whole
 	for (int iter = 1; iter <= 9; iter++) {

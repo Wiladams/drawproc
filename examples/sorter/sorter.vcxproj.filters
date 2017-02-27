@@ -24,9 +24,6 @@
     <ClCompile Include="SortRoutineGraphic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AUIApplication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,9 +39,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SortRoutineGraphic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AUIApplication.h">

@@ -70,6 +70,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\agg_embedded_raster_fonts.cpp" />
+    <ClCompile Include="src\AView.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\bezier.cpp" />
     <ClCompile Include="src\dproc_clock.cpp" />
@@ -88,6 +89,7 @@
   <ItemGroup>
     <ClInclude Include="src\agg_embedded_raster_fonts.h" />
     <ClInclude Include="src\animwin32.h" />
+    <ClInclude Include="src\AView.h" />
     <ClInclude Include="src\bezier.h" />
     <ClInclude Include="src\dproc_config.h" />
     <ClInclude Include="src\dproc_constants.h" />

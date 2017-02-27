@@ -3,10 +3,14 @@
 
 
 COLOR backing = color(127, 255, 127);
+bool showFullDeck = false;
 
+void keyReleased()
+{
+	showFullDeck = !showFullDeck;
+}
 
-
-void drawEntireDeck()
+void drawOrderedDeck()
 {
 	PImage dstImage;
 	int xoffset = 16;
@@ -32,11 +36,7 @@ void drawEntireDeck()
 	}
 }
 
-void drawForeground()
-{
-}
-
-void drawBackground()
+void drawRandomDeck()
 {
 	PImage dstImage;
 	int iterations = 52;
@@ -64,10 +64,12 @@ void drawBackground()
 
 void draw()
 {
-	drawBackground();
-	drawForeground();
-	
-	//drawEntireDeck();
+	if (showFullDeck) {
+		drawOrderedDeck();
+	}
+	else {
+		drawRandomDeck();
+	}
 }
 
 void setup()
