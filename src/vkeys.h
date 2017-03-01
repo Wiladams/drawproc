@@ -12,6 +12,11 @@
 
 	Simple example, the scancode for the letter 'A' is 0x41 for vkeys, and 
 	0x04 for the USB scancode.
+
+	For drawproc, the 'keyCode' global variable will be set using the values
+	found within this file.
+
+
 */
 
 

@@ -1,6 +1,5 @@
 #pragma once
 
-//#include "graphicc.h"
 #include "dproc_config.h"
 
 /*

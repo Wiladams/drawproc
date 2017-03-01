@@ -80,6 +80,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "radialgradient", "examples\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lines", "examples\lines\lines.vcxproj", "{FB03C985-E358-43FE-8BF4-F6F647F0EA00}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "view3d", "examples\view3d\view3d.vcxproj", "{7A34E780-6140-429C-A9A4-6A955A1A067F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -220,6 +222,14 @@ Global
 		{FB03C985-E358-43FE-8BF4-F6F647F0EA00}.Release|Win32.Build.0 = Release|Win32
 		{FB03C985-E358-43FE-8BF4-F6F647F0EA00}.Release|x64.ActiveCfg = Release|x64
 		{FB03C985-E358-43FE-8BF4-F6F647F0EA00}.Release|x64.Build.0 = Release|x64
+		{7A34E780-6140-429C-A9A4-6A955A1A067F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7A34E780-6140-429C-A9A4-6A955A1A067F}.Debug|Win32.Build.0 = Debug|Win32
+		{7A34E780-6140-429C-A9A4-6A955A1A067F}.Debug|x64.ActiveCfg = Debug|x64
+		{7A34E780-6140-429C-A9A4-6A955A1A067F}.Debug|x64.Build.0 = Debug|x64
+		{7A34E780-6140-429C-A9A4-6A955A1A067F}.Release|Win32.ActiveCfg = Release|Win32
+		{7A34E780-6140-429C-A9A4-6A955A1A067F}.Release|Win32.Build.0 = Release|Win32
+		{7A34E780-6140-429C-A9A4-6A955A1A067F}.Release|x64.ActiveCfg = Release|x64
+		{7A34E780-6140-429C-A9A4-6A955A1A067F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
