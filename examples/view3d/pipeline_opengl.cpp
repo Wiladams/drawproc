@@ -4,7 +4,7 @@
 #include <string.h>
 #include <math.h>
 
-void mat4_setXVector(mat4 mat, const real3 v)
+void mat4_setXVector(mat4 &mat, const real3 v)
 {
 	mat.m11 = v[0]; 
 	mat.m12 = v[1]; 
@@ -13,7 +13,7 @@ void mat4_setXVector(mat4 mat, const real3 v)
 
 
 
-void mat4_setYVector(mat4 mat, const real3 v)
+void mat4_setYVector(mat4 &mat, const real3 v)
 {
 	mat.m21 = v[0];
 	mat.m22 = v[1]; 
@@ -21,14 +21,34 @@ void mat4_setYVector(mat4 mat, const real3 v)
 }
 
 
-void mat4_setZVector(mat4 mat, const real3 v)
+void mat4_setZVector(mat4 &mat, const real3 v)
 {
 	mat.m31 = v[0];		// v.x;
 	mat.m32 = v[1];		//  v.y;
 	mat.m33 = v[2];		// v.z;
 }
 
+void mat4_setTranslation(mat4 &mat, const real3 t)
+{
+	mat.m41 = t[0];
+	mat.m42 = t[1];
+	mat.m43 = t[2];
+}
+
+// c = m * a
+void mat4_mul_point(real3 c, const mat4 &m, const real3 a)
+{
+	c[0] = m.m11*a[0] + m.m12 *a[1] + m.m13*a[2]; +m.m14;
+	c[1] = m.m21*a[0] + m.m22*a[1] + m.m23*a[2]; +m.m24;
+	c[2] = m.m31*a[0] + m.m32*a[1] + m.m33*a[2]; +m.m34;
+}
+
 // convenience
+void ogl_transform_point(real3 res, const mat4 &tmat, const real3 pt)
+{
+	mat4_mul_point(res, tmat, pt);
+}
+
 // Multiply rows against transformation matrix
 // assume columnar vectors on the right of the matrix
 void ogl_transform_rows(real *res, const mat4 &tmat, const real *inpts, const size_t nrows)
@@ -167,8 +187,6 @@ void ogl_set_rotation(mat4 &c, const mat3 &rot)
 
 void ogl_lookat(mat4 &mat, const real3 eye, const real3 at, const real3 up)
 {
-
-
 	real3 fN;
 	real3 f;
 	real3_sub(fN, eye, at);
@@ -188,7 +206,10 @@ void ogl_lookat(mat4 &mat, const real3 eye, const real3 at, const real3 up)
 	mat4_setYVector(matT, u);
 	mat4_setZVector(matT, f);
 	mat4_transpose(mat, matT);
-	mat4_setTranslation(matTVec3(-dotProduct(r, eye), -dotProduct(u, eye), -dotProduct(f, eye)));
+	
+	real3 tran = { -real3_dot(r, eye) , -real3_dot(u, eye),  -real3_dot(f, eye) };
+
+	mat4_setTranslation(mat,tran);
 }
 
 /*
@@ -250,14 +271,24 @@ void ogl_orthographic(mat4 &c, const real zoomx, const real zoomy, const real ne
 	c.m44 = 1;
 }
 
+// Setup an OpenGL style orthographic projection
 mat4 ogl_ortho(real left, real right, real bottom, real top, real n, real f)
 {
 	mat4 r;
-	r.m11 = 2.0f / (right - left);           r.m12 = 0, r.m13 = 0;                 r.m14 = 0;
+	mat4_set_identity(r);
+	r.m11 = 2.0f / (right - left);
+	r.m22 = 2.0 / (top - bottom);
+	r.m33 = -1 / (f - n);
+	r.m41 = (right + left) / (left - right);
+	r.m42 = (top + bottom) / (bottom - top);
+	r.m43 = (n + f) / (n - f);
+
+/*
+	r.m11 = 2.0f / (right - left);           r.m12 = 0;								  r.m13 = 0;                 r.m14 = 0;
 	r.m21 = 0;                               r.m22 = 2.0 / (top - bottom);            r.m23 = 0.0f;              r.m24 = 0.0f;
 	r.m31 = 0.0f;                            r.m32 = 0.0f;                            r.m33 = 2.0f / (n - f);    r.m34 = 0.0f;
 	r.m41 = (left + right) / (left - right); r.m42 = (bottom + top) / (bottom - top); r.m43 = (n + f) / (f - n); r.m44 = 1.0f;
-
+*/
 	return r;
 }
 

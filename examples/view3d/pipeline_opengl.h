@@ -28,6 +28,7 @@ limitations under the License.
 extern "C" {
 #endif
 
+	void ogl_transform_point(real3 res, const mat4 &tmat, const real3 pt);
 	void ogl_transform_rows(real *res, const mat4 &tmat, const real *inpts, const size_t nrows);
 
 	void ogl_translate(mat4 &c, const real dx, const real dy, const real dz);

@@ -46,31 +46,31 @@ extern "C" {
 #endif
 
 // Basic geometric vector type routines
-	void realn_assign(const int dim, real *c, const real *a);
-	void realn_add(const int dim, real * c, const real * a, const real * b);
-	void realn_sub(const int dim, real * c, const real * a, const real * b);
-	void realn_mul_scalar(const int dim, real * c, const real * a, const real scalar);
-	void realn_div_scalar(const int dim, real * c, const real * a, const real scalar);
-	void realn_neg(const int dim, real * c, const real * a);
-	void realn_mul_realn(const size_t dim, real *c, const real *a, const real *b);
+	DPROC_EXPORT void realn_assign(const int dim, real *c, const real *a);
+	DPROC_EXPORT void realn_add(const int dim, real * c, const real * a, const real * b);
+	DPROC_EXPORT void realn_sub(const int dim, real * c, const real * a, const real * b);
+	DPROC_EXPORT void realn_mul_scalar(const int dim, real * c, const real * a, const real scalar);
+	DPROC_EXPORT void realn_div_scalar(const int dim, real * c, const real * a, const real scalar);
+	DPROC_EXPORT void realn_neg(const int dim, real * c, const real * a);
+	DPROC_EXPORT void realn_mul_realn(const size_t dim, real *c, const real *a, const real *b);
 
 // Linear Algebra
-	real realn_dot(const int dim, const real * a, const real * b);
-	real realn_mag(const int dim, const real * c);	// magnitude of vector
-	void realn_normalize(const int dim, real * c, const real * a);
+	DPROC_EXPORT real realn_dot(const int dim, const real * a, const real * b);
+	DPROC_EXPORT real realn_mag(const int dim, const real * c);	// magnitude of vector
+	DPROC_EXPORT void realn_normalize(const int dim, real * c, const real * a);
 
 // Specific to 1x3
-	void real3_set(real3 c, real x, real y, real z);
+	DPROC_EXPORT void real3_set(real3 c, real x, real y, real z);
 
 
-void real3_cross(real3 c, const real3 a, const real3 b);
-real real3_distance(const real3 a, const real3 b);
-real real3_radians_between_units(const real3 a, const real3 b);
-real real3_radians_between(const real3 a, const real3 b);
+	DPROC_EXPORT void real3_cross(real3 c, const real3 a, const real3 b);
+	DPROC_EXPORT real real3_distance(const real3 a, const real3 b);
+	DPROC_EXPORT real real3_radians_between_units(const real3 a, const real3 b);
+	DPROC_EXPORT real real3_radians_between(const real3 a, const real3 b);
 
 
 // generic matrix routines
-void matn_transpose(const size_t dim, real **a);
+	DPROC_EXPORT void matn_transpose(const size_t dim, real **a);
 
 // matrix 2X2
 void mat2_mul_scalar(mat2 &c, const mat2 &a, const real scalar);
@@ -101,24 +101,25 @@ void mat3_set_columns(mat3 &rotation, const real3 col1, const real3 col2, const 
 
 // Matrix 4x4
 // c = transpose(a)
-void mat4_transpose(mat4 &c, const mat4 &a);
+DPROC_EXPORT void mat4_transpose(mat4 &c, const mat4 &a);
 
 // identity, also Kronecker delta
-void mat4_set_identity(mat4 &c);
-void mat4_mul_scalar(mat4 &c, const mat4 &a, const real scalar);
-void mat4_div_scalar(mat4 &c, const mat4 &a, const real scalar);
-real mat4_determinant(const mat4 &m);
-void mat4_adjoint(mat4 &c, const mat4 &a);
-int mat4_inverse(mat4 &c, const mat4 &a);
-void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b);
+DPROC_EXPORT void mat4_set_identity(mat4 &c);
+
+DPROC_EXPORT void mat4_mul_scalar(mat4 &c, const mat4 &a, const real scalar);
+DPROC_EXPORT void mat4_div_scalar(mat4 &c, const mat4 &a, const real scalar);
+DPROC_EXPORT real mat4_determinant(const mat4 &m);
+DPROC_EXPORT void mat4_adjoint(mat4 &c, const mat4 &a);
+DPROC_EXPORT int mat4_inverse(mat4 &c, const mat4 &a);
+DPROC_EXPORT void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b);
 
 // assuming row vectors, multiply with matrix on the right
 // c = a * m;
-void row4_mul_mat4(real4 c, const real *a, const mat4 &m);
+DPROC_EXPORT void row4_mul_mat4(real4 c, const real *a, const mat4 &m);
 
 // assuming a column vector, multiply with matrix on left
 // c = m * a;
-void mat4_mul_col4(real4 c, const mat4 &m, const real *a);
+DPROC_EXPORT void mat4_mul_col4(real4 c, const mat4 &m, const real *a);
 
 
 
