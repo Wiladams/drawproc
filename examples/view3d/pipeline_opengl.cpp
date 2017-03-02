@@ -4,6 +4,30 @@
 #include <string.h>
 #include <math.h>
 
+void mat4_setXVector(mat4 mat, const real3 v)
+{
+	mat.m11 = v[0]; 
+	mat.m12 = v[1]; 
+	mat.m13 = v[2];
+}
+
+
+
+void mat4_setYVector(mat4 mat, const real3 v)
+{
+	mat.m21 = v[0];
+	mat.m22 = v[1]; 
+	mat.m23 = v[2];
+}
+
+
+void mat4_setZVector(mat4 mat, const real3 v)
+{
+	mat.m31 = v[0];		// v.x;
+	mat.m32 = v[1];		//  v.y;
+	mat.m33 = v[2];		// v.z;
+}
+
 // convenience
 // Multiply rows against transformation matrix
 // assume columnar vectors on the right of the matrix
@@ -143,7 +167,7 @@ void ogl_set_rotation(mat4 &c, const mat3 &rot)
 
 void ogl_lookat(mat4 &mat, const real3 eye, const real3 at, const real3 up)
 {
-	mat4_set_identity(mat);
+
 
 	real3 fN;
 	real3 f;
@@ -158,11 +182,13 @@ void ogl_lookat(mat4 &mat, const real3 eye, const real3 at, const real3 up)
 	real3 u;
 	real3_cross(u, f, r);
 
-	mat4_setXVector(mat, r);
-	mat4_setYVector(mat, u);
-	mat4_setZVector(mat, f);
-	mat4_transpose();
-	mat4_setTranslation(Vec3(-dotProduct(r, eye), -dotProduct(u, eye), -dotProduct(f, eye)));
+	mat4 matT;
+	mat4_set_identity(matT);
+	mat4_setXVector(matT, r);
+	mat4_setYVector(matT, u);
+	mat4_setZVector(matT, f);
+	mat4_transpose(mat, matT);
+	mat4_setTranslation(matTVec3(-dotProduct(r, eye), -dotProduct(u, eye), -dotProduct(f, eye)));
 }
 
 /*

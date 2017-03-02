@@ -101,7 +101,7 @@ void mat3_set_columns(mat3 &rotation, const real3 col1, const real3 col2, const 
 
 // Matrix 4x4
 // c = transpose(a)
-//void mat4_transpose(mat4 &c, const mat4 &a);
+void mat4_transpose(mat4 &c, const mat4 &a);
 
 // identity, also Kronecker delta
 void mat4_set_identity(mat4 &c);
