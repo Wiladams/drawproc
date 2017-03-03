@@ -102,7 +102,6 @@
     <ClInclude Include="src\pb_rect.h" />
     <ClInclude Include="src\raster_rgba.h" />
     <ClInclude Include="src\drawproc.h" />
-    <ClInclude Include="src\vec3.h" />
     <ClInclude Include="src\vkeys.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

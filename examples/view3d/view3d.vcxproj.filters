@@ -21,6 +21,9 @@
     <ClInclude Include="pipeline_opengl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="vec3.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="view3d.cpp">

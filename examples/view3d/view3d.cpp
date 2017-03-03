@@ -2,6 +2,8 @@
 //
 
 #include "drawproc.h"
+#include "vec3.h"
+
 #include "pipeline_opengl.h"
 #include <stdio.h>
 
@@ -12,6 +14,8 @@ mat4 cmat;
 real3 wpt1 = { 1, 1, 1 };
 real3 wpt2 = { 200, 0, 0 };
 real3 wpt3 = { 100, 300, 0 };
+
+vec3 v3 = { 1,1,1 };
 
 // Points storing camera view of the world
 real3 cp1, cp2, cp3;
@@ -92,19 +96,30 @@ void transformWorldToScreen(real &scrx, real &scry, const real3 wpt) {
 		width / 2, height / 2);
 }
 
-void drawAxis()
+void drawLine(const real3 a, const real3 b, const COLOR c)
 {
-	real3 xpt1 = { 0,0,0 };
-	real3 xpt2 = { 100,0,0 };
 	real scrx1 = 0;
 	real scry1 = 0;
 	real scrx2 = 0;
 	real scry2 = 0;
-	transformWorldToScreen(scrx1, scry1, xpt1);
-	transformWorldToScreen(scrx2, scry2, xpt2);
+	transformWorldToScreen(scrx1, scry1, a);
+	transformWorldToScreen(scrx2, scry2, b);
 
-	stroke(pBlue);
+	stroke(c);
 	line(scrx1, scry1, scrx2, scry2);
+
+}
+
+void drawAxis()
+{
+	real3 origin = { 0,0,0 };
+	real3 xaxis = { 100, 0, 0 };
+	real3 yaxis = { 0,100,0 };
+	real3 zaxis = { 0,0,100 };
+
+	drawLine(origin, xaxis, pRed);
+	drawLine(origin, yaxis, pGreen);
+	drawLine(origin, zaxis, pBlue);
 }
 
 void drawTriangle()
