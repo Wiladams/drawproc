@@ -7,45 +7,133 @@
 
 mat4 cmat;
 
+// World view points of triangle
+// three points of an interesting triangle
+real3 wpt1 = { 1, 1, 1 };
+real3 wpt2 = { 200, 0, 0 };
+real3 wpt3 = { 100, 300, 0 };
+
+// Points storing camera view of the world
+real3 cp1, cp2, cp3;
+
+real3 eye = { 10, 50, -100 };
+real3 lookAt = { 0, 0, 0 };
+real3 up = { 0,1,0 };
+
+// create a world to camera transformation matrix
+void calcCamera()
+{
+	ogl_lookat(cmat, eye, lookAt, up);
+}
+
 void setup()
 {
 	createCanvas(640, 480);
+	calcCamera();
+}
 
-	// create a world to camera transformation matrix
-	real3 eye = { 10, -100, 10 };
-	real3 lookAt = { 0, 0, 0 };
-	real3 up = { 0,0,1 };
+void keyReleased()
+{
+	switch (keyCode) {
+	case KC_RIGHT:
+		eye[0] = eye[0] + 2.0;
+		break;
+	case KC_LEFT:
+		eye[0] = eye[0] - 2.0;
+		break;
+	case KC_UP:
+		eye[2] = eye[2] + 2.0;
+		break;
+	case KC_DOWN:
+		eye[2] = eye[2] - 2.0;
+		break;
+	}
+	calcCamera();
+}
 
-	ogl_lookat(cmat, eye, lookAt, up);
+
+
+
+void transformWorldToScreen(real &scrx, real &scry, const real3 wpt) {
+	char sbuff[256];
+	textAlign(TX_LEFT, TX_TOP);
+	fill(pBlack);
+
+	// transform points from world view, to camera view
+	real3 cp1;
+	ogl_transform_point(cp1, cmat, wpt);
+
+	
+	text("World to Camera", 10, 80);
+	sprintf_s(sbuff, "p1: %3.2f %3.2f %3.2f", cp1[0], cp1[1], cp1[2]);
+	text(sbuff, 10, 100);
+	
+
+	// transform the camera points through 
+	// orthographic projection
+	mat4 orthom = ogl_ortho(0, width, height, 0, -1, 1);
+	real3 npt1;
+	ogl_transform_point(npt1, orthom, cp1);
+
+	text("Camera to Normalized", 10, 180);
+	sprintf_s(sbuff, "p1: %3.2f %3.2f %3.2f", npt1[0], npt1[1], npt1[2]);
+	text(sbuff, 10, 200);
+
+
+	// We now have points in in normalized space
+	// convert to screen space
+	// Create matrix to map from normalized (projection) space to actual physical screen
+	// screenx, screeny contain the transformed values
+	// clipx, clipy represent the input point
+
+	ogl_map_to_window(scrx, scry,
+		npt1[0], npt1[1], npt1[2],
+		width, height,
+		width / 2, height / 2);
+}
+
+void drawAxis()
+{
+	real3 xpt1 = { 0,0,0 };
+	real3 xpt2 = { 100,0,0 };
+	real scrx1 = 0;
+	real scry1 = 0;
+	real scrx2 = 0;
+	real scry2 = 0;
+	transformWorldToScreen(scrx1, scry1, xpt1);
+	transformWorldToScreen(scrx2, scry2, xpt2);
+
+	stroke(pBlue);
+	line(scrx1, scry1, scrx2, scry2);
+}
+
+void drawTriangle()
+{
+	real trix1=0, triy1=0;
+	real trix2=0, triy2=0;
+	real trix3=0, triy3=0;
+
+	transformWorldToScreen(trix1, triy1, wpt1);
+	transformWorldToScreen(trix2, triy2, wpt2);
+	transformWorldToScreen(trix3, triy3, wpt3);
+
+	fill(pRed);
+	triangle(trix1, triy1, trix2, triy2, trix3, triy3);
+
+	text("Normalized to Screen", 10, 280);
+	char sbuff[256];
+	sprintf_s(sbuff, "p1: %8.2f %8.2f", trix1, triy1);
+	text(sbuff, 10, 300);
+	sprintf_s(sbuff, "p2: %8.2f %8.2f", trix2, triy2);
+	text(sbuff, 10, 320);	
+	sprintf_s(sbuff, "p3: %8.2f %8.2f", trix3, triy3);
+	text(sbuff, 10, 340);
 }
 
 void draw()
 {
-	// three points of an interesting triangle
-	real3 pt1 = { -100, -10, -10 };
-	real3 pt2 = { 100, -10, -10 };
-	real3 pt3 = { 0, 200, 10 };
-
-	// transform the points
-	real3 p1, p2, p3;
-	ogl_transform_point(p1, cmat, pt1);
-	ogl_transform_point(p2, cmat, pt2);
-	ogl_transform_point(p3, cmat, pt3);
-
-	// We now have points in camera space
-	// convert to screen space
 	background(253);
-	stroke(pBlack);
-	fill(pBlack);
-	textAlign(TX_LEFT, TX_TOP);
-	char sbuff[256];
-	sprintf_s(sbuff, "p1: %3.2f %3.2f %3.2f", p1[0], p1[1], p1[2]);
-	text(sbuff, 10, 100);
-	sprintf_s(sbuff, "p2: %f %f %f", p2[0], p2[1], p2[2]);
-	text(sbuff, 10, 120);
-	sprintf_s(sbuff, "p3: %f %f %f", p3[0], p3[1], p3[2]);
-	text(sbuff, 10, 140);
 
-	//fill(pRed);
-	//triangle(x1, y1, x2, y2, x3, y3);
+	drawTriangle();
+	drawAxis();
 }

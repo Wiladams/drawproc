@@ -4,6 +4,35 @@
 #include <string.h>
 #include <math.h>
 
+
+// Perform a transpose in place
+void mat4_transpose(mat4 &m)
+{
+	float tmp = m.m21;
+	m.m21 = m.m12;
+	m.m12 = tmp;
+
+	tmp = m.m32;
+	m.m32 = m.m23;
+	m.m23 = tmp;
+
+	tmp = m.m31;
+	m.m31 = m.m13;
+	m.m13 = tmp;
+
+	tmp = m.m41;
+	m.m41 = m.m14;
+	m.m14 = tmp;
+
+	tmp = m.m42;
+	m.m42 = m.m24;
+	m.m24 = tmp;
+
+	tmp = m.m43;
+	m.m43 = m.m34;
+	m.m34 = tmp;
+}
+
 void mat4_setXVector(mat4 &mat, const real3 v)
 {
 	mat.m11 = v[0]; 
@@ -200,12 +229,12 @@ void ogl_lookat(mat4 &mat, const real3 eye, const real3 at, const real3 up)
 	real3 u;
 	real3_cross(u, f, r);
 
-	mat4 matT;
-	mat4_set_identity(matT);
-	mat4_setXVector(matT, r);
-	mat4_setYVector(matT, u);
-	mat4_setZVector(matT, f);
-	mat4_transpose(mat, matT);
+	//mat4 mat;
+	mat4_set_identity(mat);
+	mat4_setXVector(mat, r);
+	mat4_setYVector(mat, u);
+	mat4_setZVector(mat, f);
+	mat4_transpose(mat);
 	
 	real3 tran = { -real3_dot(r, eye) , -real3_dot(u, eye),  -real3_dot(f, eye) };
 
@@ -272,16 +301,16 @@ void ogl_orthographic(mat4 &c, const real zoomx, const real zoomy, const real ne
 }
 
 // Setup an OpenGL style orthographic projection
-mat4 ogl_ortho(real left, real right, real bottom, real top, real n, real f)
+mat4 ogl_ortho(real left, real right, real bottom, real top, real z_near, real z_far)
 {
 	mat4 r;
 	mat4_set_identity(r);
 	r.m11 = 2.0f / (right - left);
-	r.m22 = 2.0 / (top - bottom);
-	r.m33 = -1 / (f - n);
+	r.m22 = 2.0f / (top - bottom);
+	r.m33 = -2.0f / (z_far - z_near);
 	r.m41 = (right + left) / (left - right);
 	r.m42 = (top + bottom) / (bottom - top);
-	r.m43 = (n + f) / (n - f);
+	r.m43 = (z_near + z_far) / (z_near - z_far);
 
 /*
 	r.m11 = 2.0f / (right - left);           r.m12 = 0;								  r.m13 = 0;                 r.m14 = 0;
