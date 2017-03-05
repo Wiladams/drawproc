@@ -20,7 +20,7 @@ struct vec3 {
 		z = 0.0;
 	}
 
-	explicit vec3(const vec3 &other) {
+	vec3(const vec3 &other) {
 		x = other.x;
 		y = other.y;
 		z = other.z;
@@ -32,6 +32,35 @@ struct vec3 {
 		z = c;
 	}
 
+	real lengthSquared() const {
+		return x*x + y*y + z*z;
+	}
+
+	real length() const {
+		return sqrt(lengthSquared());
+	}
+
+	real dot(const vec3 &rhs) const 
+	{
+		return x*rhs.x + y*rhs.y + z*rhs.z;
+	}
+
+	vec3 cross(const vec3 &b) const
+	{
+		vec3 c;
+		c.x = (y * b.z) - (z * b.y);
+		c.y = (z * b.x) - (x * b.z);
+		c.z = (x * b.y) - (y * b.x);
+	
+		return c;
+	}
+
+	void normalize() {
+		real mag = 1/length();
+		*this *= mag;
+	}
+
+	// Overloading operators
 	vec3 & operator=(const vec3& other) {
 		if (this != &other) {
 			this->x = other.x;
@@ -43,12 +72,34 @@ struct vec3 {
 	}
 
 
+	vec3 & operator *= (const real s)
+	{
+		this->x *= s;
+		this->y *= s;
+		this->z *= s;
+
+		return *this;
+	}
+
 	vec3 & operator += (const vec3 & other) {
 		this->x += other.x;
 		this->y += other.y;
 		this->z += other.z;
 
 		return *this;
+	}
+
+	vec3 & operator += (const real s) {
+		this->x += s;
+		this->y += s;
+		this->z += s;
+
+		return *this;
+	}
+
+	friend vec3 operator+(vec3 lhs, const vec3& rhs) {
+		lhs += rhs;
+		return lhs;
 	}
 
 	vec3 & operator -= (const vec3 & other) {
@@ -58,6 +109,42 @@ struct vec3 {
 
 		return *this;
 	}
+
+	friend vec3 operator-(vec3 lhs, const vec3& rhs) {
+		lhs -= rhs;
+		return lhs;
+	}
+
+	// Indexing operators
+	real & operator[](size_t idx) {
+		switch (idx) {
+		case 0:
+			return x;
+			break;
+		case 1:
+			return y;
+			break;
+		case 2:
+			return z;
+			break;
+		}
+	}
+
+	const real & operator[](size_t idx) const {
+		switch (idx) {
+		case 0:
+			return x;
+			break;
+		case 1:
+			return y;
+			break;
+		case 2:
+			return z;
+			break;
+		}
+	}
+
+
 
 };
 

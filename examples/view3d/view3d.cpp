@@ -2,7 +2,7 @@
 //
 
 #include "drawproc.h"
-#include "vec3.h"
+#include "vec3.hpp"
 
 #include "pipeline_opengl.h"
 #include <stdio.h>
@@ -11,18 +11,18 @@ mat4 cmat;
 
 // World view points of triangle
 // three points of an interesting triangle
-real3 wpt1 = { 1, 1, 1 };
-real3 wpt2 = { 200, 0, 0 };
-real3 wpt3 = { 100, 300, 0 };
+vec3 wpt1 = { 1, 1, 1 };
+vec3 wpt2 = { 200, 0, 0 };
+vec3 wpt3 = { 100, 300, 0 };
 
 vec3 v3 = { 1,1,1 };
 
 // Points storing camera view of the world
-real3 cp1, cp2, cp3;
+vec3 cp1, cp2, cp3;
 
-real3 eye = { 10, 50, -100 };
-real3 lookAt = { 0, 0, 0 };
-real3 up = { 0,1,0 };
+vec3 eye = { 10, 50, -100 };
+vec3 lookAt = { 0, 0, 0 };
+vec3 up = { 0,1,0 };
 
 // create a world to camera transformation matrix
 void calcCamera()
@@ -58,13 +58,13 @@ void keyReleased()
 
 
 
-void transformWorldToScreen(real &scrx, real &scry, const real3 wpt) {
+void transformWorldToScreen(real &scrx, real &scry, const vec3 &wpt) {
 	char sbuff[256];
 	textAlign(TX_LEFT, TX_TOP);
 	fill(pBlack);
 
 	// transform points from world view, to camera view
-	real3 cp1;
+	vec3 cp1;
 	ogl_transform_point(cp1, cmat, wpt);
 
 	
@@ -76,7 +76,7 @@ void transformWorldToScreen(real &scrx, real &scry, const real3 wpt) {
 	// transform the camera points through 
 	// orthographic projection
 	mat4 orthom = ogl_ortho(0, width, height, 0, -1, 1);
-	real3 npt1;
+	vec3 npt1;
 	ogl_transform_point(npt1, orthom, cp1);
 
 	text("Camera to Normalized", 10, 180);
@@ -96,7 +96,7 @@ void transformWorldToScreen(real &scrx, real &scry, const real3 wpt) {
 		width / 2, height / 2);
 }
 
-void drawLine(const real3 a, const real3 b, const COLOR c)
+void drawLine(const vec3 a, const vec3 b, const COLOR c)
 {
 	real scrx1 = 0;
 	real scry1 = 0;
@@ -112,10 +112,10 @@ void drawLine(const real3 a, const real3 b, const COLOR c)
 
 void drawAxis()
 {
-	real3 origin = { 0,0,0 };
-	real3 xaxis = { 100, 0, 0 };
-	real3 yaxis = { 0,100,0 };
-	real3 zaxis = { 0,0,100 };
+	vec3 origin = { 0,0,0 };
+	vec3 xaxis = { 100, 0, 0 };
+	vec3 yaxis = { 0,100,0 };
+	vec3 zaxis = { 0,0,100 };
 
 	drawLine(origin, xaxis, pRed);
 	drawLine(origin, yaxis, pGreen);

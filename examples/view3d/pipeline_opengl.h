@@ -21,6 +21,7 @@ limitations under the License.
 
 #include "graphicc.h"
 #include "linearalgebra.h"
+#include "vec3.hpp"
 
 #include <math.h>
 
@@ -28,7 +29,7 @@ limitations under the License.
 extern "C" {
 #endif
 
-	void ogl_transform_point(real3 res, const mat4 &tmat, const real3 pt);
+	void ogl_transform_point(vec3 &res, const mat4 &tmat, const vec3 &pt);
 	void ogl_transform_rows(real *res, const mat4 &tmat, const real *inpts, const size_t nrows);
 
 	void ogl_translate(mat4 &c, const real dx, const real dy, const real dz);
@@ -44,7 +45,7 @@ extern "C" {
 
 	// Some render pipeline matrices
 	// Setup the camera view (world to camera matrix)
-	void ogl_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up);
+	void ogl_lookat(mat4 &c, const vec3 &eye, const vec3 &lookAt, const vec3 &up);
 
 	// Create a projection matrix
 	void ogl_perspective(mat4 &c, const real zoomx, const real zoomy, const real near, const real far);

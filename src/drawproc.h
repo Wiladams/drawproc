@@ -103,15 +103,6 @@ struct Vector2d
 	coord _y;
 };
 
-struct Vector3d
-{
-	union {
-		struct {
-			coord _x, _y, _z;
-		};
-		coord _v[3];
-	};
-};
 
 struct PImage
 {

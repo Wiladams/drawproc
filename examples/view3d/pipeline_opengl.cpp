@@ -33,47 +33,47 @@ void mat4_transpose(mat4 &m)
 	m.m34 = tmp;
 }
 
-void mat4_setXVector(mat4 &mat, const real3 v)
+void mat4_setXVector(mat4 &mat, const vec3 &v)
 {
-	mat.m11 = v[0]; 
-	mat.m12 = v[1]; 
-	mat.m13 = v[2];
+	mat.m11 = v.x; 
+	mat.m12 = v.y; 
+	mat.m13 = v.z;
 }
 
 
 
-void mat4_setYVector(mat4 &mat, const real3 v)
+void mat4_setYVector(mat4 &mat, const vec3 &v)
 {
-	mat.m21 = v[0];
-	mat.m22 = v[1]; 
-	mat.m23 = v[2];
+	mat.m21 = v.x;
+	mat.m22 = v.y; 
+	mat.m23 = v.z;
 }
 
 
-void mat4_setZVector(mat4 &mat, const real3 v)
+void mat4_setZVector(mat4 &mat, const vec3 &v)
 {
-	mat.m31 = v[0];		// v.x;
-	mat.m32 = v[1];		//  v.y;
-	mat.m33 = v[2];		// v.z;
+	mat.m31 = v.x;		// v.x;
+	mat.m32 = v.y;		//  v.y;
+	mat.m33 = v.z;		// v.z;
 }
 
-void mat4_setTranslation(mat4 &mat, const real3 t)
+void mat4_setTranslation(mat4 &mat, const vec3 &t)
 {
-	mat.m41 = t[0];
-	mat.m42 = t[1];
-	mat.m43 = t[2];
+	mat.m41 = t.x;
+	mat.m42 = t.y;
+	mat.m43 = t.z;
 }
 
 // c = m * a
-void mat4_mul_point(real3 c, const mat4 &m, const real3 a)
+void mat4_mul_point(vec3 &c, const mat4 &m, const vec3 &a)
 {
-	c[0] = m.m11*a[0] + m.m12 *a[1] + m.m13*a[2]; +m.m14;
-	c[1] = m.m21*a[0] + m.m22*a[1] + m.m23*a[2]; +m.m24;
-	c[2] = m.m31*a[0] + m.m32*a[1] + m.m33*a[2]; +m.m34;
+	c.x = m.m11*a[0] + m.m12 *a[1] + m.m13*a[2]; +m.m14;
+	c.y = m.m21*a[0] + m.m22*a[1] + m.m23*a[2]; +m.m24;
+	c.z = m.m31*a[0] + m.m32*a[1] + m.m33*a[2]; +m.m34;
 }
 
 // convenience
-void ogl_transform_point(real3 res, const mat4 &tmat, const real3 pt)
+void ogl_transform_point(vec3 &res, const mat4 &tmat, const vec3 &pt)
 {
 	mat4_mul_point(res, tmat, pt);
 }
@@ -214,20 +214,21 @@ void ogl_set_rotation(mat4 &c, const mat3 &rot)
 
 }
 
-void ogl_lookat(mat4 &mat, const real3 eye, const real3 at, const real3 up)
+void ogl_lookat(mat4 &mat, const vec3 &eye, const vec3 &at, const vec3 &up)
 {
-	real3 fN;
-	real3 f;
-	real3_sub(fN, eye, at);
-	real3_normalize(f, fN);
+	vec3 f = eye - at;
+	f.normalize();
 
-	real3 rN;
-	real3 r;
-	real3_cross(rN, up, f);
-	real3_normalize(r, rN);
+	//real3 rN;
+	//real3 r;
+	//real3_cross(rN, up, f);
+	//real3_normalize(r, rN);
+	vec3 r = up.cross(f);
+	r.normalize();
 
-	real3 u;
-	real3_cross(u, f, r);
+	//real3 u;
+	//real3_cross(u, f, r);
+	vec3 u = f.cross(r);
 
 	//mat4 mat;
 	mat4_set_identity(mat);
@@ -236,7 +237,7 @@ void ogl_lookat(mat4 &mat, const real3 eye, const real3 at, const real3 up)
 	mat4_setZVector(mat, f);
 	mat4_transpose(mat);
 	
-	real3 tran = { -real3_dot(r, eye) , -real3_dot(u, eye),  -real3_dot(f, eye) };
+	vec3 tran = { -r.dot(eye) , -u.dot(eye),  -f.dot(eye) };
 
 	mat4_setTranslation(mat,tran);
 }
