@@ -36,7 +36,7 @@ struct vec3 {
 		return x*x + y*y + z*z;
 	}
 
-	real length() const {
+	real norm() const {
 		return sqrt(lengthSquared());
 	}
 
@@ -55,9 +55,11 @@ struct vec3 {
 		return c;
 	}
 
-	void normalize() {
-		real mag = 1/length();
+	vec3 & normalize() {
+		real mag = 1/norm();
 		*this *= mag;
+
+		return *this;
 	}
 
 	// Overloading operators

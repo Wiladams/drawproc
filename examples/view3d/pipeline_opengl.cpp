@@ -1,5 +1,5 @@
 #include "pipeline_opengl.h"
-#include "linearalgebra.h"
+//#include "linearalgebra.h"
 
 #include <string.h>
 #include <math.h>
@@ -33,7 +33,7 @@ void mat4_transpose(mat4 &m)
 	m.m34 = tmp;
 }
 
-void mat4_setXVector(mat4 &mat, const vec3 &v)
+void mat4_setXVector(mat4 &mat, const Vec3f &v)
 {
 	mat.m11 = v.x; 
 	mat.m12 = v.y; 
@@ -42,7 +42,7 @@ void mat4_setXVector(mat4 &mat, const vec3 &v)
 
 
 
-void mat4_setYVector(mat4 &mat, const vec3 &v)
+void mat4_setYVector(mat4 &mat, const Vec3f &v)
 {
 	mat.m21 = v.x;
 	mat.m22 = v.y; 
@@ -50,14 +50,14 @@ void mat4_setYVector(mat4 &mat, const vec3 &v)
 }
 
 
-void mat4_setZVector(mat4 &mat, const vec3 &v)
+void mat4_setZVector(mat4 &mat, const Vec3f &v)
 {
 	mat.m31 = v.x;		// v.x;
 	mat.m32 = v.y;		//  v.y;
 	mat.m33 = v.z;		// v.z;
 }
 
-void mat4_setTranslation(mat4 &mat, const vec3 &t)
+void mat4_setTranslation(mat4 &mat, const Vec3f &t)
 {
 	mat.m41 = t.x;
 	mat.m42 = t.y;
@@ -65,7 +65,7 @@ void mat4_setTranslation(mat4 &mat, const vec3 &t)
 }
 
 // c = m * a
-void mat4_mul_point(vec3 &c, const mat4 &m, const vec3 &a)
+void mat4_mul_point(Vec3f &c, const mat4 &m, const Vec3f &a)
 {
 	c.x = m.m11*a[0] + m.m12 *a[1] + m.m13*a[2]; +m.m14;
 	c.y = m.m21*a[0] + m.m22*a[1] + m.m23*a[2]; +m.m24;
@@ -73,7 +73,7 @@ void mat4_mul_point(vec3 &c, const mat4 &m, const vec3 &a)
 }
 
 // convenience
-void ogl_transform_point(vec3 &res, const mat4 &tmat, const vec3 &pt)
+void ogl_transform_point(Vec3f &res, const mat4 &tmat, const Vec3f &pt)
 {
 	mat4_mul_point(res, tmat, pt);
 }
@@ -214,66 +214,55 @@ void ogl_set_rotation(mat4 &c, const mat3 &rot)
 
 }
 
-void ogl_lookat(mat4 &mat, const vec3 &eye, const vec3 &at, const vec3 &up)
+mat4 ogl_lookat(const Vec3f &eye, const Vec3f &center, const Vec3f &up)
 {
-	vec3 f = eye - at;
-	f.normalize();
+	Vec3f z = (eye - center).normalize();
+	Vec3f x = cross(up,z).normalize();
+	Vec3f y = cross(z,x).normalize();
 
-	//real3 rN;
-	//real3 r;
-	//real3_cross(rN, up, f);
-	//real3_normalize(r, rN);
-	vec3 r = up.cross(f);
-	r.normalize();
+	mat4 Minv;
+	mat4 Tr;
+	mat4_set_identity(Minv);
+	mat4_set_identity(Tr);
 
-	//real3 u;
-	//real3_cross(u, f, r);
-	vec3 u = f.cross(r);
-
-	//mat4 mat;
-	mat4_set_identity(mat);
-	mat4_setXVector(mat, r);
-	mat4_setYVector(mat, u);
-	mat4_setZVector(mat, f);
-	mat4_transpose(mat);
+	mat4_setXVector(Minv, x);
+	mat4_setYVector(Minv, y);
+	mat4_setZVector(Minv, z);
 	
-	vec3 tran = { -r.dot(eye) , -u.dot(eye),  -f.dot(eye) };
+	mat4_setTranslation(Tr, { -center[0] , -center[1],  -center[2] });
 
-	mat4_setTranslation(mat,tran);
+	mat4 res;
+	mat4_mul_mat4(res, Minv, Tr);
+
+	return res;
 }
 
-/*
-void ogl_lookat(mat4 &mat, const real3 eye, const real3 center, const real3 up)
+
+
+mat4 ogl_viewport(int x, int y, int w, int h)
 {
-	real * m = (real*)&mat;
-
-	real3 tmpreal3;
-	real3 f;
-	real3 upN;
-
-	real3 s;
-	//real *s = &m[0];
-
-	real3 u;
-	//real *u = &m[4];
-
-	// Compute our new look at vector, which will be
-	//   the new negative Z axis of our transformed object.
-	real3_sub(tmpreal3, center, eye);
-	real3_normalize(f, tmpreal3);
-	real3_normalize(upN, up);
-
-	real3_cross(s, f, upN);
-	real3_cross(u, s, f);
-
-	m[0] = s[0];    m[1] = s[1];     m[2] = s[2];     m[3] = 0;
-	m[4] = u[0];    m[5] = u[1];     m[6] = u[2];     m[7] = 0;
-	m[8] = -f[0];   m[9] = -f[1];    m[10] = -f[2];    m[11] = 0;
-	m[12] = -eye[0]; m[13] = -eye[1];  m[14] = -eye[2];  m[15] = 1;
-
-
+	mat4 res;
+	mat4_set_identity(res);
+	
+	res.m14 = x + w / 2.0f;
+	res.m24 = y + h / 2.0f;
+	res.m34 = 1.0f;
+	res.m11 = w / 2.0f;
+	res.m22 = h / 2.0f;
+	res.m33 = 0;
+	
+	return res;
 }
-*/
+
+mat4 projection(float coeff) 
+{
+	mat4 res;
+	mat4_set_identity(res);
+	res.m43 = coeff;
+
+	return res;
+}
+
 
 // Render pipeline transformation matrices
 void ogl_perspective(mat4 &c, const real zoomx, const real zoomy, const real near, const real far)

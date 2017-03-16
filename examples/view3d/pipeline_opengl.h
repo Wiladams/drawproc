@@ -21,7 +21,8 @@ limitations under the License.
 
 #include "graphicc.h"
 #include "linearalgebra.h"
-#include "vec3.hpp"
+//#include "vec3.hpp"
+#include "geometry.h"
 
 #include <math.h>
 
@@ -29,7 +30,7 @@ limitations under the License.
 extern "C" {
 #endif
 
-	void ogl_transform_point(vec3 &res, const mat4 &tmat, const vec3 &pt);
+	void ogl_transform_point(Vec3f &res, const mat4 &tmat, const Vec3f &pt);
 	void ogl_transform_rows(real *res, const mat4 &tmat, const real *inpts, const size_t nrows);
 
 	void ogl_translate(mat4 &c, const real dx, const real dy, const real dz);
@@ -45,9 +46,11 @@ extern "C" {
 
 	// Some render pipeline matrices
 	// Setup the camera view (world to camera matrix)
-	void ogl_lookat(mat4 &c, const vec3 &eye, const vec3 &lookAt, const vec3 &up);
+	mat4 ogl_lookat(const Vec3f &eye, const Vec3f &center, const Vec3f &up);
 
 	// Create a projection matrix
+	mat4 projection(float coeff = 0.f); // coeff = -1/c
+
 	void ogl_perspective(mat4 &c, const real zoomx, const real zoomy, const real near, const real far);
 	void ogl_orthographic(mat4 &c, const real zoomx, const real zoomy, const real near, const real far);
 	mat4 ogl_ortho(real left, real right, real bottom, real top, real n, real f);
@@ -55,6 +58,8 @@ extern "C" {
 	// Create matrix to map from normalized (projection) space to actual physical screen
 	// screenx, screeny contain the transformed values
 	// clipx, clipy represent the input point
+	mat4 ogl_viewport(int x, int y, int w, int h);
+
 	void ogl_map_to_window(real &screenx, real &screeny,
 		const real clipx, const real clipy, const real clipw,
 		const real winResx, const real winResy,

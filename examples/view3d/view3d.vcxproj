@@ -152,10 +152,12 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="geometry.h" />
     <ClInclude Include="pipeline_opengl.h" />
     <ClInclude Include="vec3.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="geometry.cpp" />
     <ClCompile Include="pipeline_opengl.cpp" />
     <ClCompile Include="view3d.cpp" />
   </ItemGroup>

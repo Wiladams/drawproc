@@ -2,32 +2,38 @@
 //
 
 #include "drawproc.h"
-#include "vec3.hpp"
 
 #include "pipeline_opengl.h"
 #include <stdio.h>
 
-mat4 cmat;
+
+mat4 ModelView;
+mat4 Viewport;
+mat4 Projection;
 
 // World view points of triangle
 // three points of an interesting triangle
-vec3 wpt1 = { 1, 1, 1 };
-vec3 wpt2 = { 200, 0, 0 };
-vec3 wpt3 = { 100, 300, 0 };
+Vec3f wpt1 = { 1, 1, 1 };
+Vec3f wpt2 = { 200, 0, 0 };
+Vec3f wpt3 = { 100, 300, 0 };
 
-vec3 v3 = { 1,1,1 };
+Vec3f v3 = { 1,1,1 };
 
 // Points storing camera view of the world
-vec3 cp1, cp2, cp3;
+Vec3f cp1, cp2, cp3;
 
-vec3 eye = { 10, 50, -100 };
-vec3 lookAt = { 0, 0, 0 };
-vec3 up = { 0,1,0 };
+Vec3f eye = { 1, 1, 3 };
+Vec3f center = { 0, 0, 0 };
+Vec3f up = { 0,1,0 };
+
 
 // create a world to camera transformation matrix
 void calcCamera()
 {
-	ogl_lookat(cmat, eye, lookAt, up);
+	ModelView = ogl_lookat(eye, center, up);
+	Viewport = ogl_viewport(width / 8, height / 8, width * 3 / 4, height * 3 / 4);
+	Projection = projection(-1.0f / (eye - center).norm());
+
 }
 
 void setup()
@@ -58,14 +64,14 @@ void keyReleased()
 
 
 
-void transformWorldToScreen(real &scrx, real &scry, const vec3 &wpt) {
+void transformWorldToScreen(real &scrx, real &scry, const Vec3f &wpt) {
 	char sbuff[256];
 	textAlign(TX_LEFT, TX_TOP);
 	fill(pBlack);
 
 	// transform points from world view, to camera view
-	vec3 cp1;
-	ogl_transform_point(cp1, cmat, wpt);
+	Vec3f cp1;
+	ogl_transform_point(cp1, Projection, wpt);
 
 	
 	text("World to Camera", 10, 80);
@@ -76,7 +82,7 @@ void transformWorldToScreen(real &scrx, real &scry, const vec3 &wpt) {
 	// transform the camera points through 
 	// orthographic projection
 	mat4 orthom = ogl_ortho(0, width, height, 0, -1, 1);
-	vec3 npt1;
+	Vec3f npt1;
 	ogl_transform_point(npt1, orthom, cp1);
 
 	text("Camera to Normalized", 10, 180);
@@ -96,7 +102,7 @@ void transformWorldToScreen(real &scrx, real &scry, const vec3 &wpt) {
 		width / 2, height / 2);
 }
 
-void drawLine(const vec3 a, const vec3 b, const COLOR c)
+void drawLine(const Vec3f a, const Vec3f b, const COLOR c)
 {
 	real scrx1 = 0;
 	real scry1 = 0;
@@ -112,10 +118,10 @@ void drawLine(const vec3 a, const vec3 b, const COLOR c)
 
 void drawAxis()
 {
-	vec3 origin = { 0,0,0 };
-	vec3 xaxis = { 100, 0, 0 };
-	vec3 yaxis = { 0,100,0 };
-	vec3 zaxis = { 0,0,100 };
+	Vec3f origin = { 0,0,0 };
+	Vec3f xaxis = { 100, 0, 0 };
+	Vec3f yaxis = { 0,100,0 };
+	Vec3f zaxis = { 0,0,100 };
 
 	drawLine(origin, xaxis, pRed);
 	drawLine(origin, yaxis, pGreen);
@@ -149,6 +155,6 @@ void draw()
 {
 	background(253);
 
-	drawTriangle();
+	//drawTriangle();
 	drawAxis();
 }
