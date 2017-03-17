@@ -21,7 +21,11 @@ Matrix ModelView;
 Matrix Projection; 
 Matrix Viewport;
 
+size_t modelIndex = 0;
 Model *model = nullptr;
+Model *floorModel = nullptr;
+
+std::vector<Model *> models;
 float *zbuffer = nullptr;
 
 Vec3f light_dir(1, 1, 1);
@@ -35,6 +39,12 @@ struct Shader : public IShader {
 	mat<4, 3, float> varying_tri; // triangle coordinates (clip coordinates), written by VS, read by FS
 	mat<3, 3, float> varying_nrm; // normal per vertex to be interpolated by FS
 	mat<3, 3, float> ndc_tri;     // triangle in normalized device coordinates
+	Model *model;
+
+	Shader(Model *aModel)
+	{
+		model = aModel;
+	}
 
 	virtual Vec4f vertex(int iface, int nthvert) {
 		varying_uv.set_col(nthvert, model->uv(iface, nthvert));
@@ -73,18 +83,51 @@ struct Shader : public IShader {
 	}
 };
 
+void loadModels()
+{
+	floorModel = new Model("obj/floor.obj");
+
+	models.push_back(new Model("obj/african_head/african_head.obj"));
+	models.push_back(new Model("obj/diablo3_pose/diablo3_pose.obj"));
+
+	model = models.at(0);
+}
+
+void onCameraChange()
+{
+	ModelView = ogl_lookat(eye, center, up);
+	Projection = projection(-1.0f / (eye - center).norm());
+	light_dir = proj<3>((Projection*ModelView*embed<4>(light_dir, 0.f))).normalize();
+
+}
+
+void renderModel(Model *aModel)
+{
+	Shader shader(aModel);
+
+	for (int i = 0; i<aModel->nfaces(); i++) {
+		for (int j = 0; j<3; j++) {
+			shader.vertex(i, j);
+		}
+		ogl_triangle(Viewport, shader.varying_tri, shader, *gpb, zbuffer);
+	}
+}
+
 void draw()
 {
+	background(120);
+
+//	char str[256];
+//	sprintf_s(str, "keycode : %d", keyCode);
+//	text(str, 10, 10);
+
 	// Zero out the zbuffer in case the scene has changed
 	for (int i = width*height; i--; zbuffer[i] = -std::numeric_limits<float>::max());
 
-	ModelView = ogl_lookat(eye, center, up);
-	Projection = projection(-1.f / (eye - center).norm());
-	light_dir = proj<3>((Projection*ModelView*embed<4>(light_dir, 0.f))).normalize();
-
-	// Load the model
-	//model = new Model("obj/african_head/african_head.obj");
-	Shader shader;
+	renderModel(floorModel);
+	renderModel(model);
+/*
+Shader shader;
 
 	for (int i = 0; i<model->nfaces(); i++) {
 		for (int j = 0; j<3; j++) {
@@ -92,19 +135,33 @@ void draw()
 		}
 		ogl_triangle(Viewport, shader.varying_tri, shader, *gpb, zbuffer);
 	}
-
-	delete model;
+	*/
 }
 
 void setup()
 {
 	createCanvas(800, 800);
 
-	noLoop();
-
-	model = new Model("obj/diablo3_pose/diablo3_pose.obj");
 	zbuffer = new float[width*height];
+	loadModels();
 	Viewport = ogl_viewport(width / 8, height / 8, width * 3 / 4, height * 3 / 4);
-
+	onCameraChange();
 }
 
+void keyReleased()
+{
+ 
+	switch (keyCode) {
+	case KC_SPACE:
+		modelIndex = modelIndex + 1;
+		break;
+	}
+	
+	if (modelIndex == models.size()) {
+		modelIndex = 0;
+	}
+
+	model = models.at(modelIndex);
+
+	//draw();
+}
