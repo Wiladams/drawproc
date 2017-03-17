@@ -1,160 +1,110 @@
 // view3d.cpp : Defines the exported functions for the DLL application.
 //
 
-#include "drawproc.h"
 
-#include "pipeline_opengl.h"
+
+#include <vector>
+#include <limits>
+#include <iostream>
 #include <stdio.h>
 
-
-mat4 ModelView;
-mat4 Viewport;
-mat4 Projection;
-
-// World view points of triangle
-// three points of an interesting triangle
-Vec3f wpt1 = { 1, 1, 1 };
-Vec3f wpt2 = { 200, 0, 0 };
-Vec3f wpt3 = { 100, 300, 0 };
-
-Vec3f v3 = { 1,1,1 };
-
-// Points storing camera view of the world
-Vec3f cp1, cp2, cp3;
-
-Vec3f eye = { 1, 1, 3 };
-Vec3f center = { 0, 0, 0 };
-Vec3f up = { 0,1,0 };
+#include "drawproc.h"
+#include "TGAImage.h"
+#include "model.h"
+#include "geometry.h"
+#include "dproc_gl.h"
+#include "IShader.h"
+#include "renderer.h"
 
 
-// create a world to camera transformation matrix
-void calcCamera()
+Matrix ModelView;
+Matrix Projection; 
+Matrix Viewport;
+
+Model *model = nullptr;
+float *zbuffer = nullptr;
+
+Vec3f light_dir(1, 1, 1);
+Vec3f       eye(1, 1, 3);
+Vec3f    center(0, 0, 0);
+Vec3f        up(0, -1, 0);
+
+
+struct Shader : public IShader {
+	mat<2, 3, float> varying_uv;  // triangle uv coordinates, written by the vertex shader, read by the fragment shader
+	mat<4, 3, float> varying_tri; // triangle coordinates (clip coordinates), written by VS, read by FS
+	mat<3, 3, float> varying_nrm; // normal per vertex to be interpolated by FS
+	mat<3, 3, float> ndc_tri;     // triangle in normalized device coordinates
+
+	virtual Vec4f vertex(int iface, int nthvert) {
+		varying_uv.set_col(nthvert, model->uv(iface, nthvert));
+		varying_nrm.set_col(nthvert, proj<3>((Projection*ModelView).invert_transpose()*embed<4>(model->normal(iface, nthvert), 0.f)));
+		Vec4f gl_Vertex = Projection*ModelView*embed<4>(model->vert(iface, nthvert));
+		varying_tri.set_col(nthvert, gl_Vertex);
+		ndc_tri.set_col(nthvert, proj<3>(gl_Vertex / gl_Vertex[3]));
+		return gl_Vertex;
+	}
+
+	virtual bool fragment(Vec3f bar, TGAColor &color) {
+		Vec3f bn = (varying_nrm*bar).normalize();
+		Vec2f uv = varying_uv*bar;
+
+		mat<3, 3, float> A;
+		A[0] = ndc_tri.col(1) - ndc_tri.col(0);
+		A[1] = ndc_tri.col(2) - ndc_tri.col(0);
+		A[2] = bn;
+
+		mat<3, 3, float> AI = A.invert();
+
+		Vec3f i = AI * Vec3f(varying_uv[0][1] - varying_uv[0][0], varying_uv[0][2] - varying_uv[0][0], 0);
+		Vec3f j = AI * Vec3f(varying_uv[1][1] - varying_uv[1][0], varying_uv[1][2] - varying_uv[1][0], 0);
+
+		mat<3, 3, float> B;
+		B.set_col(0, i.normalize());
+		B.set_col(1, j.normalize());
+		B.set_col(2, bn);
+
+		Vec3f n = (B*model->normal(uv)).normalize();
+
+		float diff = MAX(0.f, n*light_dir);
+		color = model->diffuse(uv)*diff;
+
+		return false;
+	}
+};
+
+void draw()
 {
-	ModelView = ogl_lookat(eye, center, up);
-	Viewport = ogl_viewport(width / 8, height / 8, width * 3 / 4, height * 3 / 4);
-	Projection = projection(-1.0f / (eye - center).norm());
+	// Zero out the zbuffer in case the scene has changed
+	for (int i = width*height; i--; zbuffer[i] = -std::numeric_limits<float>::max());
 
+	ModelView = ogl_lookat(eye, center, up);
+	Projection = projection(-1.f / (eye - center).norm());
+	light_dir = proj<3>((Projection*ModelView*embed<4>(light_dir, 0.f))).normalize();
+
+	// Load the model
+	//model = new Model("obj/african_head/african_head.obj");
+	Shader shader;
+
+	for (int i = 0; i<model->nfaces(); i++) {
+		for (int j = 0; j<3; j++) {
+			shader.vertex(i, j);
+		}
+		ogl_triangle(Viewport, shader.varying_tri, shader, *gpb, zbuffer);
+	}
+
+	delete model;
 }
 
 void setup()
 {
-	createCanvas(640, 480);
-	calcCamera();
-}
+	createCanvas(800, 800);
 
-void keyReleased()
-{
-	switch (keyCode) {
-	case KC_RIGHT:
-		eye[0] = eye[0] + 2.0;
-		break;
-	case KC_LEFT:
-		eye[0] = eye[0] - 2.0;
-		break;
-	case KC_UP:
-		eye[2] = eye[2] + 2.0;
-		break;
-	case KC_DOWN:
-		eye[2] = eye[2] - 2.0;
-		break;
-	}
-	calcCamera();
-}
+	noLoop();
 
-
-
-
-void transformWorldToScreen(real &scrx, real &scry, const Vec3f &wpt) {
-	char sbuff[256];
-	textAlign(TX_LEFT, TX_TOP);
-	fill(pBlack);
-
-	// transform points from world view, to camera view
-	Vec3f cp1;
-	ogl_transform_point(cp1, Projection, wpt);
-
-	
-	text("World to Camera", 10, 80);
-	sprintf_s(sbuff, "p1: %3.2f %3.2f %3.2f", cp1[0], cp1[1], cp1[2]);
-	text(sbuff, 10, 100);
-	
-
-	// transform the camera points through 
-	// orthographic projection
-	mat4 orthom = ogl_ortho(0, width, height, 0, -1, 1);
-	Vec3f npt1;
-	ogl_transform_point(npt1, orthom, cp1);
-
-	text("Camera to Normalized", 10, 180);
-	sprintf_s(sbuff, "p1: %3.2f %3.2f %3.2f", npt1[0], npt1[1], npt1[2]);
-	text(sbuff, 10, 200);
-
-
-	// We now have points in in normalized space
-	// convert to screen space
-	// Create matrix to map from normalized (projection) space to actual physical screen
-	// screenx, screeny contain the transformed values
-	// clipx, clipy represent the input point
-
-	ogl_map_to_window(scrx, scry,
-		npt1[0], npt1[1], npt1[2],
-		width, height,
-		width / 2, height / 2);
-}
-
-void drawLine(const Vec3f a, const Vec3f b, const COLOR c)
-{
-	real scrx1 = 0;
-	real scry1 = 0;
-	real scrx2 = 0;
-	real scry2 = 0;
-	transformWorldToScreen(scrx1, scry1, a);
-	transformWorldToScreen(scrx2, scry2, b);
-
-	stroke(c);
-	line(scrx1, scry1, scrx2, scry2);
+	model = new Model("obj/diablo3_pose/diablo3_pose.obj");
+	zbuffer = new float[width*height];
+	Viewport = ogl_viewport(width / 8, height / 8, width * 3 / 4, height * 3 / 4);
 
 }
 
-void drawAxis()
-{
-	Vec3f origin = { 0,0,0 };
-	Vec3f xaxis = { 100, 0, 0 };
-	Vec3f yaxis = { 0,100,0 };
-	Vec3f zaxis = { 0,0,100 };
-
-	drawLine(origin, xaxis, pRed);
-	drawLine(origin, yaxis, pGreen);
-	drawLine(origin, zaxis, pBlue);
-}
-
-void drawTriangle()
-{
-	real trix1=0, triy1=0;
-	real trix2=0, triy2=0;
-	real trix3=0, triy3=0;
-
-	transformWorldToScreen(trix1, triy1, wpt1);
-	transformWorldToScreen(trix2, triy2, wpt2);
-	transformWorldToScreen(trix3, triy3, wpt3);
-
-	fill(pRed);
-	triangle(trix1, triy1, trix2, triy2, trix3, triy3);
-
-	text("Normalized to Screen", 10, 280);
-	char sbuff[256];
-	sprintf_s(sbuff, "p1: %8.2f %8.2f", trix1, triy1);
-	text(sbuff, 10, 300);
-	sprintf_s(sbuff, "p2: %8.2f %8.2f", trix2, triy2);
-	text(sbuff, 10, 320);	
-	sprintf_s(sbuff, "p3: %8.2f %8.2f", trix3, triy3);
-	text(sbuff, 10, 340);
-}
-
-void draw()
-{
-	background(253);
-
-	//drawTriangle();
-	drawAxis();
-}

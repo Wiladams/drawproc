@@ -50,8 +50,8 @@ inline real RADIANS(const real degrees) { return (real)(G_DTOR * degrees); }
 // utils
 #define min3(a,b,c) __min(__min(a,b),c)
 #define max3(a,b,c) __max(__max(a,b),c)
-#define min(a,b) __min(a,b)
-#define max(a,b) __max(a,b)
+#define MIN(a,b) __min(a,b)
+#define MAX(a,b) __max(a,b)
 
 
 // map a value (a) from between rlo <= a <= rhi to  shi <= b <= slo

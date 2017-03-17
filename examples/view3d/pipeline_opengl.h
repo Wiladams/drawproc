@@ -21,7 +21,6 @@ limitations under the License.
 
 #include "graphicc.h"
 #include "linearalgebra.h"
-//#include "vec3.hpp"
 #include "geometry.h"
 
 #include <math.h>

@@ -152,13 +152,19 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dproc_gl.h" />
     <ClInclude Include="geometry.h" />
-    <ClInclude Include="pipeline_opengl.h" />
-    <ClInclude Include="vec3.hpp" />
+    <ClInclude Include="IShader.h" />
+    <ClInclude Include="model.h" />
+    <ClInclude Include="renderer.h" />
+    <ClInclude Include="tgaimage.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="dproc_gl.cpp" />
     <ClCompile Include="geometry.cpp" />
-    <ClCompile Include="pipeline_opengl.cpp" />
+    <ClCompile Include="model.cpp" />
+    <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="tgaimage.cpp" />
     <ClCompile Include="view3d.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

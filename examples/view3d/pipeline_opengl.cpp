@@ -1,76 +1,10 @@
 #include "pipeline_opengl.h"
-//#include "linearalgebra.h"
 
 #include <string.h>
 #include <math.h>
 
 
-// Perform a transpose in place
-void mat4_transpose(mat4 &m)
-{
-	float tmp = m.m21;
-	m.m21 = m.m12;
-	m.m12 = tmp;
 
-	tmp = m.m32;
-	m.m32 = m.m23;
-	m.m23 = tmp;
-
-	tmp = m.m31;
-	m.m31 = m.m13;
-	m.m13 = tmp;
-
-	tmp = m.m41;
-	m.m41 = m.m14;
-	m.m14 = tmp;
-
-	tmp = m.m42;
-	m.m42 = m.m24;
-	m.m24 = tmp;
-
-	tmp = m.m43;
-	m.m43 = m.m34;
-	m.m34 = tmp;
-}
-
-void mat4_setXVector(mat4 &mat, const Vec3f &v)
-{
-	mat.m11 = v.x; 
-	mat.m12 = v.y; 
-	mat.m13 = v.z;
-}
-
-
-
-void mat4_setYVector(mat4 &mat, const Vec3f &v)
-{
-	mat.m21 = v.x;
-	mat.m22 = v.y; 
-	mat.m23 = v.z;
-}
-
-
-void mat4_setZVector(mat4 &mat, const Vec3f &v)
-{
-	mat.m31 = v.x;		// v.x;
-	mat.m32 = v.y;		//  v.y;
-	mat.m33 = v.z;		// v.z;
-}
-
-void mat4_setTranslation(mat4 &mat, const Vec3f &t)
-{
-	mat.m41 = t.x;
-	mat.m42 = t.y;
-	mat.m43 = t.z;
-}
-
-// c = m * a
-void mat4_mul_point(Vec3f &c, const mat4 &m, const Vec3f &a)
-{
-	c.x = m.m11*a[0] + m.m12 *a[1] + m.m13*a[2]; +m.m14;
-	c.y = m.m21*a[0] + m.m22*a[1] + m.m23*a[2]; +m.m24;
-	c.z = m.m31*a[0] + m.m32*a[1] + m.m33*a[2]; +m.m34;
-}
 
 // convenience
 void ogl_transform_point(Vec3f &res, const mat4 &tmat, const Vec3f &pt)
