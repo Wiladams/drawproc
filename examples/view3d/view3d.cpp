@@ -19,6 +19,8 @@
 
 Matrix ModelView;
 Matrix Projection; 
+Matrix ModelProjection;
+
 Matrix Viewport;
 
 size_t modelIndex = 0;
@@ -48,8 +50,8 @@ struct Shader : public IShader {
 
 	virtual Vec4f vertex(int iface, int nthvert) {
 		varying_uv.set_col(nthvert, model->uv(iface, nthvert));
-		varying_nrm.set_col(nthvert, proj<3>((Projection*ModelView).invert_transpose()*embed<4>(model->normal(iface, nthvert), 0.f)));
-		Vec4f gl_Vertex = Projection*ModelView*embed<4>(model->vert(iface, nthvert));
+		varying_nrm.set_col(nthvert, proj<3>(ModelProjection.invert_transpose()*embed<4>(model->normal(iface, nthvert), 0.f)));
+		Vec4f gl_Vertex = ModelProjection*embed<4>(model->vert(iface, nthvert));
 		varying_tri.set_col(nthvert, gl_Vertex);
 		ndc_tri.set_col(nthvert, proj<3>(gl_Vertex / gl_Vertex[3]));
 		return gl_Vertex;
@@ -97,8 +99,7 @@ void onCameraChange()
 {
 	ModelView = ogl_lookat(eye, center, up);
 	Projection = projection(-1.0f / (eye - center).norm());
-	light_dir = proj<3>((Projection*ModelView*embed<4>(light_dir, 0.f))).normalize();
-
+	ModelProjection = Projection*ModelView;
 }
 
 void renderModel(Model *aModel)
@@ -113,29 +114,21 @@ void renderModel(Model *aModel)
 	}
 }
 
+void ogl_clearzbuffer()
+{
+	// Zero out the zbuffer in case the scene has changed
+	for (int i = width*height; i--; zbuffer[i] = -std::numeric_limits<float>::max());
+}
+
 void draw()
 {
 	background(120);
 
-//	char str[256];
-//	sprintf_s(str, "keycode : %d", keyCode);
-//	text(str, 10, 10);
-
-	// Zero out the zbuffer in case the scene has changed
-	for (int i = width*height; i--; zbuffer[i] = -std::numeric_limits<float>::max());
+	ogl_clearzbuffer();
 
 	renderModel(floorModel);
 	renderModel(model);
-/*
-Shader shader;
 
-	for (int i = 0; i<model->nfaces(); i++) {
-		for (int j = 0; j<3; j++) {
-			shader.vertex(i, j);
-		}
-		ogl_triangle(Viewport, shader.varying_tri, shader, *gpb, zbuffer);
-	}
-	*/
 }
 
 void setup()
@@ -146,6 +139,8 @@ void setup()
 	loadModels();
 	Viewport = ogl_viewport(width / 8, height / 8, width * 3 / 4, height * 3 / 4);
 	onCameraChange();
+	light_dir = proj<3>((ModelProjection*embed<4>(light_dir, 0.f))).normalize();
+
 }
 
 void keyReleased()
@@ -154,14 +149,37 @@ void keyReleased()
 	switch (keyCode) {
 	case KC_SPACE:
 		modelIndex = modelIndex + 1;
+		
+		if (modelIndex == models.size()) 
+		{
+			modelIndex = 0;
+		}
+		
+		model = models.at(modelIndex);
+
 		break;
-	}
-	
-	if (modelIndex == models.size()) {
-		modelIndex = 0;
-	}
 
-	model = models.at(modelIndex);
+	case KC_RIGHT:
+	case KC_LEFT:
+		if (keyCode == KC_LEFT) {
+			eye.x += 0.2;
+		}
+		else if (keyCode == KC_RIGHT) {
+			eye.x -= 0.2;
+			}
 
-	//draw();
+		onCameraChange();
+
+		break;
+
+	case KC_UP:
+	case KC_DOWN:
+		if (keyCode == KC_UP) {
+			eye.y += 0.2;
+		}
+		else if (keyCode == KC_DOWN) {
+			eye.y -= 0.2;
+		}
+		onCameraChange();
+	}
 }

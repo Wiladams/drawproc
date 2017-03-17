@@ -54,6 +54,7 @@ void ogl_triangle(Matrix &Viewport, mat<4, 3, float> &clipc, IShader &shader, pb
 				//image.set(P.x, P.y, color);
 				//pb_rgba_set_pixel(&image, P.x, P.y, RGBA(color.bgra[0], color.bgra[1], color.bgra[2], color.bgra[3]));
 				pb_rgba_set_pixel(&image, P.x, P.y, color.bgraInt);
+				//pb_rgba_set_pixel(&image, P.x, P.y, RGBA(127, 127, 127, 255));
 			}
 		}
 	}
