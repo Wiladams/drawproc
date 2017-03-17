@@ -16,7 +16,7 @@ Vec3f barycentric(Vec2f A, Vec2f B, Vec2f C, Vec2f P)
 		return Vec3f(1.f - (u.x + u.y) / u.z, u.y / u.z, u.x / u.z);
 	}
 	
-	return Vec3f(-1, 1, 1); // in this case generate negative coordinates, it will be thrown away by the rasterizator
+	return Vec3f(-1, 1, 1); // in this case generate negative coordinates, it will be thrown away by the rasterizer
 }
 
 void ogl_triangle(Matrix &Viewport, mat<4, 3, float> &clipc, IShader &shader, pb_rgba &image, float *zbuffer) 
@@ -54,7 +54,7 @@ void ogl_triangle(Matrix &Viewport, mat<4, 3, float> &clipc, IShader &shader, pb
 				//image.set(P.x, P.y, color);
 				//pb_rgba_set_pixel(&image, P.x, P.y, RGBA(color.bgra[0], color.bgra[1], color.bgra[2], color.bgra[3]));
 				pb_rgba_set_pixel(&image, P.x, P.y, color.bgraInt);
-				//pb_rgba_set_pixel(&image, P.x, P.y, RGBA(127, 127, 127, 255));
+
 			}
 		}
 	}
