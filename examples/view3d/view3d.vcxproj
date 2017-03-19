@@ -152,18 +152,18 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="diffuseshader.h" />
     <ClInclude Include="dproc_gl.h" />
     <ClInclude Include="geometry.h" />
     <ClInclude Include="IShader.h" />
     <ClInclude Include="model.h" />
-    <ClInclude Include="renderer.h" />
     <ClInclude Include="tgaimage.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="diffuseshader.cpp" />
     <ClCompile Include="dproc_gl.cpp" />
     <ClCompile Include="geometry.cpp" />
     <ClCompile Include="model.cpp" />
-    <ClCompile Include="renderer.cpp" />
     <ClCompile Include="tgaimage.cpp" />
     <ClCompile Include="view3d.cpp" />
   </ItemGroup>
