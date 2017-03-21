@@ -37,7 +37,7 @@ Matrix ogl_viewport(const int x, const int y, const int w, const int h)
 	return res;
 }
 
-Matrix projection(float coeff)
+Matrix ogl_projection(float coeff)
 {
 	Matrix res = Matrix::identity();
 	res[3][2] = coeff;

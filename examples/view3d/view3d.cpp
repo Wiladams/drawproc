@@ -49,7 +49,7 @@ void loadModels()
 void onCameraChange()
 {
 	ModelView = ogl_lookat(eye, center, up);
-	Projection = projection(-1.0f / (eye - center).norm());
+	Projection = ogl_projection(-1.0f / (eye - center).norm());
 }
 
 void renderModel(Model *aModel)

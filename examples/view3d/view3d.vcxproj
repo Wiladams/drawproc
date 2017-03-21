@@ -152,6 +152,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="arcball.h" />
     <ClInclude Include="diffuseshader.h" />
     <ClInclude Include="dproc_gl.h" />
     <ClInclude Include="geometry.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="tgaimage.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="arcball.cpp" />
     <ClCompile Include="diffuseshader.cpp" />
     <ClCompile Include="dproc_gl.cpp" />
     <ClCompile Include="geometry.cpp" />
