@@ -18,19 +18,19 @@ if (cur_mx != last_mx || cur_my != last_my) {
 }
 */
 
-/*
+
 void ArcBall::onMouse(int button, int state, int x, int y) 
 {
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-		arcball_on = true;
-		last_mx = cur_mx = x;
-		last_my = cur_my = y;
-	}
-	else {
+	//if (button == KC_LBUTTON && state == GLUT_DOWN) {
+	//	arcball_on = true;
+	//	last_mx = cur_mx = x;
+	//	last_my = cur_my = y;
+	//}
+	//else {
 		arcball_on = false;
-	}
+	//}
 }
-*/
+
 
 void ArcBall::onMotion(int x, int y) 
 {

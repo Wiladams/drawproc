@@ -9,11 +9,11 @@
 #include <stdio.h>
 
 #include "drawproc.h"
-//#include "TGAImage.h"
 #include "model.h"
 #include "geometry.h"
 #include "dproc_gl.h"
 #include "diffuseshader.h"
+#include "quaternion.h"
 
 
 Matrix ModelView;
@@ -42,6 +42,7 @@ void loadModels()
 	models.push_back(new Model("obj/african_head/african_head.obj"));
 	models.push_back(new Model("obj/diablo3_pose/diablo3_pose.obj"));
 	models.push_back(new Model("obj/boggie/body.obj"));
+	//models.push_back(new Model("obj/Vanquish/vanquish.obj"));
 
 	model = models.at(0);
 }
@@ -75,6 +76,11 @@ void draw()
 
 	renderModel(floorModel);
 	renderModel(model);
+
+	char str[255];
+	sprintf_s(str, "delta: %d", mouseDelta);
+
+	text(str, 10, 10);
 
 }
 
@@ -128,4 +134,16 @@ void keyReleased()
 		}
 		onCameraChange();
 	}
+}
+
+void mouseWheel()
+{
+	if (mouseDelta > 0) 
+		eye.z -= 0.2;
+	else if (mouseDelta < 0) 
+		eye.z += 0.2;
+
+	mouseDelta = 0;
+	onCameraChange();
+
 }

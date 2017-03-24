@@ -29,6 +29,7 @@ DPROC_EXPORT void mouseDragged();
 DPROC_EXPORT void mouseMoved();
 DPROC_EXPORT void mousePressed();
 DPROC_EXPORT void mouseReleased();
+DPROC_EXPORT void mouseWheel();
 
 #ifdef __cplusplus
 }
@@ -146,10 +147,12 @@ DPROC_API void size(const size_t width, const size_t height);
 // Mouse
 DPROC_API extern int mouseX;
 DPROC_API extern int mouseY;
+DPROC_API extern int mouseButton;
+DPROC_API extern int mouseDelta;
 DPROC_API extern bool isMousePressed;
 // pmouseX
 // pmouseY
-// mouseButton
+
 
 // mouseClicked()
 // mouseDragged()

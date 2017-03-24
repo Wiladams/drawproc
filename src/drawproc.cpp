@@ -48,11 +48,14 @@ bool isKeyPressed = 0;
 // Mouse
 #define GET_X_LPARAM(lp)                        ((int)(short)LOWORD(lp))
 #define GET_Y_LPARAM(lp)                        ((int)(short)HIWORD(lp))
+#define GET_WHEEL_DELTA_WPARAM(wParam)			(short)HIWORD(wParam)
+
 
 int mouseX = 0;
 int mouseY = 0;
 bool isMousePressed = false;
 int mouseButton = 0;
+int mouseDelta = 0;
 
 
 // Typedef an STL vector of vertices which are used to represent
@@ -181,6 +184,38 @@ void setOnMouseMovedHandler(EventObserverHandler handler)
 	gmouseOnMovedHandler = handler;
 }
 
+/*
+KC_LBUTTON = 0x01,
+KC_RBUTTON = 0x02,
+KC_CANCEL = 0x03,
+KC_MBUTTON = 0x04,
+
+KC_XBUTTON1 = 0x05,
+KC_XBUTTON2 = 0x06,
+*/
+
+int wmMouseToVKeys(const int wparam)
+{
+	switch (wparam) {
+	case MK_LBUTTON:
+		return KC_LBUTTON;
+		break;
+	case MK_MBUTTON:
+		return KC_MBUTTON;
+		break;
+	case MK_RBUTTON:
+		return KC_RBUTTON;
+		break;
+	case MK_XBUTTON1:
+		return KC_XBUTTON1;
+		break;
+	case MK_XBUTTON2:
+		return KC_XBUTTON2;
+		break;
+	}
+
+	return wparam;
+}
 
 LRESULT CALLBACK mouseHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -188,7 +223,7 @@ LRESULT CALLBACK mouseHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 	{
 		case WM_MOUSEWHEEL:
 			//int fwKeys = GET_KEYSTATE_WPARAM(wParam);
-			//int zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+			mouseDelta = GET_WHEEL_DELTA_WPARAM(wParam);
 
 			if (gmouseOnWheelHandler != nullptr) {
 				gmouseOnWheelHandler(); // hWnd, message, wParam, lParam);
@@ -213,7 +248,7 @@ LRESULT CALLBACK mouseHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 		case WM_MBUTTONDOWN:
 		case WM_RBUTTONDOWN:
 			isMousePressed = true;
-			mouseButton = wParam;
+			mouseButton = wmMouseToVKeys(wParam);
 
 			if (gOnMousePressedHandler != nullptr) {
 				gOnMousePressedHandler();
@@ -224,6 +259,7 @@ LRESULT CALLBACK mouseHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 		case WM_MBUTTONUP:
 		case WM_RBUTTONUP:
 			isMousePressed = false;
+			mouseButton = wmMouseToVKeys(wParam);
 
 			if (gmouseReleasedHandler != nullptr) {
 				gmouseReleasedHandler();
@@ -265,11 +301,12 @@ void initInput()
 
 
 	// Mouse Handling Routines
-	setOnMousePressedHandler((EventObserverHandler)GetProcAddress(clientModule, "mouseClicked"));
 	setOnMousePressedHandler((EventObserverHandler)GetProcAddress(clientModule, "mousePressed"));
 	setOnMouseReleasedHandler((EventObserverHandler)GetProcAddress(clientModule, "mouseReleased"));
+	setOnMouseClickedHandler((EventObserverHandler)GetProcAddress(clientModule, "mouseClicked"));
 	setOnMouseMovedHandler((EventObserverHandler)GetProcAddress(clientModule, "mouseMoved"));
 	setOnMouseDraggedHandler((EventObserverHandler)GetProcAddress(clientModule, "mouseDragged"));
+	setOnMouseWheelHandler((EventObserverHandler)GetProcAddress(clientModule, "mouseWheel"));
 
 	setMouseHandler(mouseHandler);
 }

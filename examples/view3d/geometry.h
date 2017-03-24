@@ -82,6 +82,7 @@ template <typename T> struct vec<3, T>
 	vec(T X, T Y, T Z) : x(X), y(Y), z(Z) 
 	{}
 
+	// Copy constructor
 	template <class U> vec<3, T>(const vec<3, U> &v);
 	
 	T& operator[](const size_t i) 
@@ -95,8 +96,53 @@ template <typename T> struct vec<3, T>
 		assert(i<3); 
 		return i <= 0 ? x : (1 == i ? y : z); 
 	}
-	
-	float norm() 
+
+	vec<3, T> & operator +=(const vec<3, T> &rhs)
+	{
+		x += rhs.x;
+		y += rhs.y;
+		z += rhs.z;
+
+		return *this;
+	}
+
+	vec<3, T> & operator -=(const vec<3, T> &rhs)
+	{
+		x -= rhs.x;
+		y -= rhs.y;
+		z -= rhs.z;
+
+		return *this;
+	}
+
+	vec<3, T> & operator *=(const vec<3, T> &rhs)
+	{
+		x *= rhs.x;
+		y *= rhs.y;
+		z *= rhs.z;
+
+		return *this;
+	}
+
+	vec<3, T> & operator *=(const float scale)
+	{
+		x *= scale;
+		y *= scale;
+		z *= scale;
+
+		return *this;
+	}
+
+	vec<3, T> & operator /=(const float scale)
+	{
+		x /= scale;
+		y /= scale;
+		z /= scale;
+
+		return *this;
+	}
+
+	float norm() const
 	{ 
 		return std::sqrt(x*x + y*y + z*z); 
 	}
@@ -113,12 +159,21 @@ template <typename T> struct vec<3, T>
 /*
 	Operations on vectors
 */
+// Negation
+template <typename T> vec<3, T> operator -(const vec<3, T> rhs)
+{
+	vec <3, T> res(-rhs.x, -rhs.y, -rhs.z);
+	return res;
+}
+
+
 template<size_t DIM, typename T> T operator*(const vec<DIM, T>& lhs, const vec<DIM, T>& rhs) {
 	T ret = T();
 	for (size_t i = DIM; i--; ret += lhs[i] * rhs[i]);
 	
 	return ret;
 }
+
 
 
 template<size_t DIM, typename T>vec<DIM, T> operator+(vec<DIM, T> lhs, const vec<DIM, T>& rhs) {
@@ -158,6 +213,9 @@ template<size_t LEN, size_t DIM, typename T> vec<LEN, T> proj(const vec<DIM, T> 
 	
 	return ret;
 }
+
+
+
 
 // Cross product of two matrices
 // returns a vector
@@ -325,5 +383,6 @@ typedef vec<3, float> Vec3f;
 typedef vec<3, int>   Vec3i;
 typedef vec<4, float> Vec4f;
 typedef mat<4, 4, float> Matrix;
+typedef mat<3, 3, float> Matrix3;
 #endif //__GEOMETRY_H__
 

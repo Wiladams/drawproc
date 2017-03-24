@@ -8,7 +8,7 @@ https://gitlab.com/wikibooks-opengl/modern-tutorials/blob/master/obj-viewer/obj-
 
 #include "geometry.h"
 
-class ArcBall
+struct ArcBall
 {
 	int last_mx = 0;
 	int last_my = 0;
@@ -18,7 +18,7 @@ class ArcBall
 
 	void onMouse(int button, int state, int x, int y);
 	void onMotion(int x, int y);
-	void ArcBall::onIdle();
+	void onIdle();
 
 	Vec3f get_arcball_vector(int x, int y);
 

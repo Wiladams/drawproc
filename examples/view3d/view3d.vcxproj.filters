@@ -36,7 +36,7 @@
     <ClInclude Include="diffuseshader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="arcball.h">
+    <ClInclude Include="quaternion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -57,9 +57,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="diffuseshader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="arcball.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
