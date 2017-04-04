@@ -18,49 +18,58 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="geometry.h">
+    <ClCompile Include="terminal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vte.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dproc_gl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="tgaimage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="diffuseshader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="quaternion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    </ClCompile>
+    <ClCompile Include="shl_htable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tsm_render.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tsm_screen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tsm_selection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tsm_unicode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wcwidth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="view3d.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="geometry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dproc_gl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tgaimage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="diffuseshader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="libtsm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libtsm_int.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shl_array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shl_htable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shl_llog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wcwidth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xkbcommon-keysyms.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -60,7 +60,6 @@ struct quaternion
 	float	s; // the real component
 	Vec3f	v;	// the imaginary components
 
-	static const quaternion identity = quaternion(0, 0, 0, 1);
 
 	// constructors
 	quaternion() {}
@@ -297,9 +296,9 @@ struct quaternion
 		double xy = v.x * v.y;
 		double xz = v.x * v.z;
 		double yz = v.y * v.z;
-		double wx = v.w * v.x;
-		double wy = v.w * v.y;
-		double wz = v.w * v.z;
+		double wx = s * v.x;
+		double wy = s * v.y;
+		double wz = s * v.z;
 
 		res[0] = Vec3f(1 - 2 * (y2 + z2), 2 * (xy - s*v.z), 2 * (xz + s*v.y));
 		res[1] = Vec3f(2 * (xy + s*v.z), 1 - 2 * (v.x*v.x + v.z*v.z), 2 * (v.y*v.z - s*v.x));
@@ -417,7 +416,7 @@ struct quaternion
 	//! Given 3 quaternions, qn-1,qn and qn+1, calculate a control point to be used in spline interpolation
 	static quaternion spline(const quaternion &qnm1, const quaternion &qn, const quaternion &qnp1)
 	{
-		quaternion qni(qn.s, -qn.v);
+		quaternion qni(-qn.v, qn.s);
 
 		return qn * (((qni*qnm1).log() + (qni*qnp1).log()) / -4).exp();
 	}
@@ -425,7 +424,7 @@ struct quaternion
 	//! converts from a normalized axis - angle pair rotation to a quaternion
 	static inline quaternion from_axis_angle(const Vec3f &axis, float angle)
 	{
-		return quaternion(cosf(angle / 2), axis*sinf(angle / 2));
+		return quaternion(axis*sinf(angle / 2), cosf(angle / 2));
 	}
 
 	//! returns the axis and angle of this unit quaternion
@@ -448,7 +447,7 @@ struct quaternion
 	//! rotates v by this quaternion (quaternion must be unit)
 	Vec3f rotate(const Vec3f &v)
 	{
-		quaternion V(0, v);
+		quaternion V(v, 0);
 		quaternion conjugate(*this);
 		conjugate.conjugate();
 		return (*this * V * conjugate).v;
@@ -476,5 +475,7 @@ struct quaternion
 		return euler;
 	}
 };
+
+static const struct quaternion identity = quaternion(0, 0, 0, 1);
 
 

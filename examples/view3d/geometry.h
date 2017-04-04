@@ -142,6 +142,12 @@ template <typename T> struct vec<3, T>
 		return *this;
 	}
 
+	vec<3, T> lerp(const vec<3,T> &other, float t) const
+	{
+		vec<3, T> res();
+		return res;
+	}
+
 	float norm() const
 	{ 
 		return std::sqrt(x*x + y*y + z*z); 
