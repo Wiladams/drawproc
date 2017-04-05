@@ -82,7 +82,7 @@ static struct cell *get_cursor_cell(struct tsm_screen *con)
 	return &con->lines[cur_y]->cells[cur_x];
 }
 
-/*
+
 static void move_cursor(struct tsm_screen *con, unsigned int x, unsigned int y)
 {
 	struct cell *c;
@@ -110,7 +110,7 @@ static void move_cursor(struct tsm_screen *con, unsigned int x, unsigned int y)
 	c = get_cursor_cell(con);
 	c->age = con->age_cnt;
 }
-*/
+
 
 void screen_cell_init(struct tsm_screen *con, struct cell *cell)
 {
@@ -453,103 +453,6 @@ static void screen_erase_region(struct tsm_screen *con,
 	}
 }
 
-/*
-static inline unsigned int to_abs_x(struct tsm_screen *con, unsigned int x)
-{
-	return x;
-}
-
-static inline unsigned int to_abs_y(struct tsm_screen *con, unsigned int y)
-{
-	if (!(con->flags & TSM_SCREEN_REL_ORIGIN))
-		return y;
-
-	return con->margin_top + y;
-}
-*/
-/*
-SHL_EXPORT
-int tsm_screen_new(struct tsm_screen **out, tsm_log_t log, void *log_data)
-{
-	struct tsm_screen *con;
-	int ret;
-	unsigned int i;
-
-	if (!out)
-		return -EINVAL;
-
-	con = (struct tsm_screen *)malloc(sizeof(*con));
-	if (!con)
-		return -ENOMEM;
-
-	memset(con, 0, sizeof(*con));
-	con->ref = 1;
-	con->llog = log;
-	con->llog_data = log_data;
-	con->age_cnt = 1;
-	con->age = con->age_cnt;
-	con->def_attr.fr = 255;
-	con->def_attr.fg = 255;
-	con->def_attr.fb = 255;
-
-	ret = tsm_symbol_table_new(&con->sym_table);
-	if (ret)
-		goto err_free;
-
-	ret = tsm_screen_resize(con, 80, 24);
-	if (ret)
-		goto err_free;
-
-	llog_debug(con, "new screen");
-	*out = con;
-
-	return 0;
-
-err_free:
-	for (i = 0; i < con->line_num; ++i) {
-		line_free(con->main_lines[i]);
-		line_free(con->alt_lines[i]);
-	}
-	free(con->main_lines);
-	free(con->alt_lines);
-	free(con->tab_ruler);
-	tsm_symbol_table_unref(con->sym_table);
-	free(con);
-	return ret;
-}
-*/
-
-/*
-SHL_EXPORT
-void tsm_screen_ref(struct tsm_screen *con)
-{
-	if (!con)
-		return;
-
-	++con->ref;
-}
-
-SHL_EXPORT
-void tsm_screen_unref(struct tsm_screen *con)
-{
-	unsigned int i;
-
-	if (!con || !con->ref || --con->ref)
-		return;
-
-	llog_debug(con, "destroying screen");
-
-	for (i = 0; i < con->line_num; ++i) {
-		line_free(con->main_lines[i]);
-		line_free(con->alt_lines[i]);
-	}
-	free(con->main_lines);
-	free(con->alt_lines);
-	free(con->tab_ruler);
-	tsm_symbol_table_unref(con->sym_table);
-	free(con);
-}
-*/
 
 void tsm_screen_set_opts(struct tsm_screen *scr, unsigned int opts)
 {
@@ -575,25 +478,6 @@ unsigned int tsm_screen_get_opts(struct tsm_screen *scr)
 	return scr->opts;
 }
 
-/*
-SHL_EXPORT
-unsigned int tsm_screen_get_width(struct tsm_screen *con)
-{
-	if (!con)
-		return 0;
-
-	return con->size_x;
-}
-
-SHL_EXPORT
-unsigned int tsm_screen_get_height(struct tsm_screen *con)
-{
-	if (!con)
-		return 0;
-
-	return con->size_y;
-}
-*/
 
 SHL_EXPORT
 int tsm_screen_resize(struct tsm_screen *con, unsigned int x,
@@ -936,31 +820,6 @@ void tsm_screen_set_def_attr(struct tsm_screen *con,
 	memcpy(&con->def_attr, attr, sizeof(*attr));
 }
 
-/*
-SHL_EXPORT
-void tsm_screen_reset(struct tsm_screen *con)
-{
-	unsigned int i;
-
-	if (!con)
-		return;
-
-	screen_inc_age(con);
-	con->age = con->age_cnt;
-
-	con->flags = 0;
-	con->margin_top = 0;
-	con->margin_bottom = con->size_y - 1;
-	con->lines = con->main_lines;
-
-	for (i = 0; i < con->size_x; ++i) {
-		if (i % 8 == 0)
-			con->tab_ruler[i] = true;
-		else
-			con->tab_ruler[i] = false;
-	}
-}
-*/
 
 SHL_EXPORT
 void tsm_screen_set_flags(struct tsm_screen *con, unsigned int flags)
@@ -1029,54 +888,7 @@ unsigned int tsm_screen_get_flags(struct tsm_screen *con)
 	return con->flags;
 }
 
-/*
-SHL_EXPORT
-unsigned int tsm_screen_get_cursor_x(struct tsm_screen *con)
-{
-	if (!con)
-		return 0;
 
-	return con->cursor_x;
-}
-
-SHL_EXPORT
-unsigned int tsm_screen_get_cursor_y(struct tsm_screen *con)
-{
-	if (!con)
-		return 0;
-
-	return con->cursor_y;
-}
-*/
-SHL_EXPORT
-void tsm_screen_set_tabstop(struct tsm_screen *con)
-{
-	if (!con || con->cursor_x >= con->size_x)
-		return;
-
-	con->tab_ruler[con->cursor_x] = true;
-}
-
-SHL_EXPORT
-void tsm_screen_reset_tabstop(struct tsm_screen *con)
-{
-	if (!con || con->cursor_x >= con->size_x)
-		return;
-
-	con->tab_ruler[con->cursor_x] = false;
-}
-
-SHL_EXPORT
-void tsm_screen_reset_all_tabstops(struct tsm_screen *con)
-{
-	unsigned int i;
-
-	if (!con)
-		return;
-
-	for (i = 0; i < con->size_x; ++i)
-		con->tab_ruler[i] = false;
-}
 
 SHL_EXPORT
 void tsm_screen_write(struct tsm_screen *con, tsm_symbol_t ch,
@@ -1296,62 +1108,7 @@ void tsm_screen_move_line_home(struct tsm_screen *con)
 	move_cursor(con, 0, con->cursor_y);
 }
 
-SHL_EXPORT
-void tsm_screen_tab_right(struct tsm_screen *con, unsigned int num)
-{
-	unsigned int i, j, x;
 
-	if (!con || !num)
-		return;
-
-	screen_inc_age(con);
-
-	x = con->cursor_x;
-	for (i = 0; i < num; ++i) {
-		for (j = x + 1; j < con->size_x; ++j) {
-			if (con->tab_ruler[j])
-				break;
-		}
-
-		x = j;
-		if (x + 1 >= con->size_x)
-			break;
-	}
-
-	/* tabs never cause pending new-lines */
-	if (x >= con->size_x)
-		x = con->size_x - 1;
-
-	move_cursor(con, x, con->cursor_y);
-}
-
-SHL_EXPORT
-void tsm_screen_tab_left(struct tsm_screen *con, unsigned int num)
-{
-	unsigned int i, x;
-	int j;
-
-	if (!con || !num)
-		return;
-
-	screen_inc_age(con);
-
-	x = con->cursor_x;
-	for (i = 0; i < num; ++i) {
-		for (j = x - 1; j > 0; --j) {
-			if (con->tab_ruler[j])
-				break;
-		}
-
-		if (j <= 0) {
-			x = 0;
-			break;
-		}
-		x = j;
-	}
-
-	move_cursor(con, x, con->cursor_y);
-}
 
 SHL_EXPORT
 void tsm_screen_insert_lines(struct tsm_screen *con, unsigned int num)

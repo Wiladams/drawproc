@@ -24,10 +24,11 @@ class Console {
 	size_t Width;
 	size_t Height;
 	struct tsm_screen screen;
-	//struct tsm_screen *screen = nullptr;
 	struct tsm_screen_attr defaultattr = { -1,-1, 255, 255, 255, 0,0,0,0,0,0,0,0 };
 
+	// internal routines
 	int _init();
+	void moveCursor(unsigned int x, unsigned int y);
 
 public:
 	// Construction
@@ -42,7 +43,6 @@ public:
 	size_t getWidth() const { return screen.size_x; }
 	size_t getHeight() const { return screen.size_y; }
 
-	void moveCursor(unsigned int x, unsigned int y);
 
 
 	// writing text
@@ -55,14 +55,20 @@ public:
 	void moveTo(unsigned int x, unsigned int y);
 	void newline();
 
-	// Screen Control
-
+	// Scrolling Control
 	void setMaxScrollback(size_t num);
 	void scrollBufferUp(size_t num);
 	void scrollBufferDown(size_t num);
 
 	void scrollUp(size_t num);
 	void scrollDown(size_t num);
+
+	// Tabbing
+	void setTabstop();
+	void resetTabstop();
+	void resetAllTabstops();
+	void tabLeft(size_t num);
+	void tabRight(size_t num);
 
 	// Drawing current state of screen
 	void draw();

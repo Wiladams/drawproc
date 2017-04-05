@@ -67,8 +67,6 @@ int Console::_init()
 	if (ret)
 		goto err_free;
 
-	//llog_debug(con, "new screen");
-
 	return 0;
 
 err_free:
@@ -186,7 +184,7 @@ void Console::moveTo(unsigned int x, unsigned int y)
 	else
 		last = screen.size_y - 1;
 
-	x = to_abs_x(con, x);
+	x = to_abs_x(screen, x);
 	if (x >= getWidth())
 		x = screen.size_x - 1;
 
@@ -231,6 +229,87 @@ void Console::scrollDown(size_t num)
 }
 
 
+void Console::setTabstop()
+{
+	if (screen.cursor_x >= screen.size_x)
+		return;
+
+	screen.tab_ruler[screen.cursor_x] = true;
+}
+
+void Console::resetTabstop()
+{
+	if (screen.cursor_x >= screen.size_x)
+		return;
+
+	screen.tab_ruler[screen.cursor_x] = false;
+}
+
+void Console::resetAllTabstops()
+{
+	unsigned int i;
+
+
+	for (i = 0; i < screen.size_x; ++i)
+		screen.tab_ruler[i] = false;
+}
+
+
+void Console::tabRight(size_t num)
+{
+	unsigned int i, j, x;
+
+	if (!num)
+		return;
+
+	screen_inc_age(&screen);
+
+	x = screen.cursor_x;
+	for (i = 0; i < num; ++i) {
+		for (j = x + 1; j < screen.size_x; ++j) {
+			if (screen.tab_ruler[j])
+				break;
+		}
+
+		x = j;
+		if (x + 1 >= screen.size_x)
+			break;
+	}
+
+	/* tabs never cause pending new-lines */
+	if (x >= screen.size_x)
+		x = screen.size_x - 1;
+
+	moveCursor(x, screen.cursor_y);
+}
+
+
+void Console::tabLeft(size_t num)
+{
+	unsigned int i, x;
+	int j;
+
+	if (!num)
+		return;
+
+	screen_inc_age(&screen);
+
+	x = screen.cursor_x;
+	for (i = 0; i < num; ++i) {
+		for (j = x - 1; j > 0; --j) {
+			if (screen.tab_ruler[j])
+				break;
+		}
+
+		if (j <= 0) {
+			x = 0;
+			break;
+		}
+		x = j;
+	}
+
+	moveCursor(x, screen.cursor_y);
+}
 
 void Console::reset()
 {
