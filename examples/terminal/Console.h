@@ -1,6 +1,9 @@
 #pragma once
+
 #include "drawproc.h"
-#include "libtsm.h"
+//#include "libtsm.h"
+#include "libtsm_int.h"
+
 #include <stdio.h>
 
 /*
@@ -20,24 +23,40 @@
 class Console {
 	size_t Width;
 	size_t Height;
-	struct tsm_screen *screen = nullptr;
+	struct tsm_screen screen;
+	//struct tsm_screen *screen = nullptr;
 	struct tsm_screen_attr defaultattr = { -1,-1, 255, 255, 255, 0,0,0,0,0,0,0,0 };
 
+	int _init();
 
 public:
 	// Construction
 	Console(const size_t width, const size_t height);
+	~Console();
 
+	void reset();
+
+	// Various screen attributes
+	size_t getCursorX() const { return screen.cursor_x; }
+	size_t getCursorY() const { return screen.cursor_y; }
+	size_t getWidth() const { return screen.size_x; }
+	size_t getHeight() const { return screen.size_y; }
+
+	void moveCursor(unsigned int x, unsigned int y);
+
+
+	// writing text
 	void write(const char *str);
-	
-	// Cursor control
-	void getCursor(unsigned int &x, unsigned int &y);
+	void writeLine(const char *str);
+
+
 	
 	void moveDown(size_t num, bool scroll);
 	void moveTo(unsigned int x, unsigned int y);
 	void newline();
 
 	// Screen Control
+
 	void setMaxScrollback(size_t num);
 	void scrollBufferUp(size_t num);
 	void scrollBufferDown(size_t num);

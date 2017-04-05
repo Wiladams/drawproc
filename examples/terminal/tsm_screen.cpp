@@ -82,20 +82,21 @@ static struct cell *get_cursor_cell(struct tsm_screen *con)
 	return &con->lines[cur_y]->cells[cur_x];
 }
 
+/*
 static void move_cursor(struct tsm_screen *con, unsigned int x, unsigned int y)
 {
 	struct cell *c;
 
-	/* if cursor is hidden, just move it */
+	// if cursor is hidden, just move it
 	if (con->flags & TSM_SCREEN_HIDE_CURSOR) {
 		con->cursor_x = x;
 		con->cursor_y = y;
 		return;
 	}
 
-	/* If cursor is visible, we have to mark the current and the new cell
-	 * as changed by resetting their age. We skip it if the cursor-position
-	 * didn't actually change. */
+	// If cursor is visible, we have to mark the current and the new cell
+	// as changed by resetting their age. We skip it if the cursor-position
+	// didn't actually change.
 
 	if (con->cursor_x == x && con->cursor_y == y)
 		return;
@@ -109,6 +110,7 @@ static void move_cursor(struct tsm_screen *con, unsigned int x, unsigned int y)
 	c = get_cursor_cell(con);
 	c->age = con->age_cnt;
 }
+*/
 
 void screen_cell_init(struct tsm_screen *con, struct cell *cell)
 {
@@ -451,6 +453,7 @@ static void screen_erase_region(struct tsm_screen *con,
 	}
 }
 
+/*
 static inline unsigned int to_abs_x(struct tsm_screen *con, unsigned int x)
 {
 	return x;
@@ -463,7 +466,8 @@ static inline unsigned int to_abs_y(struct tsm_screen *con, unsigned int y)
 
 	return con->margin_top + y;
 }
-
+*/
+/*
 SHL_EXPORT
 int tsm_screen_new(struct tsm_screen **out, tsm_log_t log, void *log_data)
 {
@@ -513,7 +517,9 @@ err_free:
 	free(con);
 	return ret;
 }
+*/
 
+/*
 SHL_EXPORT
 void tsm_screen_ref(struct tsm_screen *con)
 {
@@ -543,6 +549,7 @@ void tsm_screen_unref(struct tsm_screen *con)
 	tsm_symbol_table_unref(con->sym_table);
 	free(con);
 }
+*/
 
 void tsm_screen_set_opts(struct tsm_screen *scr, unsigned int opts)
 {
@@ -568,6 +575,7 @@ unsigned int tsm_screen_get_opts(struct tsm_screen *scr)
 	return scr->opts;
 }
 
+/*
 SHL_EXPORT
 unsigned int tsm_screen_get_width(struct tsm_screen *con)
 {
@@ -585,6 +593,7 @@ unsigned int tsm_screen_get_height(struct tsm_screen *con)
 
 	return con->size_y;
 }
+*/
 
 SHL_EXPORT
 int tsm_screen_resize(struct tsm_screen *con, unsigned int x,
@@ -927,6 +936,7 @@ void tsm_screen_set_def_attr(struct tsm_screen *con,
 	memcpy(&con->def_attr, attr, sizeof(*attr));
 }
 
+/*
 SHL_EXPORT
 void tsm_screen_reset(struct tsm_screen *con)
 {
@@ -950,6 +960,7 @@ void tsm_screen_reset(struct tsm_screen *con)
 			con->tab_ruler[i] = false;
 	}
 }
+*/
 
 SHL_EXPORT
 void tsm_screen_set_flags(struct tsm_screen *con, unsigned int flags)
@@ -1018,6 +1029,7 @@ unsigned int tsm_screen_get_flags(struct tsm_screen *con)
 	return con->flags;
 }
 
+/*
 SHL_EXPORT
 unsigned int tsm_screen_get_cursor_x(struct tsm_screen *con)
 {
@@ -1035,7 +1047,7 @@ unsigned int tsm_screen_get_cursor_y(struct tsm_screen *con)
 
 	return con->cursor_y;
 }
-
+*/
 SHL_EXPORT
 void tsm_screen_set_tabstop(struct tsm_screen *con)
 {
@@ -1103,6 +1115,7 @@ void tsm_screen_write(struct tsm_screen *con, tsm_symbol_t ch,
 	move_cursor(con, con->cursor_x + len, con->cursor_y);
 }
 
+/*
 SHL_EXPORT
 void tsm_screen_newline(struct tsm_screen *con)
 {
@@ -1114,6 +1127,7 @@ void tsm_screen_newline(struct tsm_screen *con)
 	tsm_screen_move_down(con, 1, true);
 	tsm_screen_move_line_home(con);
 }
+*/
 
 SHL_EXPORT
 void tsm_screen_scroll_up(struct tsm_screen *con, unsigned int num)
@@ -1137,6 +1151,7 @@ void tsm_screen_scroll_down(struct tsm_screen *con, unsigned int num)
 	screen_scroll_down(con, num);
 }
 
+/*
 SHL_EXPORT
 void tsm_screen_move_to(struct tsm_screen *con, unsigned int x,
 			    unsigned int y)
@@ -1163,6 +1178,7 @@ void tsm_screen_move_to(struct tsm_screen *con, unsigned int x,
 
 	move_cursor(con, x, y);
 }
+*/
 
 SHL_EXPORT
 void tsm_screen_move_up(struct tsm_screen *con, unsigned int num,

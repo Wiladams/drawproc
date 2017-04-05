@@ -179,12 +179,6 @@ typedef int (*tsm_screen_draw_cb) (struct tsm_screen *con,
 				   tsm_age_t age,
 				   void *data);
 
-int tsm_screen_new(struct tsm_screen **out, tsm_log_t log, void *log_data);
-void tsm_screen_ref(struct tsm_screen *con);
-void tsm_screen_unref(struct tsm_screen *con);
-
-unsigned int tsm_screen_get_width(struct tsm_screen *con);
-unsigned int tsm_screen_get_height(struct tsm_screen *con);
 int tsm_screen_resize(struct tsm_screen *con, unsigned int x,
 		      unsigned int y);
 int tsm_screen_set_margins(struct tsm_screen *con,
@@ -200,13 +194,13 @@ void tsm_screen_sb_reset(struct tsm_screen *con);
 
 void tsm_screen_set_def_attr(struct tsm_screen *con,
 			     const struct tsm_screen_attr *attr);
-void tsm_screen_reset(struct tsm_screen *con);
+//void tsm_screen_reset(struct tsm_screen *con);
 void tsm_screen_set_flags(struct tsm_screen *con, unsigned int flags);
 void tsm_screen_reset_flags(struct tsm_screen *con, unsigned int flags);
 unsigned int tsm_screen_get_flags(struct tsm_screen *con);
 
-unsigned int tsm_screen_get_cursor_x(struct tsm_screen *con);
-unsigned int tsm_screen_get_cursor_y(struct tsm_screen *con);
+//unsigned int tsm_screen_get_cursor_x(struct tsm_screen *con);
+//unsigned int tsm_screen_get_cursor_y(struct tsm_screen *con);
 
 void tsm_screen_set_tabstop(struct tsm_screen *con);
 void tsm_screen_reset_tabstop(struct tsm_screen *con);
@@ -214,51 +208,40 @@ void tsm_screen_reset_all_tabstops(struct tsm_screen *con);
 
 void tsm_screen_write(struct tsm_screen *con, tsm_symbol_t ch,
 		      const struct tsm_screen_attr *attr);
-void tsm_screen_newline(struct tsm_screen *con);
+//void tsm_screen_newline(struct tsm_screen *con);
 void tsm_screen_scroll_up(struct tsm_screen *con, unsigned int num);
 void tsm_screen_scroll_down(struct tsm_screen *con, unsigned int num);
-void tsm_screen_move_to(struct tsm_screen *con, unsigned int x,
-			unsigned int y);
-void tsm_screen_move_up(struct tsm_screen *con, unsigned int num,
-			bool scroll);
-void tsm_screen_move_down(struct tsm_screen *con, unsigned int num,
-			  bool scroll);
+//void tsm_screen_move_to(struct tsm_screen *con, unsigned int x, unsigned int y);
+void tsm_screen_move_up(struct tsm_screen *con, unsigned int num, bool scroll);
+void tsm_screen_move_down(struct tsm_screen *con, unsigned int num, bool scroll);
 void tsm_screen_move_left(struct tsm_screen *con, unsigned int num);
 void tsm_screen_move_right(struct tsm_screen *con, unsigned int num);
 void tsm_screen_move_line_end(struct tsm_screen *con);
 void tsm_screen_move_line_home(struct tsm_screen *con);
+
 void tsm_screen_tab_right(struct tsm_screen *con, unsigned int num);
 void tsm_screen_tab_left(struct tsm_screen *con, unsigned int num);
+
 void tsm_screen_insert_lines(struct tsm_screen *con, unsigned int num);
 void tsm_screen_delete_lines(struct tsm_screen *con, unsigned int num);
 void tsm_screen_insert_chars(struct tsm_screen *con, unsigned int num);
 void tsm_screen_delete_chars(struct tsm_screen *con, unsigned int num);
+
 void tsm_screen_erase_cursor(struct tsm_screen *con);
 void tsm_screen_erase_chars(struct tsm_screen *con, unsigned int num);
-void tsm_screen_erase_cursor_to_end(struct tsm_screen *con,
-				    bool protect);
-void tsm_screen_erase_home_to_cursor(struct tsm_screen *con,
-				     bool protect);
-void tsm_screen_erase_current_line(struct tsm_screen *con,
-				   bool protect);
-void tsm_screen_erase_screen_to_cursor(struct tsm_screen *con,
-				       bool protect);
-void tsm_screen_erase_cursor_to_screen(struct tsm_screen *con,
-				       bool protect);
+void tsm_screen_erase_cursor_to_end(struct tsm_screen *con, bool protect);
+void tsm_screen_erase_home_to_cursor(struct tsm_screen *con, bool protect);
+void tsm_screen_erase_current_line(struct tsm_screen *con, bool protect);
+void tsm_screen_erase_screen_to_cursor(struct tsm_screen *con, bool protect);
+void tsm_screen_erase_cursor_to_screen(struct tsm_screen *con, bool protect);
 void tsm_screen_erase_screen(struct tsm_screen *con, bool protect);
 
 void tsm_screen_selection_reset(struct tsm_screen *con);
-void tsm_screen_selection_start(struct tsm_screen *con,
-				unsigned int posx,
-				unsigned int posy);
-void tsm_screen_selection_target(struct tsm_screen *con,
-				 unsigned int posx,
-				 unsigned int posy);
+void tsm_screen_selection_start(struct tsm_screen *con, unsigned int posx, unsigned int posy);
+void tsm_screen_selection_target(struct tsm_screen *con, unsigned int posx, unsigned int posy);
 int tsm_screen_selection_copy(struct tsm_screen *con, char **out);
 
-tsm_age_t tsm_screen_draw(struct tsm_screen *con, tsm_screen_draw_cb draw_cb,
-			  void *data);
-
+tsm_age_t tsm_screen_draw(struct tsm_screen *con, tsm_screen_draw_cb draw_cb,  void *data);
 
 
 #ifdef __cplusplus

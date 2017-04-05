@@ -41,18 +41,15 @@ void setup() {
 
 	con.setMaxScrollback(1024);
 
-	con.write("          1         2         3         4         5         6         7");
-	con.newline();
+	con.writeLine("          1         2         3         4         5         6         7");
 	con.write("01234567890123456789012345678901234567890123456789012345678901234567890123456789");
 	con.moveTo(0, 2);
 	con.write("Hello,");
 	con.moveDown(1, true);
-	con.write("World!");
-	con.newline();
+	con.writeLine("World!");
 
 	for (int i = 1; i <= 30; i++)
 	{
-		con.write("line");
-		con.newline();
+		con.writeLine("line");
 	}
 }
