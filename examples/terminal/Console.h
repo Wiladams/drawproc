@@ -29,6 +29,11 @@ class Console {
 	// internal routines
 	int _init();
 	void moveCursor(unsigned int x, unsigned int y);
+	void eraseRegion(unsigned int x_from,
+		unsigned int y_from,
+		unsigned int x_to,
+		unsigned int y_to,
+		bool protect);
 
 public:
 	// Construction

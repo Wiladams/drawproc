@@ -21,9 +21,6 @@
     <ClCompile Include="terminal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vte.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="shl_htable.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -39,10 +36,10 @@
     <ClCompile Include="tsm_selection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tsm_unicode.cpp">
+    <ClCompile Include="wcwidth.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="wcwidth.cpp">
+    <ClCompile Include="tsm_unicode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -69,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Console.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UTF8Machine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -311,6 +311,44 @@ void Console::tabLeft(size_t num)
 	moveCursor(x, screen.cursor_y);
 }
 
+void Console::eraseRegion(unsigned int x_from,
+	unsigned int y_from,
+	unsigned int x_to,
+	unsigned int y_to,
+	bool protect)
+{
+	unsigned int to;
+	struct line *line;
+
+	/* TODO: more sophisticated ageing */
+	screen.age = screen.age_cnt;
+
+	if (y_to >= screen.size_y)
+		y_to = screen.size_y - 1;
+	if (x_to >= screen.size_x)
+		x_to = screen.size_x - 1;
+
+	for (; y_from <= y_to; ++y_from) {
+		line = screen.lines[y_from];
+		if (!line) {
+			x_from = 0;
+			continue;
+		}
+
+		if (y_from == y_to)
+			to = x_to;
+		else
+			to = screen.size_x - 1;
+		for (; x_from <= to; ++x_from) {
+			if (protect && line->cells[x_from].attr.protect)
+				continue;
+
+			screen_cell_init(&screen, &line->cells[x_from]);
+		}
+		x_from = 0;
+	}
+}
+
 void Console::reset()
 {
 	unsigned int i;

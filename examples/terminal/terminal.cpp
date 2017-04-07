@@ -48,7 +48,7 @@ void setup() {
 	con.moveDown(1, true);
 	con.writeLine("World!");
 
-	for (int i = 1; i <= 30; i++)
+	for (int i = 1; i <= 26; i++)
 	{
 		con.writeLine("line");
 	}

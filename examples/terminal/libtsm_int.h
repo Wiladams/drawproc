@@ -57,7 +57,7 @@ unsigned int tsm_symbol_get_width(struct tsm_symbol_table *tbl,
 				  tsm_symbol_t sym);
 
 /* utf8 state machine */
-
+/*
 struct tsm_utf8_mach;
 
 enum tsm_utf8_mach_state {
@@ -75,7 +75,7 @@ void tsm_utf8_mach_free(struct tsm_utf8_mach *mach);
 int tsm_utf8_mach_feed(struct tsm_utf8_mach *mach, char c);
 uint32_t tsm_utf8_mach_get(struct tsm_utf8_mach *mach);
 void tsm_utf8_mach_reset(struct tsm_utf8_mach *mach);
-
+*/
 /* TSM screen */
 
 struct cell {
