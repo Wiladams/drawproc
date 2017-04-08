@@ -154,11 +154,13 @@
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="shl_htable.c" />
+    <ClCompile Include="SymbolTable.cpp" />
     <ClCompile Include="terminal.cpp" />
     <ClCompile Include="tsm_render.cpp" />
     <ClCompile Include="tsm_screen.cpp" />
     <ClCompile Include="tsm_selection.cpp" />
     <ClCompile Include="tsm_unicode.cpp" />
+    <ClCompile Include="Unicode.cpp" />
     <ClCompile Include="wcwidth.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -168,7 +170,8 @@
     <ClInclude Include="shl_array.h" />
     <ClInclude Include="shl_htable.h" />
     <ClInclude Include="shl_llog.h" />
-    <ClInclude Include="UTF8Machine.h" />
+    <ClInclude Include="SymbolTable.h" />
+    <ClInclude Include="Unicode.h" />
     <ClInclude Include="wcwidth.h" />
     <ClInclude Include="xkbcommon-keysyms.h" />
   </ItemGroup>

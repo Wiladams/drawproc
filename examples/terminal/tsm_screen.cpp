@@ -899,7 +899,9 @@ void tsm_screen_write(struct tsm_screen *con, tsm_symbol_t ch,
 	if (!con)
 		return;
 
-	len = tsm_symbol_get_width(con->sym_table, ch);
+
+	//len = tsm_symbol_get_width(con->sym_table, ch);
+	len = con->sym_table.getWidth(ch);
 	if (!len)
 		return;
 

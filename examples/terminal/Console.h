@@ -3,6 +3,7 @@
 #include "drawproc.h"
 //#include "libtsm.h"
 #include "libtsm_int.h"
+#include "SymbolTable.h"
 
 #include <stdio.h>
 
@@ -25,6 +26,7 @@ class Console {
 	size_t Height;
 	struct tsm_screen screen;
 	struct tsm_screen_attr defaultattr = { -1,-1, 255, 255, 255, 0,0,0,0,0,0,0,0 };
+	SymbolTable symtable;
 
 	// internal routines
 	int _init();

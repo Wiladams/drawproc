@@ -31,6 +31,8 @@
 #include <stdlib.h>
 #include "libtsm.h"
 #include "shl_llog.h"
+#include "SymbolTable.h"
+
 
 //#define SHL_EXPORT __attribute__((visibility("default")))
 #define SHL_EXPORT
@@ -108,7 +110,8 @@ struct tsm_screen {
 	void *llog_data;
 	unsigned int opts;
 	unsigned int flags;
-	struct tsm_symbol_table *sym_table;
+	//struct tsm_symbol_table *sym_table;
+	struct SymbolTable sym_table;
 
 	/* default attributes for new cells */
 	struct tsm_screen_attr def_attr;

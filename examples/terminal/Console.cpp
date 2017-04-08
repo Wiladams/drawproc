@@ -59,9 +59,9 @@ int Console::_init()
 	screen.def_attr.fg = 255;
 	screen.def_attr.fb = 255;
 
-	ret = tsm_symbol_table_new(&screen.sym_table);
-	if (ret)
-		goto err_free;
+	//ret = tsm_symbol_table_new(&screen.sym_table);
+	//if (ret)
+	//	goto err_free;
 
 	ret = tsm_screen_resize(&screen, Width, Height);
 	if (ret)
@@ -77,7 +77,7 @@ err_free:
 	free(screen.main_lines);
 	free(screen.alt_lines);
 	free(screen.tab_ruler);
-	tsm_symbol_table_unref(screen.sym_table);
+	//tsm_symbol_table_unref(screen.sym_table);
 
 	return ret;
 }
@@ -103,7 +103,7 @@ Console::~Console()
 	free(screen.main_lines);
 	free(screen.alt_lines);
 	free(screen.tab_ruler);
-	tsm_symbol_table_unref(screen.sym_table);
+	//tsm_symbol_table_unref(screen.sym_table);
 
 }
 
