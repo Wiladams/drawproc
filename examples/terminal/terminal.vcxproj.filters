@@ -27,19 +27,10 @@
     <ClCompile Include="Console.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tsm_render.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="tsm_screen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="tsm_selection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wcwidth.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tsm_unicode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Unicode.cpp">
@@ -63,9 +54,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shl_llog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wcwidth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="xkbcommon-keysyms.h">

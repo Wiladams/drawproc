@@ -161,7 +161,6 @@ tsm_age_t tsm_screen_draw(struct tsm_screen *con, tsm_screen_draw_cb draw_cb,
 					age = con->age;
 			}
 
-//			ch = tsm_symbol_get(con->sym_table, &cell->ch, &len);
 			ch = con->sym_table.get(&cell->ch, &len);
 			if (cell->ch == ' ' || cell->ch == 0)
 				len = 0;

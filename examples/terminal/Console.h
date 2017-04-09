@@ -26,10 +26,10 @@ class Console {
 	size_t Height;
 	struct tsm_screen screen;
 	struct tsm_screen_attr defaultattr = { -1,-1, 255, 255, 255, 0,0,0,0,0,0,0,0 };
-	SymbolTable symtable;
+
 
 	// internal routines
-	int _init();
+	int _init(const size_t width, const size_t height);
 	void moveCursor(unsigned int x, unsigned int y);
 	void eraseRegion(unsigned int x_from,
 		unsigned int y_from,
@@ -78,5 +78,7 @@ public:
 	void tabRight(size_t num);
 
 	// Drawing current state of screen
+	tsm_age_t drawScreen(void *data);
+
 	void draw();
 };

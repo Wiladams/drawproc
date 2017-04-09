@@ -106,17 +106,6 @@ typedef void (*tsm_log_t) (void *data,
  * @{
  */
 
-/* UCS4 helpers */
-
-#define TSM_UCS4_MAX (0x7fffffffUL)
-#define TSM_UCS4_INVALID (TSM_UCS4_MAX + 1)
-#define TSM_UCS4_REPLACEMENT (0xfffdUL)
-
-/* ucs4 to utf8 converter */
-
-unsigned int tsm_ucs4_get_width(uint32_t ucs4);
-size_t tsm_ucs4_to_utf8(uint32_t ucs4, char *out);
-char *tsm_ucs4_to_utf8_alloc(const uint32_t *ucs4, size_t len, size_t *len_out);
 
 /* symbols */
 
@@ -194,7 +183,7 @@ void tsm_screen_sb_reset(struct tsm_screen *con);
 
 void tsm_screen_set_def_attr(struct tsm_screen *con,
 			     const struct tsm_screen_attr *attr);
-//void tsm_screen_reset(struct tsm_screen *con);
+
 void tsm_screen_set_flags(struct tsm_screen *con, unsigned int flags);
 void tsm_screen_reset_flags(struct tsm_screen *con, unsigned int flags);
 unsigned int tsm_screen_get_flags(struct tsm_screen *con);
@@ -210,8 +199,7 @@ void tsm_screen_move_right(struct tsm_screen *con, unsigned int num);
 void tsm_screen_move_line_end(struct tsm_screen *con);
 void tsm_screen_move_line_home(struct tsm_screen *con);
 
-void tsm_screen_tab_right(struct tsm_screen *con, unsigned int num);
-void tsm_screen_tab_left(struct tsm_screen *con, unsigned int num);
+
 
 void tsm_screen_insert_lines(struct tsm_screen *con, unsigned int num);
 void tsm_screen_delete_lines(struct tsm_screen *con, unsigned int num);
@@ -231,9 +219,6 @@ void tsm_screen_selection_reset(struct tsm_screen *con);
 void tsm_screen_selection_start(struct tsm_screen *con, unsigned int posx, unsigned int posy);
 void tsm_screen_selection_target(struct tsm_screen *con, unsigned int posx, unsigned int posy);
 int tsm_screen_selection_copy(struct tsm_screen *con, char **out);
-
-tsm_age_t tsm_screen_draw(struct tsm_screen *con, tsm_screen_draw_cb draw_cb,  void *data);
-
 
 #ifdef __cplusplus
 }

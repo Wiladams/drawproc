@@ -44,7 +44,7 @@ static int draw_cb(struct tsm_screen *con,
 	return 0;
 }
 
-int Console::_init()
+int Console::_init(const size_t width, const size_t height)
 {
 	int ret;
 	unsigned int i;
@@ -59,11 +59,7 @@ int Console::_init()
 	screen.def_attr.fg = 255;
 	screen.def_attr.fb = 255;
 
-	//ret = tsm_symbol_table_new(&screen.sym_table);
-	//if (ret)
-	//	goto err_free;
-
-	ret = tsm_screen_resize(&screen, Width, Height);
+	ret = tsm_screen_resize(&screen, width, height);
 	if (ret)
 		goto err_free;
 
@@ -77,16 +73,13 @@ err_free:
 	free(screen.main_lines);
 	free(screen.alt_lines);
 	free(screen.tab_ruler);
-	//tsm_symbol_table_unref(screen.sym_table);
 
 	return ret;
 }
 
 Console::Console(const size_t width, const size_t height) 
 {
-		Width = width;
-		Height = height;
-		int err = _init();
+		int err = _init(width, height);
 }
 
 Console::~Console()
@@ -103,8 +96,6 @@ Console::~Console()
 	free(screen.main_lines);
 	free(screen.alt_lines);
 	free(screen.tab_ruler);
-	//tsm_symbol_table_unref(screen.sym_table);
-
 }
 
 void Console::write(const char *str) 
@@ -370,10 +361,154 @@ void Console::reset()
 	}
 }
 
+
+tsm_age_t Console::drawScreen(void *data)
+{
+	unsigned int cur_x, cur_y;
+	unsigned int i, j, k;
+	struct line *iter, *line = NULL;
+	struct cell *cell, empty;
+	struct tsm_screen_attr attr;
+	int ret = 0, warned = 0;
+	const uint32_t *ch;
+	size_t len;
+	bool in_sel = false, sel_start = false, sel_end = false;
+	bool was_sel = false;
+	tsm_age_t age;
+
+
+
+	screen_cell_init(&screen, &empty);
+
+	cur_x = screen.cursor_x;
+	if (screen.cursor_x >= screen.size_x)
+		cur_x = screen.size_x - 1;
+	cur_y = screen.cursor_y;
+	if (screen.cursor_y >= screen.size_y)
+		cur_y = screen.size_y - 1;
+
+	/* push each character into rendering pipeline */
+
+	iter = screen.sb_pos;
+	k = 0;
+
+	if (screen.sel_active) {
+		if (!screen.sel_start.line && screen.sel_start.y == SELECTION_TOP)
+			in_sel = !in_sel;
+		if (!screen.sel_end.line && screen.sel_end.y == SELECTION_TOP)
+			in_sel = !in_sel;
+
+		if (screen.sel_start.line &&
+			(!iter || screen.sel_start.line->sb_id < iter->sb_id))
+			in_sel = !in_sel;
+		if (screen.sel_end.line &&
+			(!iter || screen.sel_end.line->sb_id < iter->sb_id))
+			in_sel = !in_sel;
+	}
+
+	for (i = 0; i < screen.size_y; ++i) {
+		if (iter) {
+			line = iter;
+			iter = iter->next;
+		}
+		else {
+			line = screen.lines[k];
+			k++;
+		}
+
+		if (screen.sel_active) {
+			if (screen.sel_start.line == line ||
+				(!screen.sel_start.line &&
+					screen.sel_start.y == k - 1))
+				sel_start = true;
+			else
+				sel_start = false;
+			if (screen.sel_end.line == line ||
+				(!screen.sel_end.line &&
+					screen.sel_end.y == k - 1))
+				sel_end = true;
+			else
+				sel_end = false;
+
+			was_sel = false;
+		}
+
+		for (j = 0; j < screen.size_x; ++j) {
+			if (j < line->size)
+				cell = &line->cells[j];
+			else
+				cell = &empty;
+
+			memcpy(&attr, &cell->attr, sizeof(attr));
+
+			if (screen.sel_active) {
+				if (sel_start &&
+					j == screen.sel_start.x) {
+					was_sel = in_sel;
+					in_sel = !in_sel;
+				}
+				if (sel_end &&
+					j == screen.sel_end.x) {
+					was_sel = in_sel;
+					in_sel = !in_sel;
+				}
+			}
+
+			if (k == cur_y + 1 && j == cur_x &&
+				!(screen.flags & TSM_SCREEN_HIDE_CURSOR))
+				attr.inverse = !attr.inverse;
+
+			/* TODO: do some more sophisticated inverse here. When
+			* INVERSE mode is set, we should instead just select
+			* inverse colors instead of switching background and
+			* foreground */
+			if (screen.flags & TSM_SCREEN_INVERSE)
+				attr.inverse = !attr.inverse;
+
+			if (in_sel || was_sel) {
+				was_sel = false;
+				attr.inverse = !attr.inverse;
+			}
+
+			if (screen.age_reset) {
+				age = 0;
+			}
+			else {
+				age = cell->age;
+				if (line->age > age)
+					age = line->age;
+				if (screen.age > age)
+					age = screen.age;
+			}
+
+			ch = screen.sym_table.get(&cell->ch, &len);
+			if (cell->ch == ' ' || cell->ch == 0)
+				len = 0;
+
+			ret = draw_cb(&screen, cell->ch, ch, len, cell->width,
+				j, i, &attr, age, data);
+			if (ret && warned++ < 3) {
+				//llog_debug(con,"cannot draw glyph at %ux%u via text-renderer",j, i);
+				//if (warned == 3)
+					//llog_debug(con,"suppressing further warnings during this rendering round");
+			}
+		}
+	}
+
+	if (screen.age_reset) {
+		screen.age_reset = 0;
+		return 0;
+	}
+	else {
+		return screen.age_cnt;
+	}
+}
+
+
 void Console::draw() 
 {
 	background(0);
 
 	setFont(mcs6x10_mono);
-	tsm_age_t age = tsm_screen_draw(&screen, draw_cb, nullptr);
+	drawScreen(nullptr);
 }
