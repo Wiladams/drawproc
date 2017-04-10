@@ -17,7 +17,7 @@ Your own views are added to the application using the app->AddChild() function.
 Here is the sorter.cpp file, which is typical of how you would setup
 such an application.
 
-```
+```c++
 #include <stdio.h>
 
 #include "drawproc.h"
