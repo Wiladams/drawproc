@@ -7,6 +7,13 @@ do with parsing the terminal commands and turning them into low level console wr
 
 Some sample code:
 
+```c++
+#include "drawproc.h"
+#include "libtsm.h"
+#include "console.h"
+
+#include <stdio.h>
+
 Console con(80, 24);
 
 void keyReleased()
@@ -51,7 +58,7 @@ void setup() {
 		con.writeLine("line");
 	}
 }
-
+```
 
 usage: drawproc terminal.dll
 
