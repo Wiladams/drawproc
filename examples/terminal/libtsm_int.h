@@ -37,26 +37,11 @@
 //#define SHL_EXPORT __attribute__((visibility("default")))
 #define SHL_EXPORT
 
-/* max combined-symbol length */
-#define TSM_UCS4_MAXLEN 10
-
 /* symbols */
 
 struct tsm_symbol_table;
 
 extern const tsm_symbol_t tsm_symbol_default;
-
-//int tsm_symbol_table_new(struct tsm_symbol_table **out);
-//void tsm_symbol_table_ref(struct tsm_symbol_table *tbl);
-//void tsm_symbol_table_unref(struct tsm_symbol_table *tbl);
-
-//tsm_symbol_t tsm_symbol_make(uint32_t ucs4);
-//tsm_symbol_t tsm_symbol_append(struct tsm_symbol_table *tbl,
-//			       tsm_symbol_t sym, uint32_t ucs4);
-//const uint32_t *tsm_symbol_get(struct tsm_symbol_table *tbl,
-//			       tsm_symbol_t *sym, size_t *size);
-//unsigned int tsm_symbol_get_width(struct tsm_symbol_table *tbl,
-//				  tsm_symbol_t sym);
 
 
 /* TSM screen */

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "drawproc.h"
-//#include "libtsm.h"
+
 #include "libtsm_int.h"
 #include "SymbolTable.h"
 
@@ -53,14 +53,30 @@ public:
 
 
 	// writing text
+	void writeSymbolAt(size_t x, size_t y, tsm_symbol_t ch, unsigned int len, const struct tsm_screen_attr *attr);
+	void writeSymbol(tsm_symbol_t ch, const struct tsm_screen_attr *attr);
 	void write(const char *str);
 	void writeLine(const char *str);
 
-
+	// Erasing parts of screen
+	void eraseScreen(bool protect);
+	void eraseCursor();
+	void eraseChars( size_t num);
+	void eraseCursorToEnd( bool protect);
+	void eraseHomeToCursor( bool protect);
+	void eraseCurrentLine( bool protect);
+	void eraseScreenToCursor( bool protect);
+	void eraseCursorToScreen( bool protect);
 	
-	void moveDown(size_t num, bool scroll);
 	void moveTo(unsigned int x, unsigned int y);
 	void newline();
+	void moveDown(size_t num, bool scroll);
+	void moveUp(size_t num, bool scroll);
+	void moveLeft(size_t num);
+	void moveRight(size_t num);
+	void moveLineEnd();
+	void moveLineHome();
+
 
 	// Scrolling Control
 	void setMaxScrollback(size_t num);
@@ -70,12 +86,18 @@ public:
 	void scrollUp(size_t num);
 	void scrollDown(size_t num);
 
+	// Margins
+	int setMargins(size_t top, size_t bottom);
+
+
 	// Tabbing
 	void setTabstop();
 	void resetTabstop();
 	void resetAllTabstops();
 	void tabLeft(size_t num);
 	void tabRight(size_t num);
+
+
 
 	// Drawing current state of screen
 	tsm_age_t drawScreen(void *data);

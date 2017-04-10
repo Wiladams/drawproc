@@ -4,6 +4,19 @@
 
 #include <stdio.h>
 
+/*
+typedef int (*tsm_screen_draw_cb) (struct tsm_screen *con,
+uint32_t id,
+const uint32_t *ch,
+size_t len,
+unsigned int width,
+unsigned int posx,
+unsigned int posy,
+const struct tsm_screen_attr *attr,
+tsm_age_t age,
+void *data);
+*/
+
 static inline unsigned int to_abs_x(struct tsm_screen &con, unsigned int x)
 {
 	return x;
@@ -98,12 +111,90 @@ Console::~Console()
 	free(screen.tab_ruler);
 }
 
+void Console::newline()
+{
+	screen_inc_age(&screen);
+
+	moveDown(1, true);
+	moveLineHome();
+}
+
+void Console::writeSymbolAt(size_t x, size_t y, tsm_symbol_t ch, unsigned int len, const struct tsm_screen_attr *attr)
+{
+	struct line *line;
+	unsigned int i;
+
+	if (!len)
+		return;
+
+	if (x >= screen.size_x || y >= screen.size_y) {
+		//llog_warning(con, "writing beyond buffer boundary");
+		return;
+	}
+
+	line = screen.lines[y];
+
+	if ((screen.flags & TSM_SCREEN_INSERT_MODE) &&
+		(int)x < ((int)screen.size_x - len)) {
+		line->age = screen.age_cnt;
+		memmove(&line->cells[x + len], &line->cells[x],
+			sizeof(struct cell) * (screen.size_x - len - x));
+	}
+
+	line->cells[x].age = screen.age_cnt;
+	line->cells[x].ch = ch;
+	line->cells[x].width = len;
+	memcpy(&line->cells[x].attr, attr, sizeof(*attr));
+
+	for (i = 1; i < len && i + x < screen.size_x; ++i) {
+		line->cells[x + i].age = screen.age_cnt;
+		line->cells[x + i].width = 0;
+	}
+}
+
+/*
+	writeSymbol(ch, attr)
+
+	write the given symbol at the current screen cursor location
+*/
+void Console::writeSymbol(tsm_symbol_t ch, const struct tsm_screen_attr *attr)
+{
+	unsigned int last, len;
+
+	len = screen.sym_table.getWidth(ch);
+	if (!len)
+		return;
+
+	screen_inc_age(&screen);
+
+	if (screen.cursor_y <= screen.margin_bottom ||
+		screen.cursor_y >= screen.size_y)
+		last = screen.margin_bottom;
+	else
+		last = screen.size_y - 1;
+
+	if (screen.cursor_x >= screen.size_x) {
+		if (screen.flags & TSM_SCREEN_AUTO_WRAP)
+			moveCursor(0, screen.cursor_y + 1);
+		else
+			moveCursor(screen.size_x - 1, screen.cursor_y);
+	}
+
+	if (screen.cursor_y > last) {
+		moveCursor(screen.cursor_x, last);
+		scrollUp(1);
+	}
+
+	writeSymbolAt(screen.cursor_x, screen.cursor_y, ch, len, attr);
+	moveCursor(screen.cursor_x + len, screen.cursor_y);
+}
+
 void Console::write(const char *str) 
 {
 	int idx = 0;
 	while (str[idx] != 0) 
 	{
-		tsm_screen_write(&screen, str[idx], &defaultattr);
+		writeSymbol(str[idx], &defaultattr);
 
 		idx = idx + 1;
 	}
@@ -115,10 +206,7 @@ void Console::writeLine(const char *str)
 	newline();
 }
 
-void Console::moveDown(size_t num, bool scroll)
-{
-	tsm_screen_move_down(&screen, num, scroll);
-}
+
 
 static struct cell *get_cursor_cell(tsm_screen &con)
 {
@@ -134,6 +222,133 @@ static struct cell *get_cursor_cell(tsm_screen &con)
 
 	return &con.lines[cur_y]->cells[cur_x];
 }
+
+/*
+static void screen_scroll_up(struct tsm_screen *con, unsigned int num)
+{
+	unsigned int i, j, max, pos;
+	int ret;
+
+	if (!num)
+		return;
+
+	// TODO: more sophisticated ageing 
+	screen.age = screen.age_cnt;
+
+	max = screen.margin_bottom + 1 - screen.margin_top;
+	if (num > max)
+		num = max;
+
+	// We cache lines on the stack to speed up the scrolling. However, if
+	// num is too big we might get overflows here so use recursion if num
+	// exceeds a hard-coded limit.
+	// 128 seems to be a sane limit that should never be reached but should
+	// also be small enough so we do not get stack overflows.
+	if (num > 128) {
+		screen_scroll_up(con, 128);
+		return screen_scroll_up(con, num - 128);
+	}
+	struct line **cache = (struct line **)malloc(num * sizeof(struct line *));
+
+	for (i = 0; i < num; ++i) {
+		pos = screen.margin_top + i;
+		if (!(screen.flags & TSM_SCREEN_ALTERNATE))
+			ret = line_new(con, &cache[i], screen.size_x);
+		else
+			ret = -EAGAIN;
+
+		if (!ret) {
+			link_to_scrollback(con, screen.lines[pos]);
+		}
+		else {
+			cache[i] = screen.lines[pos];
+			for (j = 0; j < screen.size_x; ++j)
+				screen_cell_init(con, &cache[i]->cells[j]);
+		}
+	}
+
+	if (num < max) {
+		memmove(&screen.lines[screen.margin_top],
+			&screen.lines[screen.margin_top + num],
+			(max - num) * sizeof(struct line*));
+	}
+
+	memcpy(&screen.lines[screen.margin_top + (max - num)],
+		cache, num * sizeof(struct line*));
+
+	if (screen.sel_active) {
+		if (!screen.sel_start.line && screen.sel_start.y >= 0) {
+			screen.sel_start.y -= num;
+			if (screen.sel_start.y < 0) {
+				screen.sel_start.line = screen.sb_last;
+				while (screen.sel_start.line && ++screen.sel_start.y < 0)
+					screen.sel_start.line = screen.sel_start.line->prev;
+				screen.sel_start.y = SELECTION_TOP;
+			}
+		}
+		if (!screen.sel_end.line && screen.sel_end.y >= 0) {
+			screen.sel_end.y -= num;
+			if (screen.sel_end.y < 0) {
+				screen.sel_end.line = screen.sb_last;
+				while (screen.sel_end.line && ++screen.sel_end.y < 0)
+					screen.sel_end.line = screen.sel_end.line->prev;
+				screen.sel_end.y = SELECTION_TOP;
+			}
+		}
+	}
+
+	free(cache);
+}
+*/
+
+/*
+static void screen_scroll_down(struct tsm_screen *con, unsigned int num)
+{
+	unsigned int i, j, max;
+
+	if (!num)
+		return;
+
+	// TODO: more sophisticated ageing
+	screen.age = screen.age_cnt;
+
+	max = screen.margin_bottom + 1 - screen.margin_top;
+	if (num > max)
+		num = max;
+
+	// see screen_scroll_up() for an explanation
+	if (num > 128) {
+		screen_scroll_down(con, 128);
+		return screen_scroll_down(con, num - 128);
+	}
+	//struct line *cache[num];
+	struct line **cache = (struct line **)malloc(num * sizeof(struct line *));
+
+	for (i = 0; i < num; ++i) {
+		cache[i] = screen.lines[screen.margin_bottom - i];
+		for (j = 0; j < screen.size_x; ++j)
+			screen_cell_init(con, &cache[i]->cells[j]);
+	}
+
+	if (num < max) {
+		memmove(&screen.lines[screen.margin_top + num],
+			&screen.lines[screen.margin_top],
+			(max - num) * sizeof(struct line*));
+	}
+
+	memcpy(&screen.lines[screen.margin_top],
+		cache, num * sizeof(struct line*));
+
+	if (screen.sel_active) {
+		if (!screen.sel_start.line && screen.sel_start.y >= 0)
+			screen.sel_start.y += num;
+		if (!screen.sel_end.line && screen.sel_end.y >= 0)
+			screen.sel_end.y += num;
+	}
+
+	free(cache);
+}
+*/
 
 void Console::moveCursor(unsigned int x, unsigned int y)
 {
@@ -186,13 +401,116 @@ void Console::moveTo(unsigned int x, unsigned int y)
 	moveCursor(x, y);
 }
 
-void Console::newline()
+void Console::moveUp(size_t num, bool scroll)
+{
+	unsigned int diff, size;
+
+	if (!num)
+		return;
+
+	screen_inc_age(&screen);
+
+	if (screen.cursor_y >= screen.margin_top)
+		size = screen.margin_top;
+	else
+		size = 0;
+
+	diff = screen.cursor_y - size;
+	if (num > diff) {
+		num -= diff;
+		if (scroll)
+			scrollDown(num);
+		moveCursor(screen.cursor_x, size);
+	}
+	else {
+		moveCursor(screen.cursor_x, screen.cursor_y - num);
+	}
+}
+
+void Console::moveDown(size_t num, bool scroll)
+{
+	unsigned int diff, size;
+
+	screen_inc_age(&screen);
+
+	if (screen.cursor_y <= screen.margin_bottom)
+		size = screen.margin_bottom + 1;
+	else
+		size = screen.size_y;
+
+	diff = size - screen.cursor_y - 1;
+	if (num > diff) {
+		num -= diff;
+		if (scroll)
+			scrollUp(num);
+		moveCursor(screen.cursor_x, size - 1);
+	}
+	else {
+		moveCursor(screen.cursor_x, screen.cursor_y + num);
+	}
+}
+
+
+
+void Console::moveLeft(size_t num)
+{
+	unsigned int x;
+
+	if (!num)
+		return;
+
+	screen_inc_age(&screen);
+
+	if (num > screen.size_x)
+		num = screen.size_x;
+
+	x = screen.cursor_x;
+	if (x >= screen.size_x)
+		x = screen.size_x - 1;
+
+	if (num > x)
+		moveCursor(0, screen.cursor_y);
+	else
+		moveCursor(x - num, screen.cursor_y);
+}
+
+
+void Console::moveRight(size_t num)
+{
+	if (!num)
+		return;
+
+	screen_inc_age(&screen);
+
+	if (num > screen.size_x)
+		num = screen.size_x;
+
+	if (num + screen.cursor_x >= screen.size_x)
+		moveCursor(screen.size_x - 1, screen.cursor_y);
+	else
+		moveCursor(screen.cursor_x + num, screen.cursor_y);
+}
+
+
+void Console::moveLineEnd()
 {
 	screen_inc_age(&screen);
 
-	tsm_screen_move_down(&screen, 1, true);
-	tsm_screen_move_line_home(&screen);
+	moveCursor(screen.size_x - 1, screen.cursor_y);
 }
+
+
+void Console::moveLineHome()
+{
+	screen_inc_age(&screen);
+
+	moveCursor(0, screen.cursor_y);
+}
+
+
+//
+// Scroll Buffer routines
+//
 
 void Console::setMaxScrollback(size_t num)
 {
@@ -209,6 +527,9 @@ void Console::scrollBufferDown(size_t num)
 	tsm_screen_sb_down(&screen, num);
 }
 
+// 
+// Screen Scrolling, without scroll buffer
+//
 void Console::scrollUp(size_t num)
 {
 	tsm_screen_scroll_up(&screen, num);
@@ -219,6 +540,32 @@ void Console::scrollDown(size_t num)
 	tsm_screen_scroll_down(&screen, num);
 }
 
+
+int Console::setMargins(size_t top, size_t bottom)
+{
+	unsigned int upper, lower;
+
+	if (!top)
+		top = 1;
+
+	if (bottom <= top) {
+		upper = 0;
+		lower = screen.size_y - 1;
+	}
+	else if (bottom > screen.size_y) {
+		upper = 0;
+		lower = screen.size_y - 1;
+	}
+	else {
+		upper = top - 1;
+		lower = bottom - 1;
+	}
+
+	screen.margin_top = upper;
+	screen.margin_bottom = lower;
+
+	return 0;
+}
 
 void Console::setTabstop()
 {
@@ -340,6 +687,105 @@ void Console::eraseRegion(unsigned int x_from,
 	}
 }
 
+// Erasing
+void Console::eraseScreen(bool protect)
+{
+	screen_inc_age(&screen);
+
+	eraseRegion(0, 0, screen.size_x - 1, screen.size_y - 1, protect);
+}
+
+
+void Console::eraseCursor()
+{
+	unsigned int x;
+
+	screen_inc_age(&screen);
+
+	if (screen.cursor_x >= screen.size_x)
+		x = screen.size_x - 1;
+	else
+		x = screen.cursor_x;
+
+	eraseRegion(x, screen.cursor_y, x, screen.cursor_y, false);
+}
+
+
+void Console::eraseChars(size_t num)
+{
+	unsigned int x;
+
+	if (!num)
+		return;
+
+	screen_inc_age(&screen);
+
+	if (screen.cursor_x >= screen.size_x)
+		x = screen.size_x - 1;
+	else
+		x = screen.cursor_x;
+
+	eraseRegion(x, screen.cursor_y, x + num - 1, screen.cursor_y, false);
+}
+
+
+void Console::eraseCursorToEnd(bool protect)
+{
+	unsigned int x;
+
+	screen_inc_age(&screen);
+
+	if (screen.cursor_x >= screen.size_x)
+		x = screen.size_x - 1;
+	else
+		x = screen.cursor_x;
+
+	eraseRegion(x, screen.cursor_y, screen.size_x - 1, screen.cursor_y, protect);
+}
+
+
+void Console::eraseHomeToCursor(bool protect)
+{
+	screen_inc_age(&screen);
+
+	eraseRegion(0, screen.cursor_y, screen.cursor_x,
+		screen.cursor_y, protect);
+}
+
+
+void Console::eraseCurrentLine(bool protect)
+{
+	screen_inc_age(&screen);
+
+	eraseRegion(0, screen.cursor_y, screen.size_x - 1,
+		screen.cursor_y, protect);
+}
+
+
+void Console::eraseScreenToCursor(bool protect)
+{
+	screen_inc_age(&screen);
+
+	eraseRegion(0, 0, screen.cursor_x, screen.cursor_y, protect);
+}
+
+
+void Console::eraseCursorToScreen(bool protect)
+{
+	unsigned int x;
+
+	screen_inc_age(&screen);
+
+	if (screen.cursor_x >= screen.size_x)
+		x = screen.size_x - 1;
+	else
+		x = screen.cursor_x;
+
+	eraseRegion(x, screen.cursor_y, screen.size_x - 1,
+		screen.size_y - 1, protect);
+}
+
+
 void Console::reset()
 {
 	unsigned int i;
@@ -362,6 +808,13 @@ void Console::reset()
 }
 
 
+
+/*
+	drawScreen()
+
+	Take all the data that is in the console buffer and display
+	it on the screen.
+*/
 tsm_age_t Console::drawScreen(void *data)
 {
 	unsigned int cur_x, cur_y;
