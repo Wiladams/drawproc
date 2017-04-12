@@ -223,83 +223,9 @@ static struct cell *get_cursor_cell(tsm_screen &con)
 	return &con.lines[cur_y]->cells[cur_x];
 }
 
-/*
-static void screen_scroll_up(struct tsm_screen *con, unsigned int num)
-{
-	unsigned int i, j, max, pos;
-	int ret;
 
-	if (!num)
-		return;
 
-	// TODO: more sophisticated ageing 
-	screen.age = screen.age_cnt;
 
-	max = screen.margin_bottom + 1 - screen.margin_top;
-	if (num > max)
-		num = max;
-
-	// We cache lines on the stack to speed up the scrolling. However, if
-	// num is too big we might get overflows here so use recursion if num
-	// exceeds a hard-coded limit.
-	// 128 seems to be a sane limit that should never be reached but should
-	// also be small enough so we do not get stack overflows.
-	if (num > 128) {
-		screen_scroll_up(con, 128);
-		return screen_scroll_up(con, num - 128);
-	}
-	struct line **cache = (struct line **)malloc(num * sizeof(struct line *));
-
-	for (i = 0; i < num; ++i) {
-		pos = screen.margin_top + i;
-		if (!(screen.flags & TSM_SCREEN_ALTERNATE))
-			ret = line_new(con, &cache[i], screen.size_x);
-		else
-			ret = -EAGAIN;
-
-		if (!ret) {
-			link_to_scrollback(con, screen.lines[pos]);
-		}
-		else {
-			cache[i] = screen.lines[pos];
-			for (j = 0; j < screen.size_x; ++j)
-				screen_cell_init(con, &cache[i]->cells[j]);
-		}
-	}
-
-	if (num < max) {
-		memmove(&screen.lines[screen.margin_top],
-			&screen.lines[screen.margin_top + num],
-			(max - num) * sizeof(struct line*));
-	}
-
-	memcpy(&screen.lines[screen.margin_top + (max - num)],
-		cache, num * sizeof(struct line*));
-
-	if (screen.sel_active) {
-		if (!screen.sel_start.line && screen.sel_start.y >= 0) {
-			screen.sel_start.y -= num;
-			if (screen.sel_start.y < 0) {
-				screen.sel_start.line = screen.sb_last;
-				while (screen.sel_start.line && ++screen.sel_start.y < 0)
-					screen.sel_start.line = screen.sel_start.line->prev;
-				screen.sel_start.y = SELECTION_TOP;
-			}
-		}
-		if (!screen.sel_end.line && screen.sel_end.y >= 0) {
-			screen.sel_end.y -= num;
-			if (screen.sel_end.y < 0) {
-				screen.sel_end.line = screen.sb_last;
-				while (screen.sel_end.line && ++screen.sel_end.y < 0)
-					screen.sel_end.line = screen.sel_end.line->prev;
-				screen.sel_end.y = SELECTION_TOP;
-			}
-		}
-	}
-
-	free(cache);
-}
-*/
 
 /*
 static void screen_scroll_down(struct tsm_screen *con, unsigned int num)
@@ -530,9 +456,81 @@ void Console::scrollBufferDown(size_t num)
 // 
 // Screen Scrolling, without scroll buffer
 //
+
 void Console::scrollUp(size_t num)
 {
-	tsm_screen_scroll_up(&screen, num);
+	size_t i, j, max, pos;
+	int ret;
+
+	if (!num)
+		return;
+
+	// TODO: more sophisticated ageing 
+	screen.age = screen.age_cnt;
+
+	max = screen.margin_bottom + 1 - screen.margin_top;
+	if (num > max)
+		num = max;
+
+	// We cache lines on the stack to speed up the scrolling. However, if
+	// num is too big we might get overflows here so use recursion if num
+	// exceeds a hard-coded limit.
+	// 128 seems to be a sane limit that should never be reached but should
+	// also be small enough so we do not get stack overflows.
+	if (num > 128) {
+		scroll_screen_up(128);
+		return scroll_screen_up(num - 128);
+	}
+	struct line **cache = (struct line **)malloc(num * sizeof(struct line *));
+
+	for (i = 0; i < num; ++i) {
+		pos = screen.margin_top + i;
+		if (!(screen.flags & TSM_SCREEN_ALTERNATE))
+			ret = line_new(&screen, &cache[i], screen.size_x);
+		else
+			ret = -EAGAIN;
+
+		if (!ret) {
+			link_to_scrollback(&screen, screen.lines[pos]);
+		}
+		else {
+			cache[i] = screen.lines[pos];
+			for (j = 0; j < screen.size_x; ++j)
+				screen_cell_init(con, &cache[i]->cells[j]);
+		}
+	}
+
+	if (num < max) {
+		memmove(&screen.lines[screen.margin_top],
+			&screen.lines[screen.margin_top + num],
+			(max - num) * sizeof(struct line*));
+	}
+
+	memcpy(&screen.lines[screen.margin_top + (max - num)],
+		cache, num * sizeof(struct line*));
+
+	if (screen.sel_active) {
+		if (!screen.sel_start.line && screen.sel_start.y >= 0) {
+			screen.sel_start.y -= num;
+			if (screen.sel_start.y < 0) {
+				screen.sel_start.line = screen.sb_last;
+				while (screen.sel_start.line && ++screen.sel_start.y < 0)
+					screen.sel_start.line = screen.sel_start.line->prev;
+				screen.sel_start.y = SELECTION_TOP;
+			}
+		}
+		if (!screen.sel_end.line && screen.sel_end.y >= 0) {
+			screen.sel_end.y -= num;
+			if (screen.sel_end.y < 0) {
+				screen.sel_end.line = screen.sb_last;
+				while (screen.sel_end.line && ++screen.sel_end.y < 0)
+					screen.sel_end.line = screen.sel_end.line->prev;
+				screen.sel_end.y = SELECTION_TOP;
+			}
+		}
+	}
+
+	free(cache);
 }
 
 void Console::scrollDown(size_t num)

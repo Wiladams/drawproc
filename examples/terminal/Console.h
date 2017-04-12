@@ -36,6 +36,7 @@ class Console {
 		unsigned int x_to,
 		unsigned int y_to,
 		bool protect);
+	void scroll_screen_up(size_t num);
 
 public:
 	// Construction

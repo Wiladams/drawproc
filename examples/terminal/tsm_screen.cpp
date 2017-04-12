@@ -379,42 +379,6 @@ static void screen_scroll_down(struct tsm_screen *con, unsigned int num)
 	free(cache);
 }
 
-/*
-static void screen_write(struct tsm_screen *con, unsigned int x,
-			  unsigned int y, tsm_symbol_t ch, unsigned int len,
-			  const struct tsm_screen_attr *attr)
-{
-	struct line *line;
-	unsigned int i;
-
-	if (!len)
-		return;
-
-	if (x >= con->size_x || y >= con->size_y) {
-		llog_warning(con, "writing beyond buffer boundary");
-		return;
-	}
-
-	line = con->lines[y];
-
-	if ((con->flags & TSM_SCREEN_INSERT_MODE) &&
-	    (int)x < ((int)con->size_x - len)) {
-		line->age = con->age_cnt;
-		memmove(&line->cells[x + len], &line->cells[x],
-			sizeof(struct cell) * (con->size_x - len - x));
-	}
-
-	line->cells[x].age = con->age_cnt;
-	line->cells[x].ch = ch;
-	line->cells[x].width = len;
-	memcpy(&line->cells[x].attr, attr, sizeof(*attr));
-
-	for (i = 1; i < len && i + x < con->size_x; ++i) {
-		line->cells[x + i].age = con->age_cnt;
-		line->cells[x + i].width = 0;
-	}
-}
-*/
 
 static void screen_erase_region(struct tsm_screen *con,
 				 unsigned int x_from,
@@ -864,46 +828,6 @@ unsigned int tsm_screen_get_flags(struct tsm_screen *con)
 }
 
 
-/*
-SHL_EXPORT
-void tsm_screen_write(struct tsm_screen *con, tsm_symbol_t ch,
-			  const struct tsm_screen_attr *attr)
-{
-	unsigned int last, len;
-
-	if (!con)
-		return;
-
-
-	//len = tsm_symbol_get_width(con->sym_table, ch);
-	len = con->sym_table.getWidth(ch);
-	if (!len)
-		return;
-
-	screen_inc_age(con);
-
-	if (con->cursor_y <= con->margin_bottom ||
-	    con->cursor_y >= con->size_y)
-		last = con->margin_bottom;
-	else
-		last = con->size_y - 1;
-
-	if (con->cursor_x >= con->size_x) {
-		if (con->flags & TSM_SCREEN_AUTO_WRAP)
-			move_cursor(con, 0, con->cursor_y + 1);
-		else
-			move_cursor(con, con->size_x - 1, con->cursor_y);
-	}
-
-	if (con->cursor_y > last) {
-		move_cursor(con, con->cursor_x, last);
-		screen_scroll_up(con, 1);
-	}
-
-	screen_write(con, con->cursor_x, con->cursor_y, ch, len, attr);
-	move_cursor(con, con->cursor_x + len, con->cursor_y);
-}
-*/
 
 
 SHL_EXPORT
