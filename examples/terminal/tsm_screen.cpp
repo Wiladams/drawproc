@@ -67,22 +67,9 @@
 
 #define LLOG_SUBSYSTEM "tsm_screen"
 
-static struct cell *get_cursor_cell(struct tsm_screen *con)
-{
-	unsigned int cur_x, cur_y;
-
-	cur_x = con->cursor_x;
-	if (cur_x >= con->size_x)
-		cur_x = con->size_x - 1;
-
-	cur_y = con->cursor_y;
-	if (cur_y >= con->size_y)
-		cur_y = con->size_y - 1;
-
-	return &con->lines[cur_y]->cells[cur_x];
-}
 
 
+/*
 static void move_cursor(struct tsm_screen *con, unsigned int x, unsigned int y)
 {
 	struct cell *c;
@@ -110,6 +97,7 @@ static void move_cursor(struct tsm_screen *con, unsigned int x, unsigned int y)
 	c = get_cursor_cell(con);
 	c->age = con->age_cnt;
 }
+*/
 
 void cell::init(struct tsm_screen *con)
 {
@@ -131,43 +119,32 @@ cell::cell(struct tsm_screen *con)
 	init(con);
 }
 
-
-int line_new(struct tsm_screen *con, struct line **out, unsigned int width)
+line::line(struct tsm_screen *con, size_t width)
 {
-	struct line *line;
-	unsigned int i;
+	next = nullptr;
+	prev = nullptr;
+	size = width;
+	this->age = con->age_cnt;
 
-	if (!width)
-		return -EINVAL;
+	cells = (cell *)malloc(sizeof(struct cell) * width);
 
-	line = (struct line *)malloc(sizeof(*line));
-	if (!line)
-		return -ENOMEM;
-	line->next = NULL;
-	line->prev = NULL;
-	line->size = width;
-	line->age = con->age_cnt;
-
-	line->cells = (cell *)malloc(sizeof(struct cell) * width);
-	if (!line->cells) {
-		free(line);
-		return -ENOMEM;
-	}
-
-	for (i = 0; i < width; ++i) {
-		//screen_cell_init(con, &line->cells[i]);
-		line->cells[i].init(con);
-	}
-
-	*out = line;
-	return 0;
+	initCells(*con);
 }
 
-static void line_free(struct line *line)
+
+line::~line()
 {
-	free(line->cells);
-	free(line);
+	free(cells);
 }
+
+void line::initCells(struct tsm_screen &con)
+{
+	for (int i = 0; i < size; i++) {
+		cells[i].init(&con);
+	}
+}
+
+
 
 int line::resize(struct tsm_screen *con, size_t width)
 {
@@ -190,6 +167,43 @@ int line::resize(struct tsm_screen *con, size_t width)
 	}
 
 	return 0;
+}
+
+
+int line_new(struct tsm_screen *con, struct line **out, unsigned int width)
+{
+	struct line *line;
+	unsigned int i;
+
+	if (!width)
+		return -EINVAL;
+
+	line = (struct line *)malloc(sizeof(*line));
+
+	if (!line)
+		return -ENOMEM;
+
+	line->next = NULL;
+	line->prev = NULL;
+	line->size = width;
+	line->age = con->age_cnt;
+
+	line->cells = (cell *)malloc(sizeof(struct cell) * width);
+	if (!line->cells) {
+		free(line);
+		return -ENOMEM;
+	}
+
+	line->initCells(*con);
+
+	*out = line;
+	return 0;
+}
+
+static void line_free(struct line *line)
+{
+	free(line->cells);
+	free(line);
 }
 
 /* This links the given line into the scrollback-buffer */
@@ -268,35 +282,6 @@ void link_to_scrollback(struct tsm_screen *con, struct line *line)
 	con->sb_last = line;
 	++con->sb_count;
 }
-
-
-
-void tsm_screen_set_opts(struct tsm_screen *scr, unsigned int opts)
-{
-	if (!scr || !opts)
-		return;
-
-	scr->opts |= opts;
-}
-
-void tsm_screen_reset_opts(struct tsm_screen *scr, unsigned int opts)
-{
-	if (!scr || !opts)
-		return;
-
-	scr->opts &= ~opts;
-}
-
-unsigned int tsm_screen_get_opts(struct tsm_screen *scr)
-{
-	if (!scr)
-		return 0;
-
-	return scr->opts;
-}
-
-
-
 
 
 /* set maximum scrollback buffer size */
@@ -465,72 +450,6 @@ void tsm_screen_set_def_attr(struct tsm_screen *con,
 }
 
 
-SHL_EXPORT
-void tsm_screen_set_flags(struct tsm_screen *con, unsigned int flags)
-{
-	unsigned int old;
-	struct cell *c;
-
-	if (!con || !flags)
-		return;
-
-	screen_inc_age(con);
-
-	old = con->flags;
-	con->flags |= flags;
-
-	if (!(old & TSM_SCREEN_ALTERNATE) && (flags & TSM_SCREEN_ALTERNATE)) {
-		con->age = con->age_cnt;
-		con->lines = con->alt_lines;
-	}
-
-	if (!(old & TSM_SCREEN_HIDE_CURSOR) &&
-	    (flags & TSM_SCREEN_HIDE_CURSOR)) {
-		c = get_cursor_cell(con);
-		c->age = con->age_cnt;
-	}
-
-	if (!(old & TSM_SCREEN_INVERSE) && (flags & TSM_SCREEN_INVERSE))
-		con->age = con->age_cnt;
-}
-
-SHL_EXPORT
-void tsm_screen_reset_flags(struct tsm_screen *con, unsigned int flags)
-{
-	unsigned int old;
-	struct cell *c;
-
-	if (!con || !flags)
-		return;
-
-	screen_inc_age(con);
-
-	old = con->flags;
-	con->flags &= ~flags;
-
-	if ((old & TSM_SCREEN_ALTERNATE) && (flags & TSM_SCREEN_ALTERNATE)) {
-		con->age = con->age_cnt;
-		con->lines = con->main_lines;
-	}
-
-	if ((old & TSM_SCREEN_HIDE_CURSOR) &&
-	    (flags & TSM_SCREEN_HIDE_CURSOR)) {
-		c = get_cursor_cell(con);
-		c->age = con->age_cnt;
-	}
-
-	if ((old & TSM_SCREEN_INVERSE) && (flags & TSM_SCREEN_INVERSE))
-		con->age = con->age_cnt;
-}
-
-SHL_EXPORT
-unsigned int tsm_screen_get_flags(struct tsm_screen *con)
-{
-	if (!con)
-		return 0;
-
-	return con->flags;
-}
 
 
 SHL_EXPORT

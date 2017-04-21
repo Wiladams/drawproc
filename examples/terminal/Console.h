@@ -44,6 +44,32 @@ public:
 	Console(const size_t width, const size_t height);
 	~Console();
 
+	void setFlags(unsigned int flags);
+	void resetFlags(unsigned int flags);
+	unsigned int getFlags() const;
+
+
+	void setOptions(unsigned int opts)
+	{
+		if (!opts)
+			return;
+
+		screen.opts |= opts;
+	}
+
+	void resetOptions(unsigned int opts)
+	{
+		if (!opts)
+			return;
+
+		screen.opts &= ~opts;
+	}
+
+	unsigned int getOptions()
+	{
+		return screen.opts;
+	}
+
 	void reset();
 	int resize(size_t x, size_t y);
 

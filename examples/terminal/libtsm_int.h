@@ -70,6 +70,10 @@ struct line {
 	uint64_t sb_id;			/* sb ID */
 	tsm_age_t age;			/* age of the whole line */
 
+	
+	line(struct tsm_screen *con, size_t width);
+	~line();
+	void initCells(struct tsm_screen &con);
 	int resize(struct tsm_screen *con, size_t width);
 };
 

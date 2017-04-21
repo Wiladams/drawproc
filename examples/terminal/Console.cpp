@@ -114,6 +114,84 @@ Console::~Console()
 }
 
 
+static struct cell *get_cursor_cell(tsm_screen &con)
+{
+	unsigned int cur_x, cur_y;
+
+	cur_x = con.cursor_x;
+	if (cur_x >= con.size_x)
+		cur_x = con.size_x - 1;
+
+	cur_y = con.cursor_y;
+	if (cur_y >= con.size_y)
+		cur_y = con.size_y - 1;
+
+	return &con.lines[cur_y]->cells[cur_x];
+}
+
+void Console::setFlags(unsigned int flags)
+{
+	unsigned int old;
+	struct cell *c;
+
+	if (!flags)
+		return;
+
+	screen_inc_age(&screen);
+
+	old = screen.flags;
+	screen.flags |= flags;
+
+	if (!(old & TSM_SCREEN_ALTERNATE) && (flags & TSM_SCREEN_ALTERNATE)) {
+		screen.age = screen.age_cnt;
+		screen.lines = screen.alt_lines;
+	}
+
+	if (!(old & TSM_SCREEN_HIDE_CURSOR) &&
+		(flags & TSM_SCREEN_HIDE_CURSOR)) {
+		c = get_cursor_cell(screen);
+		c->age = screen.age_cnt;
+	}
+
+	if (!(old & TSM_SCREEN_INVERSE) && (flags & TSM_SCREEN_INVERSE))
+		screen.age = screen.age_cnt;
+}
+
+void Console::resetFlags(unsigned int flags)
+{
+	unsigned int old;
+	struct cell *c;
+
+	if (!flags)
+		return;
+
+	screen_inc_age(&screen);
+
+	old = screen.flags;
+	screen.flags &= ~flags;
+
+	if ((old & TSM_SCREEN_ALTERNATE) && (flags & TSM_SCREEN_ALTERNATE)) {
+		screen.age = screen.age_cnt;
+		screen.lines = screen.main_lines;
+	}
+
+	if ((old & TSM_SCREEN_HIDE_CURSOR) &&
+		(flags & TSM_SCREEN_HIDE_CURSOR)) {
+		c = get_cursor_cell(screen);
+		c->age = screen.age_cnt;
+	}
+
+	if ((old & TSM_SCREEN_INVERSE) && (flags & TSM_SCREEN_INVERSE))
+		screen.age = screen.age_cnt;
+}
+
+
+unsigned int Console::getFlags() const
+{
+	return screen.flags;
+}
+
+
 int Console::resize(size_t x, size_t y)
 {
 	struct tsm_screen *con = &screen;
@@ -161,13 +239,11 @@ int Console::resize(size_t x, size_t y)
 			width = con->size_x;
 
 		while (con->line_num < y) {
-			ret = line_new(con, &con->main_lines[con->line_num],
-				width);
+			ret = line_new(con, &con->main_lines[con->line_num], width);
 			if (ret)
 				return ret;
 
-			ret = line_new(con, &con->alt_lines[con->line_num],
-				width);
+			ret = line_new(con, &con->alt_lines[con->line_num], width);
 			if (ret) {
 				line_free(con->main_lines[con->line_num]);
 				return ret;
@@ -360,20 +436,7 @@ void Console::writeLine(const char *str)
 
 
 
-static struct cell *get_cursor_cell(tsm_screen &con)
-{
-	unsigned int cur_x, cur_y;
 
-	cur_x = con.cursor_x;
-	if (cur_x >= con.size_x)
-		cur_x = con.size_x - 1;
-
-	cur_y = con.cursor_y;
-	if (cur_y >= con.size_y)
-		cur_y = con.size_y - 1;
-
-	return &con.lines[cur_y]->cells[cur_x];
-}
 
 
 
