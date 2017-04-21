@@ -36,7 +36,8 @@ class Console {
 		unsigned int x_to,
 		unsigned int y_to,
 		bool protect);
-	void scroll_screen_up(size_t num);
+	void scrollScreenUp(size_t num);
+	void scrollScreenDown(size_t num);
 
 public:
 	// Construction
@@ -44,6 +45,7 @@ public:
 	~Console();
 
 	void reset();
+	int resize(size_t x, size_t y);
 
 	// Various screen attributes
 	size_t getCursorX() const { return screen.cursor_x; }

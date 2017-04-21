@@ -158,9 +158,6 @@ struct tsm_screen_attr {
 };
 
 
-int tsm_screen_resize(struct tsm_screen *con, unsigned int x,
-		      unsigned int y);
-
 void tsm_screen_set_max_sb(struct tsm_screen *con, unsigned int max);
 void tsm_screen_clear_sb(struct tsm_screen *con);
 
@@ -176,10 +173,6 @@ void tsm_screen_set_def_attr(struct tsm_screen *con,
 void tsm_screen_set_flags(struct tsm_screen *con, unsigned int flags);
 void tsm_screen_reset_flags(struct tsm_screen *con, unsigned int flags);
 unsigned int tsm_screen_get_flags(struct tsm_screen *con);
-
-
-void tsm_screen_scroll_up(struct tsm_screen *con, unsigned int num);
-void tsm_screen_scroll_down(struct tsm_screen *con, unsigned int num);
 
 
 void tsm_screen_insert_lines(struct tsm_screen *con, unsigned int num);

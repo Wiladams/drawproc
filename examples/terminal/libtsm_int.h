@@ -51,6 +51,14 @@ struct cell {
 	unsigned int width;		/* character width */
 	struct tsm_screen_attr attr;	/* cell attributes */
 	tsm_age_t age;			/* age of the single cell */
+
+
+
+public:
+	void init(struct tsm_screen *con);
+	cell();
+	cell(struct tsm_screen *con);
+
 };
 
 struct line {
@@ -61,7 +69,12 @@ struct line {
 	struct cell *cells;		/* actuall cells */
 	uint64_t sb_id;			/* sb ID */
 	tsm_age_t age;			/* age of the whole line */
+
+	int resize(struct tsm_screen *con, size_t width);
 };
+
+int line_new(struct tsm_screen *con, struct line **out, unsigned int width);
+void link_to_scrollback(struct tsm_screen *con, struct line *line);
 
 #define SELECTION_TOP -1
 struct selection_pos {
@@ -119,7 +132,6 @@ struct tsm_screen {
 	struct selection_pos sel_end;
 };
 
-void screen_cell_init(struct tsm_screen *con, struct cell *cell);
 
 void tsm_screen_set_opts(struct tsm_screen *scr, unsigned int opts);
 void tsm_screen_reset_opts(struct tsm_screen *scr, unsigned int opts);

@@ -4,6 +4,8 @@
 
 #include <stdio.h>
 
+
+
 /*
 typedef int (*tsm_screen_draw_cb) (struct tsm_screen *con,
 uint32_t id,
@@ -72,7 +74,7 @@ int Console::_init(const size_t width, const size_t height)
 	screen.def_attr.fg = 255;
 	screen.def_attr.fb = 255;
 
-	ret = tsm_screen_resize(&screen, width, height);
+	ret = resize(width, height);
 	if (ret)
 		goto err_free;
 
@@ -109,6 +111,156 @@ Console::~Console()
 	free(screen.main_lines);
 	free(screen.alt_lines);
 	free(screen.tab_ruler);
+}
+
+
+int Console::resize(size_t x, size_t y)
+{
+	struct tsm_screen *con = &screen;
+	struct line **cache;
+	unsigned int i, j, width, diff, start;
+	int ret;
+	bool *tab_ruler;
+
+	if (!x || !y)
+		return -EINVAL;
+
+	if (screen.size_x == x && screen.size_y == y)
+		return 0;
+
+	/* First make sure the line buffer is big enough for our new screen.
+	* That is, allocate all new lines and make sure each line has enough
+	* cells to hold the new screen or the current screen. If we fail, we
+	* can safely return -ENOMEM and the buffer is still valid. We must
+	* allocate the new lines to at least the same size as the current
+	* lines. Otherwise, if this function fails in later turns, we will have
+	* invalid lines in the buffer. */
+	if (y > screen.line_num) {
+		// resize main buffer
+		cache = (struct line **)realloc(screen.main_lines, sizeof(struct line*) * y);
+		if (!cache)
+			return -ENOMEM;
+
+		if (con->lines == con->main_lines)
+			con->lines = cache;
+		con->main_lines = cache;
+
+		/* resize alt buffer */
+		cache = (struct line **)realloc(con->alt_lines, sizeof(struct line*) * y);
+		if (!cache)
+			return -ENOMEM;
+
+		if (con->lines == con->alt_lines)
+			con->lines = cache;
+		con->alt_lines = cache;
+
+		/* allocate new lines */
+		if (x > con->size_x)
+			width = x;
+		else
+			width = con->size_x;
+
+		while (con->line_num < y) {
+			ret = line_new(con, &con->main_lines[con->line_num],
+				width);
+			if (ret)
+				return ret;
+
+			ret = line_new(con, &con->alt_lines[con->line_num],
+				width);
+			if (ret) {
+				line_free(con->main_lines[con->line_num]);
+				return ret;
+			}
+
+			++con->line_num;
+		}
+	}
+
+	/* Resize all lines in the buffer if we increase screen width. This
+	* will guarantee that all lines are big enough so we can resize the
+	* buffer without reallocating them later. */
+	if (x > con->size_x) {
+		tab_ruler = (bool *)realloc(con->tab_ruler, sizeof(bool) * x);
+		if (!tab_ruler)
+			return -ENOMEM;
+		con->tab_ruler = tab_ruler;
+
+		for (i = 0; i < con->line_num; ++i) {
+			ret = con->main_lines[i]->resize(con, x);
+			if (ret)
+				return ret;
+
+			ret = con->alt_lines[i]->resize(con, x);
+			if (ret)
+				return ret;
+		}
+	}
+
+	screen_inc_age(con);
+
+	/* clear expansion/padding area */
+	start = x;
+	if (x > con->size_x)
+		start = con->size_x;
+	for (j = 0; j < con->line_num; ++j) {
+		/* main-lines may go into SB, so clear all cells */
+		i = 0;
+		if (j < con->size_y)
+			i = start;
+
+		for (; i < con->main_lines[j]->size; ++i) {
+			con->main_lines[j]->cells[i].init(con);
+		}
+
+		/* alt-lines never go into SB, only clear visible cells */
+		i = 0;
+		if (j < con->size_y)
+			i = con->size_x;
+
+		for (; i < x; ++i) {
+			con->alt_lines[j]->cells[i].init(con);
+		}
+	}
+
+	/* xterm destroys margins on resize, so do we */
+	con->margin_top = 0;
+	con->margin_bottom = con->size_y - 1;
+
+	/* reset tabs */
+	for (i = 0; i < x; ++i) {
+		if (i % 8 == 0)
+			con->tab_ruler[i] = true;
+		else
+			con->tab_ruler[i] = false;
+	}
+
+	/* We need to adjust x-size first as screen_scroll_up() and friends may
+	* have to reallocate lines. The y-size is adjusted after them to avoid
+	* missing lines when shrinking y-size.
+	* We need to carefully look for the functions that we call here as they
+	* have stronger invariants as when called normally. */
+
+	con->size_x = x;
+	if (con->cursor_x >= con->size_x)
+		moveCursor(con->size_x - 1, con->cursor_y);
+
+	/* scroll buffer if screen height shrinks */
+	if (y < con->size_y) {
+		diff = con->size_y - y;
+		scrollScreenUp(diff);
+		if (con->cursor_y > diff)
+			moveCursor(con->cursor_x, con->cursor_y - diff);
+		else
+			moveCursor(con->cursor_x, 0);
+	}
+
+	con->size_y = y;
+	con->margin_bottom = con->size_y - 1;
+	if (con->cursor_y >= con->size_y)
+		moveCursor(con->cursor_x, con->size_y - 1);
+
+	return 0;
 }
 
 void Console::newline()
@@ -227,54 +379,7 @@ static struct cell *get_cursor_cell(tsm_screen &con)
 
 
 
-/*
-static void screen_scroll_down(struct tsm_screen *con, unsigned int num)
-{
-	unsigned int i, j, max;
 
-	if (!num)
-		return;
-
-	// TODO: more sophisticated ageing
-	screen.age = screen.age_cnt;
-
-	max = screen.margin_bottom + 1 - screen.margin_top;
-	if (num > max)
-		num = max;
-
-	// see screen_scroll_up() for an explanation
-	if (num > 128) {
-		screen_scroll_down(con, 128);
-		return screen_scroll_down(con, num - 128);
-	}
-	//struct line *cache[num];
-	struct line **cache = (struct line **)malloc(num * sizeof(struct line *));
-
-	for (i = 0; i < num; ++i) {
-		cache[i] = screen.lines[screen.margin_bottom - i];
-		for (j = 0; j < screen.size_x; ++j)
-			screen_cell_init(con, &cache[i]->cells[j]);
-	}
-
-	if (num < max) {
-		memmove(&screen.lines[screen.margin_top + num],
-			&screen.lines[screen.margin_top],
-			(max - num) * sizeof(struct line*));
-	}
-
-	memcpy(&screen.lines[screen.margin_top],
-		cache, num * sizeof(struct line*));
-
-	if (screen.sel_active) {
-		if (!screen.sel_start.line && screen.sel_start.y >= 0)
-			screen.sel_start.y += num;
-		if (!screen.sel_end.line && screen.sel_end.y >= 0)
-			screen.sel_end.y += num;
-	}
-
-	free(cache);
-}
-*/
 
 void Console::moveCursor(unsigned int x, unsigned int y)
 {
@@ -457,7 +562,7 @@ void Console::scrollBufferDown(size_t num)
 // Screen Scrolling, without scroll buffer
 //
 
-void Console::scrollUp(size_t num)
+void Console::scrollScreenUp(size_t num)
 {
 	size_t i, j, max, pos;
 	int ret;
@@ -478,8 +583,8 @@ void Console::scrollUp(size_t num)
 	// 128 seems to be a sane limit that should never be reached but should
 	// also be small enough so we do not get stack overflows.
 	if (num > 128) {
-		scroll_screen_up(128);
-		return scroll_screen_up(num - 128);
+		scrollUp(128);
+		return scrollUp(num - 128);
 	}
 	struct line **cache = (struct line **)malloc(num * sizeof(struct line *));
 
@@ -495,8 +600,10 @@ void Console::scrollUp(size_t num)
 		}
 		else {
 			cache[i] = screen.lines[pos];
-			for (j = 0; j < screen.size_x; ++j)
-				screen_cell_init(con, &cache[i]->cells[j]);
+			for (j = 0; j < screen.size_x; ++j) {
+				//screen_cell_init(con, &cache[i]->cells[j]);
+				cache[i]->cells[j].init(&screen);
+			}
 		}
 	}
 
@@ -533,9 +640,73 @@ void Console::scrollUp(size_t num)
 	free(cache);
 }
 
+
+void Console::scrollScreenDown(size_t num)
+{
+unsigned int i, j, max;
+
+	if (!num)
+		return;
+
+	// TODO: more sophisticated ageing
+	screen.age = screen.age_cnt;
+
+	max = screen.margin_bottom + 1 - screen.margin_top;
+	if (num > max)
+		num = max;
+
+	// see scrollScreenUp() for an explanation
+	if (num > 128) {	
+		scrollScreenDown(128);
+		return scrollScreenDown(num - 128);
+	}
+
+	struct line **cache = (struct line **)malloc(num * sizeof(struct line *));
+
+	for (i = 0; i < num; ++i) {
+		cache[i] = screen.lines[screen.margin_bottom - i];
+		for (j = 0; j < screen.size_x; ++j) {
+			cache[i]->cells[j].init(&screen);
+		}
+	}
+
+	if (num < max) {
+		memmove(&screen.lines[screen.margin_top + num],
+			&screen.lines[screen.margin_top],
+			(max - num) * sizeof(struct line*));
+	}
+
+	memcpy(&screen.lines[screen.margin_top], cache, num * sizeof(struct line*));
+
+	if (screen.sel_active) {
+		if (!screen.sel_start.line && screen.sel_start.y >= 0)
+			screen.sel_start.y += num;
+		
+		if (!screen.sel_end.line && screen.sel_end.y >= 0)
+			screen.sel_end.y += num;
+	}
+
+	free(cache);
+}
+
+void Console::scrollUp(size_t num)
+{
+	if (!num)
+		return;
+
+	screen_inc_age(&screen);
+
+	scrollScreenUp(num);
+}
+
 void Console::scrollDown(size_t num)
 {
-	tsm_screen_scroll_down(&screen, num);
+	if (!num)
+		return;
+
+	screen_inc_age(&screen);
+
+	scrollScreenDown(num);
 }
 
 
@@ -679,7 +850,8 @@ void Console::eraseRegion(unsigned int x_from,
 			if (protect && line->cells[x_from].attr.protect)
 				continue;
 
-			screen_cell_init(&screen, &line->cells[x_from]);
+			//screen_cell_init(&screen, &line->cells[x_from]);
+			line->cells[x_from].init(&screen);
 		}
 		x_from = 0;
 	}
@@ -829,7 +1001,8 @@ tsm_age_t Console::drawScreen(void *data)
 
 
 
-	screen_cell_init(&screen, &empty);
+	//screen_cell_init(&screen, &empty);
+	empty.init(&screen);
 
 	cur_x = screen.cursor_x;
 	if (screen.cursor_x >= screen.size_x)
