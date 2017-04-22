@@ -34,7 +34,6 @@
 #include "SymbolTable.h"
 
 
-//#define SHL_EXPORT __attribute__((visibility("default")))
 #define SHL_EXPORT
 
 /* symbols */
@@ -43,6 +42,41 @@ struct tsm_symbol_table;
 
 extern const tsm_symbol_t tsm_symbol_default;
 
+
+struct tsm_screen_attr {
+	int8_t fccode;			/* foreground color code or <0 for rgb */
+	int8_t bccode;			/* background color code or <0 for rgb */
+	uint8_t fr;			/* foreground red */
+	uint8_t fg;			/* foreground green */
+	uint8_t fb;			/* foreground blue */
+	uint8_t br;			/* background red */
+	uint8_t bg;			/* background green */
+	uint8_t bb;			/* background blue */
+	unsigned int bold : 1;		/* bold character */
+	unsigned int underline : 1;	/* underlined character */
+	unsigned int inverse : 1;	/* inverse colors */
+	unsigned int protect : 1;	/* cannot be erased */
+	unsigned int blink : 1;		/* blinking character */
+
+	tsm_screen_attr() {
+		fccode = -1;
+		bccode = -1;
+
+		fr = 255;
+		fg = 255;
+
+		br = 0;
+		bg = 0;
+		bb = 0;
+		fb = 255;
+
+		bold = 0;
+		underline = 0;
+		inverse = 0;
+		protect = 0;
+		blink = 0;
+	}
+};
 
 /* TSM screen */
 
@@ -70,14 +104,14 @@ struct line {
 	uint64_t sb_id;			/* sb ID */
 	tsm_age_t age;			/* age of the whole line */
 
-	
+public:
 	line(struct tsm_screen *con, size_t width);
 	~line();
 	void initCells(struct tsm_screen &con);
 	int resize(struct tsm_screen *con, size_t width);
 };
 
-int line_new(struct tsm_screen *con, struct line **out, unsigned int width);
+
 void link_to_scrollback(struct tsm_screen *con, struct line *line);
 
 #define SELECTION_TOP -1
@@ -93,7 +127,6 @@ struct tsm_screen {
 	void *llog_data;
 	unsigned int opts;
 	unsigned int flags;
-	//struct tsm_symbol_table *sym_table;
 	struct SymbolTable sym_table;
 
 	/* default attributes for new cells */
@@ -136,10 +169,6 @@ struct tsm_screen {
 	struct selection_pos sel_end;
 };
 
-
-void tsm_screen_set_opts(struct tsm_screen *scr, unsigned int opts);
-void tsm_screen_reset_opts(struct tsm_screen *scr, unsigned int opts);
-unsigned int tsm_screen_get_opts(struct tsm_screen *scr);
 
 static inline void screen_inc_age(struct tsm_screen *con)
 {

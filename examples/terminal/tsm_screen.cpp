@@ -69,35 +69,7 @@
 
 
 
-/*
-static void move_cursor(struct tsm_screen *con, unsigned int x, unsigned int y)
-{
-	struct cell *c;
 
-	// if cursor is hidden, just move it
-	if (con->flags & TSM_SCREEN_HIDE_CURSOR) {
-		con->cursor_x = x;
-		con->cursor_y = y;
-		return;
-	}
-
-	// If cursor is visible, we have to mark the current and the new cell
-	// as changed by resetting their age. We skip it if the cursor-position
-	// didn't actually change.
-
-	if (con->cursor_x == x && con->cursor_y == y)
-		return;
-
-	c = get_cursor_cell(con);
-	c->age = con->age_cnt;
-
-	con->cursor_x = x;
-	con->cursor_y = y;
-
-	c = get_cursor_cell(con);
-	c->age = con->age_cnt;
-}
-*/
 
 void cell::init(struct tsm_screen *con)
 {
@@ -170,42 +142,6 @@ int line::resize(struct tsm_screen *con, size_t width)
 }
 
 
-int line_new(struct tsm_screen *con, struct line **out, unsigned int width)
-{
-	struct line *line;
-	unsigned int i;
-
-	if (!width)
-		return -EINVAL;
-
-	line = (struct line *)malloc(sizeof(*line));
-
-	if (!line)
-		return -ENOMEM;
-
-	line->next = NULL;
-	line->prev = NULL;
-	line->size = width;
-	line->age = con->age_cnt;
-
-	line->cells = (cell *)malloc(sizeof(struct cell) * width);
-	if (!line->cells) {
-		free(line);
-		return -ENOMEM;
-	}
-
-	line->initCells(*con);
-
-	*out = line;
-	return 0;
-}
-
-static void line_free(struct line *line)
-{
-	free(line->cells);
-	free(line);
-}
-
 /* This links the given line into the scrollback-buffer */
 void link_to_scrollback(struct tsm_screen *con, struct line *line)
 {
@@ -225,7 +161,8 @@ void link_to_scrollback(struct tsm_screen *con, struct line *line)
 				con->sel_end.y = SELECTION_TOP;
 			}
 		}
-		line_free(line);
+		delete line;
+
 		return;
 	}
 
@@ -269,7 +206,7 @@ void link_to_scrollback(struct tsm_screen *con, struct line *line)
 				con->sel_end.y = SELECTION_TOP;
 			}
 		}
-		line_free(tmp);
+		delete tmp;
 	}
 
 	line->sb_id = ++con->sb_last_id;
@@ -322,7 +259,7 @@ void tsm_screen_set_max_sb(struct tsm_screen *con,
 				con->sel_end.y = SELECTION_TOP;
 			}
 		}
-		line_free(line);
+		delete line;
 	}
 
 	con->sb_max = max;
@@ -344,7 +281,8 @@ void tsm_screen_clear_sb(struct tsm_screen *con)
 	for (iter = con->sb_first; iter; ) {
 		tmp = iter;
 		iter = iter->next;
-		line_free(tmp);
+
+		delete tmp;
 	}
 
 	con->sb_first = NULL;

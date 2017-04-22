@@ -6,19 +6,6 @@
 
 
 
-/*
-typedef int (*tsm_screen_draw_cb) (struct tsm_screen *con,
-uint32_t id,
-const uint32_t *ch,
-size_t len,
-unsigned int width,
-unsigned int posx,
-unsigned int posy,
-const struct tsm_screen_attr *attr,
-tsm_age_t age,
-void *data);
-*/
-
 static inline unsigned int to_abs_x(struct tsm_screen &con, unsigned int x)
 {
 	return x;
@@ -30,14 +17,6 @@ static inline unsigned int to_abs_y(struct tsm_screen &con, unsigned int y)
 		return y;
 
 	return con.margin_top + y;
-}
-
-
-// Console Line routines
-static void line_free(struct line *line)
-{
-	free(line->cells);
-	free(line);
 }
 
 
@@ -82,8 +61,12 @@ int Console::_init(const size_t width, const size_t height)
 
 err_free:
 	for (i = 0; i < screen.line_num; ++i) {
-		line_free(screen.main_lines[i]);
-		line_free(screen.alt_lines[i]);
+		//line_free(screen.main_lines[i]);
+		//line_free(screen.alt_lines[i]);
+
+		delete screen.main_lines[i];
+		delete screen.alt_lines[i];
+
 	}
 	free(screen.main_lines);
 	free(screen.alt_lines);
@@ -105,8 +88,11 @@ Console::~Console()
 
 	for (int i = 0; i < screen.line_num; ++i) 
 	{
-		line_free(screen.main_lines[i]);
-		line_free(screen.alt_lines[i]);
+		//line_free(screen.main_lines[i]);
+		//line_free(screen.alt_lines[i]);
+
+		delete screen.main_lines[i];
+		delete screen.alt_lines[i];
 	}
 	free(screen.main_lines);
 	free(screen.alt_lines);
@@ -191,6 +177,23 @@ unsigned int Console::getFlags() const
 	return screen.flags;
 }
 
+int Console::createNewLine(struct line **out, size_t width)
+{
+	struct line *aline;
+	unsigned int i;
+
+	if (!width)
+		return -EINVAL;
+
+	aline = new struct line(&screen, width);
+
+	if (!line)
+		return -ENOMEM;
+
+	*out = aline;
+
+	return 0;
+}
 
 int Console::resize(size_t x, size_t y)
 {
@@ -239,13 +242,13 @@ int Console::resize(size_t x, size_t y)
 			width = con->size_x;
 
 		while (con->line_num < y) {
-			ret = line_new(con, &con->main_lines[con->line_num], width);
+			ret = createNewLine(&con->main_lines[con->line_num], width);
 			if (ret)
 				return ret;
 
-			ret = line_new(con, &con->alt_lines[con->line_num], width);
+			ret = createNewLine(&con->alt_lines[con->line_num], width);
 			if (ret) {
-				line_free(con->main_lines[con->line_num]);
+				delete con->main_lines[con->line_num];
 				return ret;
 			}
 
@@ -654,14 +657,13 @@ void Console::scrollScreenUp(size_t num)
 	for (i = 0; i < num; ++i) {
 		pos = screen.margin_top + i;
 		if (!(screen.flags & TSM_SCREEN_ALTERNATE))
-			ret = line_new(&screen, &cache[i], screen.size_x);
+			ret = createNewLine(&cache[i], screen.size_x);
 		else
 			ret = -EAGAIN;
 
 		if (!ret) {
 			link_to_scrollback(&screen, screen.lines[pos]);
-		}
-		else {
+		} else {
 			cache[i] = screen.lines[pos];
 			for (j = 0; j < screen.size_x; ++j) {
 				//screen_cell_init(con, &cache[i]->cells[j]);

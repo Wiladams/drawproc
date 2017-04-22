@@ -25,7 +25,7 @@ class Console {
 	size_t Width;
 	size_t Height;
 	struct tsm_screen screen;
-	struct tsm_screen_attr defaultattr = { -1,-1, 255, 255, 255, 0,0,0,0,0,0,0,0 };
+	struct tsm_screen_attr defaultattr; // = { -1,-1, 255, 255, 255, 0,0,0,0,0,0,0,0 };
 
 
 	// internal routines
@@ -72,6 +72,7 @@ public:
 
 	void reset();
 	int resize(size_t x, size_t y);
+	int createNewLine(struct line **out, size_t width);
 
 	// Various screen attributes
 	size_t getCursorX() const { return screen.cursor_x; }

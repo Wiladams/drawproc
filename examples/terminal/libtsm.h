@@ -141,21 +141,9 @@ typedef uint_fast32_t tsm_age_t;
 #define TSM_SCREEN_FIXED_POS	0x20
 #define TSM_SCREEN_ALTERNATE	0x40
 
-struct tsm_screen_attr {
-	int8_t fccode;			/* foreground color code or <0 for rgb */
-	int8_t bccode;			/* background color code or <0 for rgb */
-	uint8_t fr;			/* foreground red */
-	uint8_t fg;			/* foreground green */
-	uint8_t fb;			/* foreground blue */
-	uint8_t br;			/* background red */
-	uint8_t bg;			/* background green */
-	uint8_t bb;			/* background blue */
-	unsigned int bold : 1;		/* bold character */
-	unsigned int underline : 1;	/* underlined character */
-	unsigned int inverse : 1;	/* inverse colors */
-	unsigned int protect : 1;	/* cannot be erased */
-	unsigned int blink : 1;		/* blinking character */
-};
+struct tsm_screen_attr;
+
+
 
 
 void tsm_screen_set_max_sb(struct tsm_screen *con, unsigned int max);
@@ -169,10 +157,6 @@ void tsm_screen_sb_reset(struct tsm_screen *con);
 
 void tsm_screen_set_def_attr(struct tsm_screen *con,
 			     const struct tsm_screen_attr *attr);
-
-void tsm_screen_set_flags(struct tsm_screen *con, unsigned int flags);
-void tsm_screen_reset_flags(struct tsm_screen *con, unsigned int flags);
-unsigned int tsm_screen_get_flags(struct tsm_screen *con);
 
 
 void tsm_screen_insert_lines(struct tsm_screen *con, unsigned int num);
