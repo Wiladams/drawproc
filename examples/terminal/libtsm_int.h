@@ -119,6 +119,12 @@ struct selection_pos {
 	struct line *line;
 	unsigned int x;
 	int y;
+
+public:
+	selection_pos() { line = nullptr; x = 0; y = 0; }
+	selection_pos(struct line * aline, size_t x, int y) 
+		: line(aline),x(x),y(y)
+	{}
 };
 
 struct tsm_screen {

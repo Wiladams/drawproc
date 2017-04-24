@@ -67,10 +67,6 @@
 
 #define LLOG_SUBSYSTEM "tsm_screen"
 
-
-
-
-
 void cell::init(struct tsm_screen *con)
 {
 	ch = 0;
@@ -223,8 +219,7 @@ void link_to_scrollback(struct tsm_screen *con, struct line *line)
 
 /* set maximum scrollback buffer size */
 SHL_EXPORT
-void tsm_screen_set_max_sb(struct tsm_screen *con,
-			       unsigned int max)
+void tsm_screen_set_max_sb(struct tsm_screen *con, unsigned int max)
 {
 	struct line *line;
 
@@ -385,161 +380,4 @@ void tsm_screen_set_def_attr(struct tsm_screen *con,
 		return;
 
 	memcpy(&con->def_attr, attr, sizeof(*attr));
-}
-
-
-
-
-SHL_EXPORT
-void tsm_screen_insert_lines(struct tsm_screen *con, unsigned int num)
-{
-	unsigned int i, j, max;
-
-	if (!con || !num)
-		return;
-
-	if (con->cursor_y < con->margin_top ||
-	    con->cursor_y > con->margin_bottom)
-		return;
-
-	screen_inc_age(con);
-	/* TODO: more sophisticated ageing */
-	con->age = con->age_cnt;
-
-	max = con->margin_bottom - con->cursor_y + 1;
-	if (num > max)
-		num = max;
-
-	//struct line *cache[num];
-	struct line **cache = (line **)malloc(num * sizeof(struct line *));
-
-	for (i = 0; i < num; ++i) {
-		cache[i] = con->lines[con->margin_bottom - i];
-		for (j = 0; j < con->size_x; ++j) {
-			cache[i]->cells[j].init(con);
-		}
-	}
-
-	if (num < max) {
-		memmove(&con->lines[con->cursor_y + num],
-			&con->lines[con->cursor_y],
-			(max - num) * sizeof(struct line*));
-
-		memcpy(&con->lines[con->cursor_y],
-		       cache, num * sizeof(struct line*));
-	}
-
-	con->cursor_x = 0;
-	free(cache);
-}
-
-SHL_EXPORT
-void tsm_screen_delete_lines(struct tsm_screen *con, unsigned int num)
-{
-	unsigned int i, j, max;
-
-	if (!con || !num)
-		return;
-
-	if (con->cursor_y < con->margin_top ||
-	    con->cursor_y > con->margin_bottom)
-		return;
-
-	screen_inc_age(con);
-	// TODO: more sophisticated ageing
-	con->age = con->age_cnt;
-
-	max = con->margin_bottom - con->cursor_y + 1;
-	if (num > max)
-		num = max;
-
-	struct line **cache = (line **)malloc(num * sizeof (struct line *));
-
-	for (i = 0; i < num; ++i) {
-		cache[i] = con->lines[con->cursor_y + i];
-		for (j = 0; j < con->size_x; ++j) {
-			//screen_cell_init(con, &cache[i]->cells[j]);
-			cache[i]->cells[j].init(con);
-		}
-	}
-
-	if (num < max) {
-		memmove(&con->lines[con->cursor_y],
-			&con->lines[con->cursor_y + num],
-			(max - num) * sizeof(struct line*));
-
-		memcpy(&con->lines[con->cursor_y + (max - num)],
-		       cache, num * sizeof(struct line*));
-	}
-
-	con->cursor_x = 0;
-	free (cache);
-}
-
-SHL_EXPORT
-void tsm_screen_insert_chars(struct tsm_screen *con, unsigned int num)
-{
-	struct cell *cells;
-	unsigned int max, mv, i;
-
-	if (!con || !num || !con->size_y || !con->size_x)
-		return;
-
-	screen_inc_age(con);
-	// TODO: more sophisticated ageing */
-	con->age = con->age_cnt;
-
-	if (con->cursor_x >= con->size_x)
-		con->cursor_x = con->size_x - 1;
-	if (con->cursor_y >= con->size_y)
-		con->cursor_y = con->size_y - 1;
-
-	max = con->size_x - con->cursor_x;
-	if (num > max)
-		num = max;
-	mv = max - num;
-
-	cells = con->lines[con->cursor_y]->cells;
-	if (mv)
-		memmove(&cells[con->cursor_x + num],
-			&cells[con->cursor_x],
-			mv * sizeof(*cells));
-
-	for (i = 0; i < num; ++i) {
-		cells[con->cursor_x + i].init(con);
-	}
-}
-
-SHL_EXPORT
-void tsm_screen_delete_chars(struct tsm_screen *con, unsigned int num)
-{
-	struct cell *cells;
-	unsigned int max, mv, i;
-
-	if (!con || !num || !con->size_y || !con->size_x)
-		return;
-
-	screen_inc_age(con);
-	/* TODO: more sophisticated ageing */
-	con->age = con->age_cnt;
-
-	if (con->cursor_x >= con->size_x)
-		con->cursor_x = con->size_x - 1;
-	if (con->cursor_y >= con->size_y)
-		con->cursor_y = con->size_y - 1;
-
-	max = con->size_x - con->cursor_x;
-	if (num > max)
-		num = max;
-	mv = max - num;
-
-	cells = con->lines[con->cursor_y]->cells;
-	if (mv)
-		memmove(&cells[con->cursor_x],
-			&cells[con->cursor_x + num],
-			mv * sizeof(*cells));
-
-	for (i = 0; i < num; ++i) {
-		cells[con->cursor_x + mv + i].init(con);
-	}
 }

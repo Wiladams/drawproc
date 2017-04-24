@@ -98,6 +98,13 @@ public:
 	void eraseScreenToCursor( bool protect);
 	void eraseCursorToScreen( bool protect);
 	
+	// Deleting and inserting chars and lines
+	void deleteChars(size_t num);
+	void insertChars(size_t num);
+	void deleteLines(size_t num);
+	void insertLines(size_t num);
+
+
 	void moveTo(unsigned int x, unsigned int y);
 	void newline();
 	void moveDown(size_t num, bool scroll);

@@ -222,55 +222,55 @@ int Console::resize(size_t x, size_t y)
 		if (!cache)
 			return -ENOMEM;
 
-		if (con->lines == con->main_lines)
-			con->lines = cache;
-		con->main_lines = cache;
+		if (screen.lines == screen.main_lines)
+			screen.lines = cache;
+		screen.main_lines = cache;
 
 		/* resize alt buffer */
-		cache = (struct line **)realloc(con->alt_lines, sizeof(struct line*) * y);
+		cache = (struct line **)realloc(screen.alt_lines, sizeof(struct line*) * y);
 		if (!cache)
 			return -ENOMEM;
 
-		if (con->lines == con->alt_lines)
-			con->lines = cache;
-		con->alt_lines = cache;
+		if (screen.lines == screen.alt_lines)
+			screen.lines = cache;
+		screen.alt_lines = cache;
 
 		/* allocate new lines */
-		if (x > con->size_x)
+		if (x > screen.size_x)
 			width = x;
 		else
-			width = con->size_x;
+			width = screen.size_x;
 
-		while (con->line_num < y) {
-			ret = createNewLine(&con->main_lines[con->line_num], width);
+		while (screen.line_num < y) {
+			ret = createNewLine(&screen.main_lines[screen.line_num], width);
 			if (ret)
 				return ret;
 
-			ret = createNewLine(&con->alt_lines[con->line_num], width);
+			ret = createNewLine(&screen.alt_lines[screen.line_num], width);
 			if (ret) {
-				delete con->main_lines[con->line_num];
+				delete screen.main_lines[screen.line_num];
 				return ret;
 			}
 
-			++con->line_num;
+			++screen.line_num;
 		}
 	}
 
 	/* Resize all lines in the buffer if we increase screen width. This
 	* will guarantee that all lines are big enough so we can resize the
 	* buffer without reallocating them later. */
-	if (x > con->size_x) {
-		tab_ruler = (bool *)realloc(con->tab_ruler, sizeof(bool) * x);
+	if (x > screen.size_x) {
+		tab_ruler = (bool *)realloc(screen.tab_ruler, sizeof(bool) * x);
 		if (!tab_ruler)
 			return -ENOMEM;
-		con->tab_ruler = tab_ruler;
+		screen.tab_ruler = tab_ruler;
 
-		for (i = 0; i < con->line_num; ++i) {
-			ret = con->main_lines[i]->resize(con, x);
+		for (i = 0; i < screen.line_num; ++i) {
+			ret = screen.main_lines[i]->resize(con, x);
 			if (ret)
 				return ret;
 
-			ret = con->alt_lines[i]->resize(con, x);
+			ret = screen.alt_lines[i]->resize(con, x);
 			if (ret)
 				return ret;
 		}
@@ -280,38 +280,38 @@ int Console::resize(size_t x, size_t y)
 
 	/* clear expansion/padding area */
 	start = x;
-	if (x > con->size_x)
-		start = con->size_x;
-	for (j = 0; j < con->line_num; ++j) {
+	if (x > screen.size_x)
+		start = screen.size_x;
+	for (j = 0; j < screen.line_num; ++j) {
 		/* main-lines may go into SB, so clear all cells */
 		i = 0;
-		if (j < con->size_y)
+		if (j < screen.size_y)
 			i = start;
 
-		for (; i < con->main_lines[j]->size; ++i) {
-			con->main_lines[j]->cells[i].init(con);
+		for (; i < screen.main_lines[j]->size; ++i) {
+			screen.main_lines[j]->cells[i].init(con);
 		}
 
 		/* alt-lines never go into SB, only clear visible cells */
 		i = 0;
-		if (j < con->size_y)
-			i = con->size_x;
+		if (j < screen.size_y)
+			i = screen.size_x;
 
 		for (; i < x; ++i) {
-			con->alt_lines[j]->cells[i].init(con);
+			screen.alt_lines[j]->cells[i].init(con);
 		}
 	}
 
 	/* xterm destroys margins on resize, so do we */
-	con->margin_top = 0;
-	con->margin_bottom = con->size_y - 1;
+	screen.margin_top = 0;
+	screen.margin_bottom = screen.size_y - 1;
 
 	/* reset tabs */
 	for (i = 0; i < x; ++i) {
 		if (i % 8 == 0)
-			con->tab_ruler[i] = true;
+			screen.tab_ruler[i] = true;
 		else
-			con->tab_ruler[i] = false;
+			screen.tab_ruler[i] = false;
 	}
 
 	/* We need to adjust x-size first as screen_scroll_up() and friends may
@@ -320,24 +320,24 @@ int Console::resize(size_t x, size_t y)
 	* We need to carefully look for the functions that we call here as they
 	* have stronger invariants as when called normally. */
 
-	con->size_x = x;
-	if (con->cursor_x >= con->size_x)
-		moveCursor(con->size_x - 1, con->cursor_y);
+	screen.size_x = x;
+	if (screen.cursor_x >= screen.size_x)
+		moveCursor(screen.size_x - 1, screen.cursor_y);
 
 	/* scroll buffer if screen height shrinks */
-	if (y < con->size_y) {
-		diff = con->size_y - y;
+	if (y < screen.size_y) {
+		diff = screen.size_y - y;
 		scrollScreenUp(diff);
-		if (con->cursor_y > diff)
-			moveCursor(con->cursor_x, con->cursor_y - diff);
+		if (screen.cursor_y > diff)
+			moveCursor(screen.cursor_x, screen.cursor_y - diff);
 		else
-			moveCursor(con->cursor_x, 0);
+			moveCursor(screen.cursor_x, 0);
 	}
 
-	con->size_y = y;
-	con->margin_bottom = con->size_y - 1;
-	if (con->cursor_y >= con->size_y)
-		moveCursor(con->cursor_x, con->size_y - 1);
+	screen.size_y = y;
+	screen.margin_bottom = screen.size_y - 1;
+	if (screen.cursor_y >= screen.size_y)
+		moveCursor(screen.cursor_x, screen.size_y - 1);
 
 	return 0;
 }
@@ -1018,6 +1018,159 @@ void Console::eraseCursorToScreen(bool protect)
 
 	eraseRegion(x, screen.cursor_y, screen.size_x - 1,
 		screen.size_y - 1, protect);
+}
+
+
+
+void Console::insertLines(size_t num)
+{
+	unsigned int i, j, max;
+
+	if (!num)
+		return;
+
+	if (screen.cursor_y < screen.margin_top ||
+		screen.cursor_y > screen.margin_bottom)
+		return;
+
+	screen_inc_age(&screen);
+	// TODO: more sophisticated ageing
+	screen.age = screen.age_cnt;
+
+	max = screen.margin_bottom - screen.cursor_y + 1;
+	if (num > max)
+		num = max;
+
+	struct line **cache = (struct line **)malloc(num * sizeof(struct line *));
+
+	for (i = 0; i < num; ++i) {
+		cache[i] = screen.lines[screen.margin_bottom - i];
+		for (j = 0; j < screen.size_x; ++j) {
+			cache[i]->cells[j].init(&screen);
+		}
+	}
+
+	if (num < max) {
+		memmove(&screen.lines[screen.cursor_y + num],
+			&screen.lines[screen.cursor_y],
+			(max - num) * sizeof(struct line*));
+
+		memcpy(&screen.lines[screen.cursor_y],
+			cache, num * sizeof(struct line*));
+	}
+
+	screen.cursor_x = 0;
+	free(cache);
+}
+
+
+void Console::deleteLines(size_t num)
+{
+	unsigned int i, j, max;
+
+	if (!num)
+		return;
+
+	if (screen.cursor_y < screen.margin_top ||
+		screen.cursor_y > screen.margin_bottom)
+		return;
+
+	screen_inc_age(&screen);
+	// TODO: more sophisticated ageing
+	screen.age = screen.age_cnt;
+
+	max = screen.margin_bottom - screen.cursor_y + 1;
+	if (num > max)
+		num = max;
+
+	struct line **cache = (struct line **)malloc(num * sizeof(struct line *));
+
+	for (i = 0; i < num; ++i) {
+		cache[i] = screen.lines[screen.cursor_y + i];
+		for (j = 0; j < screen.size_x; ++j) {
+			//screen_cell_init(con, &cache[i]->cells[j]);
+			cache[i]->cells[j].init(&screen);
+		}
+	}
+
+	if (num < max) {
+		memmove(&screen.lines[screen.cursor_y],
+			&screen.lines[screen.cursor_y + num],
+			(max - num) * sizeof(struct line*));
+
+		memcpy(&screen.lines[screen.cursor_y + (max - num)],
+			cache, num * sizeof(struct line*));
+	}
+
+	screen.cursor_x = 0;
+	free(cache);
+}
+
+void Console::insertChars(size_t num)
+{
+	struct cell *cells;
+	unsigned int max, mv, i;
+
+	if (!num || !screen.size_y || !screen.size_x)
+		return;
+
+	screen_inc_age(&screen);
+	// TODO: more sophisticated ageing */
+	screen.age = screen.age_cnt;
+
+	if (screen.cursor_x >= screen.size_x)
+		screen.cursor_x = screen.size_x - 1;
+	if (screen.cursor_y >= screen.size_y)
+		screen.cursor_y = screen.size_y - 1;
+
+	max = screen.size_x - screen.cursor_x;
+	if (num > max)
+		num = max;
+	mv = max - num;
+
+	cells = screen.lines[screen.cursor_y]->cells;
+	if (mv)
+		memmove(&cells[screen.cursor_x + num],
+			&cells[screen.cursor_x],
+			mv * sizeof(*cells));
+
+	for (i = 0; i < num; ++i) {
+		cells[screen.cursor_x + i].init(&screen);
+	}
+}
+
+
+void Console::deleteChars(size_t num)
+{
+	struct cell *cells;
+	unsigned int max, mv, i;
+
+	if (!num || !screen.size_y || !screen.size_x)
+		return;
+
+	screen_inc_age(&screen);
+	/* TODO: more sophisticated ageing */
+	screen.age = screen.age_cnt;
+
+	if (screen.cursor_x >= screen.size_x)
+		screen.cursor_x = screen.size_x - 1;
+	if (screen.cursor_y >= screen.size_y)
+		screen.cursor_y = screen.size_y - 1;
+
+	max = screen.size_x - screen.cursor_x;
+	if (num > max)
+		num = max;
+	mv = max - num;
+
+	cells = screen.lines[screen.cursor_y]->cells;
+	if (mv)
+		memmove(&cells[screen.cursor_x],
+			&cells[screen.cursor_x + num],
+			mv * sizeof(*cells));
+
+	for (i = 0; i < num; ++i) {
+		cells[screen.cursor_x + mv + i].init(&screen);
+	}
 }
 
 
