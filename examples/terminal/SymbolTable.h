@@ -6,6 +6,9 @@
 #include "shl_htable.h"
 #include "shl_array.h"
 
+//struct tsm_symbol_table;
+//extern const tsm_symbol_t tsm_symbol_default;
+
 struct SymbolTable {
 	unsigned long ref;
 	uint32_t next_id;

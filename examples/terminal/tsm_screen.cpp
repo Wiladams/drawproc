@@ -112,8 +112,6 @@ void line::initCells(struct tsm_screen &con)
 	}
 }
 
-
-
 int line::resize(struct tsm_screen *con, size_t width)
 {
 	struct cell *tmp;
@@ -216,6 +214,14 @@ void link_to_scrollback(struct tsm_screen *con, struct line *line)
 	++con->sb_count;
 }
 
+
+static inline void screen_inc_age(struct tsm_screen *con)
+{
+	if (!++con->age_cnt) {
+		con->age_reset = 1;
+		++con->age_cnt;
+	}
+}
 
 /* set maximum scrollback buffer size */
 SHL_EXPORT
@@ -372,12 +378,4 @@ void tsm_screen_sb_reset(struct tsm_screen *con)
 	con->sb_pos = NULL;
 }
 
-SHL_EXPORT
-void tsm_screen_set_def_attr(struct tsm_screen *con,
-				 const struct tsm_screen_attr *attr)
-{
-	if (!con || !attr)
-		return;
 
-	memcpy(&con->def_attr, attr, sizeof(*attr));
-}

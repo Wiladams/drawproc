@@ -108,7 +108,6 @@ typedef void (*tsm_log_t) (void *data,
 
 
 /* symbols */
-
 typedef uint32_t tsm_symbol_t;
 
 /** @} */

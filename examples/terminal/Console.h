@@ -44,6 +44,8 @@ public:
 	Console(const size_t width, const size_t height);
 	~Console();
 
+	void incrementAge();
+
 	void setFlags(unsigned int flags);
 	void resetFlags(unsigned int flags);
 	unsigned int getFlags() const;
@@ -69,6 +71,8 @@ public:
 	{
 		return screen.opts;
 	}
+
+	void setDefaultAttribute(const struct tsm_screen_attr & attr);
 
 	void reset();
 	int resize(size_t x, size_t y);

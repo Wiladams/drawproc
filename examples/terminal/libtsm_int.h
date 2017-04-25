@@ -36,13 +36,6 @@
 
 #define SHL_EXPORT
 
-/* symbols */
-
-struct tsm_symbol_table;
-
-extern const tsm_symbol_t tsm_symbol_default;
-
-
 struct tsm_screen_attr {
 	int8_t fccode;			/* foreground color code or <0 for rgb */
 	int8_t bccode;			/* background color code or <0 for rgb */
@@ -174,23 +167,5 @@ struct tsm_screen {
 	struct selection_pos sel_start;
 	struct selection_pos sel_end;
 };
-
-
-static inline void screen_inc_age(struct tsm_screen *con)
-{
-	if (!++con->age_cnt) {
-		con->age_reset = 1;
-		++con->age_cnt;
-	}
-}
-
-/* available character sets */
-
-typedef tsm_symbol_t tsm_vte_charset[96];
-
-extern tsm_vte_charset tsm_vte_unicode_lower;
-extern tsm_vte_charset tsm_vte_unicode_upper;
-extern tsm_vte_charset tsm_vte_dec_supplemental_graphics;
-extern tsm_vte_charset tsm_vte_dec_special_graphics;
 
 #endif /* TSM_LIBTSM_INT_H */

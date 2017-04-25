@@ -42,12 +42,10 @@ static void free_ucs4(void *elem, void *priv)
 
 SymbolTable::SymbolTable()
 {
-	struct tsm_symbol_table *tbl;
 	int ret;
 	static const uint32_t *val = NULL; /* we need a valid lvalue */
 
 
-	//memset(tbl, 0, sizeof(*tbl));
 	ref = 1;
 	next_id = TSM_UCS4_MAX + 2;
 	shl_htable_init(&symbols, cmp_ucs4, hash_ucs4, NULL);

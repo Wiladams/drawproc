@@ -99,6 +99,20 @@ Console::~Console()
 	free(screen.tab_ruler);
 }
 
+void Console::incrementAge()
+{
+	if (!++screen.age_cnt) {
+		screen.age_reset = 1;
+		++screen.age_cnt;
+	}
+}
+
+
+void Console::setDefaultAttribute(const struct tsm_screen_attr & attr)
+{
+	memcpy(&con->def_attr, attr, sizeof(*attr));
+	screen.def_attr = attr;
+}
 
 static struct cell *get_cursor_cell(tsm_screen &con)
 {
@@ -123,7 +137,7 @@ void Console::setFlags(unsigned int flags)
 	if (!flags)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	old = screen.flags;
 	screen.flags |= flags;
@@ -151,7 +165,7 @@ void Console::resetFlags(unsigned int flags)
 	if (!flags)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	old = screen.flags;
 	screen.flags &= ~flags;
@@ -276,7 +290,7 @@ int Console::resize(size_t x, size_t y)
 		}
 	}
 
-	screen_inc_age(con);
+	incrementAge();
 
 	/* clear expansion/padding area */
 	start = x;
@@ -344,7 +358,7 @@ int Console::resize(size_t x, size_t y)
 
 void Console::newline()
 {
-	screen_inc_age(&screen);
+	incrementAge();
 
 	moveDown(1, true);
 	moveLineHome();
@@ -396,7 +410,7 @@ void Console::writeSymbol(tsm_symbol_t ch, const struct tsm_screen_attr *attr)
 	if (!len)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	if (screen.cursor_y <= screen.margin_bottom ||
 		screen.cursor_y >= screen.size_y)
@@ -480,7 +494,7 @@ void Console::moveTo(unsigned int x, unsigned int y)
 	unsigned int last;
 
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	if (screen.flags & TSM_SCREEN_REL_ORIGIN)
 		last = screen.margin_bottom;
@@ -505,7 +519,7 @@ void Console::moveUp(size_t num, bool scroll)
 	if (!num)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	if (screen.cursor_y >= screen.margin_top)
 		size = screen.margin_top;
@@ -528,7 +542,7 @@ void Console::moveDown(size_t num, bool scroll)
 {
 	unsigned int diff, size;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	if (screen.cursor_y <= screen.margin_bottom)
 		size = screen.margin_bottom + 1;
@@ -556,7 +570,7 @@ void Console::moveLeft(size_t num)
 	if (!num)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	if (num > screen.size_x)
 		num = screen.size_x;
@@ -577,7 +591,7 @@ void Console::moveRight(size_t num)
 	if (!num)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	if (num > screen.size_x)
 		num = screen.size_x;
@@ -591,7 +605,7 @@ void Console::moveRight(size_t num)
 
 void Console::moveLineEnd()
 {
-	screen_inc_age(&screen);
+	incrementAge();
 
 	moveCursor(screen.size_x - 1, screen.cursor_y);
 }
@@ -599,7 +613,7 @@ void Console::moveLineEnd()
 
 void Console::moveLineHome()
 {
-	screen_inc_age(&screen);
+	incrementAge();
 
 	moveCursor(0, screen.cursor_y);
 }
@@ -759,7 +773,7 @@ void Console::scrollUp(size_t num)
 	if (!num)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	scrollScreenUp(num);
 }
@@ -769,7 +783,7 @@ void Console::scrollDown(size_t num)
 	if (!num)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	scrollScreenDown(num);
 }
@@ -834,7 +848,7 @@ void Console::tabRight(size_t num)
 	if (!num)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	x = screen.cursor_x;
 	for (i = 0; i < num; ++i) {
@@ -864,7 +878,7 @@ void Console::tabLeft(size_t num)
 	if (!num)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	x = screen.cursor_x;
 	for (i = 0; i < num; ++i) {
@@ -925,7 +939,7 @@ void Console::eraseRegion(unsigned int x_from,
 // Erasing
 void Console::eraseScreen(bool protect)
 {
-	screen_inc_age(&screen);
+	incrementAge();
 
 	eraseRegion(0, 0, screen.size_x - 1, screen.size_y - 1, protect);
 }
@@ -935,7 +949,7 @@ void Console::eraseCursor()
 {
 	unsigned int x;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	if (screen.cursor_x >= screen.size_x)
 		x = screen.size_x - 1;
@@ -953,7 +967,7 @@ void Console::eraseChars(size_t num)
 	if (!num)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	if (screen.cursor_x >= screen.size_x)
 		x = screen.size_x - 1;
@@ -968,7 +982,7 @@ void Console::eraseCursorToEnd(bool protect)
 {
 	unsigned int x;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	if (screen.cursor_x >= screen.size_x)
 		x = screen.size_x - 1;
@@ -981,7 +995,7 @@ void Console::eraseCursorToEnd(bool protect)
 
 void Console::eraseHomeToCursor(bool protect)
 {
-	screen_inc_age(&screen);
+	incrementAge();
 
 	eraseRegion(0, screen.cursor_y, screen.cursor_x,
 		screen.cursor_y, protect);
@@ -990,7 +1004,7 @@ void Console::eraseHomeToCursor(bool protect)
 
 void Console::eraseCurrentLine(bool protect)
 {
-	screen_inc_age(&screen);
+	incrementAge();
 
 	eraseRegion(0, screen.cursor_y, screen.size_x - 1,
 		screen.cursor_y, protect);
@@ -999,7 +1013,7 @@ void Console::eraseCurrentLine(bool protect)
 
 void Console::eraseScreenToCursor(bool protect)
 {
-	screen_inc_age(&screen);
+	incrementAge();
 
 	eraseRegion(0, 0, screen.cursor_x, screen.cursor_y, protect);
 }
@@ -1009,7 +1023,7 @@ void Console::eraseCursorToScreen(bool protect)
 {
 	unsigned int x;
 
-	screen_inc_age(&screen);
+	incrementAge();
 
 	if (screen.cursor_x >= screen.size_x)
 		x = screen.size_x - 1;
@@ -1033,7 +1047,7 @@ void Console::insertLines(size_t num)
 		screen.cursor_y > screen.margin_bottom)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 	// TODO: more sophisticated ageing
 	screen.age = screen.age_cnt;
 
@@ -1075,7 +1089,7 @@ void Console::deleteLines(size_t num)
 		screen.cursor_y > screen.margin_bottom)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 	// TODO: more sophisticated ageing
 	screen.age = screen.age_cnt;
 
@@ -1114,7 +1128,7 @@ void Console::insertChars(size_t num)
 	if (!num || !screen.size_y || !screen.size_x)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 	// TODO: more sophisticated ageing */
 	screen.age = screen.age_cnt;
 
@@ -1148,7 +1162,7 @@ void Console::deleteChars(size_t num)
 	if (!num || !screen.size_y || !screen.size_x)
 		return;
 
-	screen_inc_age(&screen);
+	incrementAge();
 	/* TODO: more sophisticated ageing */
 	screen.age = screen.age_cnt;
 
@@ -1178,7 +1192,7 @@ void Console::reset()
 {
 	unsigned int i;
 
-	screen_inc_age(&screen);
+	incrementAge();
 	screen.age = screen.age_cnt;
 
 	screen.flags = 0;
