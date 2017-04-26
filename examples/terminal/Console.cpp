@@ -111,7 +111,7 @@ void Console::incrementAge()
 
 void Console::setDefaultAttribute(const struct tsm_screen_attr & attr)
 {
-	memcpy(&con->def_attr, attr, sizeof(*attr));
+	//memcpy(&con->def_attr, attr, sizeof(*attr));
 	screen.def_attr = attr;
 }
 

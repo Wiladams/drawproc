@@ -145,7 +145,7 @@ void ScrollbackBuffer::pageUp(size_t num)
 }
 
 
-void ScrollbackBuffer::down(size_t num)
+void ScrollbackBuffer::pageDown(size_t num)
 {
 	if (!num)
 		return;
