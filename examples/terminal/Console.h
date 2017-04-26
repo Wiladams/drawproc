@@ -7,6 +7,8 @@
 
 #include <stdio.h>
 
+class ScrollbackBuffer;
+
 /*
 	Console
 
@@ -26,7 +28,7 @@ class Console {
 	size_t Height;
 	struct tsm_screen screen;
 	struct tsm_screen_attr defaultattr; // = { -1,-1, 255, 255, 255, 0,0,0,0,0,0,0,0 };
-
+	ScrollbackBuffer * scrollBuffer;
 
 	// internal routines
 	int _init(const size_t width, const size_t height);

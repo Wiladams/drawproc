@@ -5,7 +5,7 @@
 
 
 class ScrollbackBuffer {
-	Console con;
+	Console & con;
 
 	/* scroll-back buffer */
 	unsigned int sb_count;		/* number of lines in sb */
@@ -15,10 +15,10 @@ class ScrollbackBuffer {
 	struct line *sb_pos;		/* current position in sb or NULL */
 	uint64_t sb_last_id;		/* last id given to sb-line */
 
-	void init(Console con, size_t num);
+	void setMax(size_t num);
 
 public:
-	ScrollbackBuffer(Console con, size_t max);
+	ScrollbackBuffer(Console &con, size_t max);
 
 
 	void reset();

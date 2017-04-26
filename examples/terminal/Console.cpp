@@ -1,6 +1,7 @@
 #include "drawproc.h"
 #include "libtsm.h"
 #include "Console.h"
+#include "ScrollbackBuffer.h"
 
 #include <stdio.h>
 
@@ -625,17 +626,26 @@ void Console::moveLineHome()
 
 void Console::setMaxScrollback(size_t num)
 {
-	tsm_screen_set_max_sb(&screen, num);
+	if (scrollBuffer != nullptr)
+		delete scrollBuffer;
+
+	scrollBuffer = new ScrollbackBuffer(*this, num);
 }
 
 void Console::scrollBufferUp(size_t num)
 {
-	tsm_screen_sb_up(&screen, num);
+	if (scrollBuffer == nullptr)
+		return;
+
+	scrollBuffer->up(num);
 }
 
 void Console::scrollBufferDown(size_t num)
 {
-	tsm_screen_sb_down(&screen, num);
+	if (nullptr == scrollBuffer)
+		return;
+
+	scrollBuffer->down(num);
 }
 
 // 
