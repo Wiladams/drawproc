@@ -6,7 +6,8 @@
 #include "shl_htable.h"
 #include "shl_array.h"
 
-//struct tsm_symbol_table;
+#include "Unicode.h"
+
 //extern const tsm_symbol_t tsm_symbol_default;
 
 struct SymbolTable {

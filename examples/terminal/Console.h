@@ -8,6 +8,7 @@
 #include <stdio.h>
 
 class ScrollbackBuffer;
+class ScreenSelection;
 
 /*
 	Console
@@ -85,7 +86,7 @@ public:
 	size_t getCursorY() const { return screen.cursor_y; }
 	size_t getWidth() const { return screen.size_x; }
 	size_t getHeight() const { return screen.size_y; }
-
+	struct line ** getLines() { return screen.lines; }
 
 
 	// writing text

@@ -153,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="ScreenSelection.cpp" />
     <ClCompile Include="ScrollbackBuffer.cpp" />
     <ClCompile Include="shl_htable.c" />
     <ClCompile Include="SymbolTable.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Console.h" />
     <ClInclude Include="libtsm.h" />
     <ClInclude Include="libtsm_int.h" />
+    <ClInclude Include="ScreenSelection.h" />
     <ClInclude Include="ScrollbackBuffer.h" />
     <ClInclude Include="shl_array.h" />
     <ClInclude Include="shl_htable.h" />

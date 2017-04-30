@@ -107,8 +107,6 @@ typedef void (*tsm_log_t) (void *data,
  */
 
 
-/* symbols */
-typedef uint32_t tsm_symbol_t;
 
 /** @} */
 
@@ -154,6 +152,7 @@ void tsm_screen_sb_page_up(struct tsm_screen *con, unsigned int num);
 void tsm_screen_sb_page_down(struct tsm_screen *con, unsigned int num);
 void tsm_screen_sb_reset(struct tsm_screen *con);
 
+/*
 void tsm_screen_set_def_attr(struct tsm_screen *con,
 			     const struct tsm_screen_attr *attr);
 
@@ -162,7 +161,7 @@ void tsm_screen_insert_lines(struct tsm_screen *con, unsigned int num);
 void tsm_screen_delete_lines(struct tsm_screen *con, unsigned int num);
 void tsm_screen_insert_chars(struct tsm_screen *con, unsigned int num);
 void tsm_screen_delete_chars(struct tsm_screen *con, unsigned int num);
-
+*/
 
 void tsm_screen_selection_reset(struct tsm_screen *con);
 void tsm_screen_selection_start(struct tsm_screen *con, unsigned int posx, unsigned int posy);

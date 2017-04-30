@@ -89,7 +89,7 @@ void tsm_screen_selection_reset(struct tsm_screen *con)
 		return;
 
 	screen_inc_age(con);
-	/* TODO: more sophisticated ageing */
+	// TODO: more sophisticated ageing
 	con->age = con->age_cnt;
 
 	con->sel_active = false;

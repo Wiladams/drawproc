@@ -7,6 +7,10 @@
 #define TSM_UCS4_REPLACEMENT (0xfffdUL)
 #define TSM_UCS4_MAXLEN 10
 
+/* symbols */
+typedef uint32_t tsm_symbol_t;
+
+
 enum tsm_utf8_mach_state {
 	TSM_UTF8_START,
 	TSM_UTF8_ACCEPT,
