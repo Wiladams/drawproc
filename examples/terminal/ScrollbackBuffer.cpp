@@ -1,16 +1,16 @@
 #include "ScrollbackBuffer.h"
+#include "Console.h"
+
 
 /* set maximum scrollback buffer size */
 void ScrollbackBuffer::setMax(size_t max)
 {
 
 	con.incrementAge();
-
-	//con.screen.age = con.screen.age_cnt;
+	con.alignAge();
 	
 	// Making it smaller
 	// We only allow this if resizing is allowed
-/*
 	struct line *line;
 	while (sb_count > max) {
 		line = sb_first;
@@ -29,19 +29,19 @@ void ScrollbackBuffer::setMax(size_t max)
 		if (sb_pos == line)
 			sb_pos = sb_first;
 
-		if (con->sel_active) {
-			if (con->sel_start.line == line) {
-				con->sel_start.line = NULL;
-				con->sel_start.y = SELECTION_TOP;
+		if (con.getSelection().isActive()) {
+			if (con.getSelection().getStart().line == line) {
+				con.getSelection().getStart().line = nullptr;
+				con.getSelection().getStart().y = SELECTION_TOP;
 			}
-			if (con->sel_end.line == line) {
-				con->sel_end.line = NULL;
-				con->sel_end.y = SELECTION_TOP;
+			if (con.getSelection().getEnd().line == line) {
+				con.getSelection().getEnd().line = nullptr;
+				con.getSelection().getEnd().y = SELECTION_TOP;
 			}
 		}
 		delete line;
 	}
-*/
+
 	sb_max = max;
 }
 

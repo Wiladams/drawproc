@@ -148,7 +148,8 @@ err_free:
 }
 
 Console::Console(const size_t width, const size_t height) 
-	:selection(*this)
+	:selection(*this),
+	scrollBuffer(*this, height)
 {
 		int err = _init(width, height);
 }
@@ -689,26 +690,17 @@ void Console::moveLineHome()
 
 void Console::setMaxScrollback(size_t num)
 {
-	if (scrollBuffer != nullptr)
-		delete scrollBuffer;
-
-	scrollBuffer = new ScrollbackBuffer(*this, num);
+	scrollBuffer.setMax(num);
 }
 
 void Console::scrollBufferUp(size_t num)
 {
-	if (scrollBuffer == nullptr)
-		return;
-
-	scrollBuffer->up(num);
+	scrollBuffer.up(num);
 }
 
 void Console::scrollBufferDown(size_t num)
 {
-	if (nullptr == scrollBuffer)
-		return;
-
-	scrollBuffer->down(num);
+	scrollBuffer.down(num);
 }
 
 // 
@@ -721,7 +713,7 @@ void Console::link_to_scrollback(struct line *aline)
 
 	alignAge();
 
-	if (scrollBuffer->getMax() == 0) {
+	if (scrollBuffer.getMax() == 0) {
 		if (selection.isActive()) {
 			if (selection.getStart().line == aline) {
 				selection.getStart().line = nullptr;
@@ -742,15 +734,15 @@ void Console::link_to_scrollback(struct line *aline)
 	* line is linked in after we remove the top-most line here.
 	* sb_max == 0 is tested earlier so we can assume sb_max > 0 here. In
 	* other words, buf->sb_first is a valid line if sb_count >= sb_max. */
-	if (scrollBuffer->getCount() >= scrollBuffer->getMax()) {
-		tmp = scrollBuffer->getFirst();
-		scrollBuffer->setFirst(tmp->next);
+	if (scrollBuffer.getCount() >= scrollBuffer.getMax()) {
+		tmp = scrollBuffer.getFirst();
+		scrollBuffer.setFirst(tmp->next);
 		if (tmp->next)
 			tmp->next->prev = nullptr;
 		else
-			scrollBuffer->setLast(nullptr);
+			scrollBuffer.setLast(nullptr);
 
-		scrollBuffer->decrementCount();
+		scrollBuffer.decrementCount();
 
 
 		/* (position == tmp && !next) means we have sb_max=1 so set
@@ -759,13 +751,13 @@ void Console::link_to_scrollback(struct line *aline)
 		* needs to be done because we can stay at the same line. If we
 		* have no fixed-position, we need to set the position to the
 		* next inserted line, which can be "line", too. */
-		if (scrollBuffer->getPosition()) {
-			if (scrollBuffer->getPosition() == tmp ||
+		if (scrollBuffer.getPosition()) {
+			if (scrollBuffer.getPosition() == tmp ||
 				!(screen.flags & TSM_SCREEN_FIXED_POS)) {
-				if (scrollBuffer->getPosition()->next)
-					scrollBuffer->setPosition(scrollBuffer->getPosition()->next);
+				if (scrollBuffer.getPosition()->next)
+					scrollBuffer.setPosition(scrollBuffer.getPosition()->next);
 				else
-					scrollBuffer->setPosition(aline);
+					scrollBuffer.setPosition(aline);
 			}
 		}
 
@@ -782,16 +774,16 @@ void Console::link_to_scrollback(struct line *aline)
 		delete tmp;
 	}
 
-	aline->sb_id = scrollBuffer->incrementLastId();
+	aline->sb_id = scrollBuffer.incrementLastId();
 	aline->next = nullptr;
-	aline->prev = scrollBuffer->getLast();
-	if (scrollBuffer->getLast())
-		scrollBuffer->getLast()->next = aline;
+	aline->prev = scrollBuffer.getLast();
+	if (scrollBuffer.getLast())
+		scrollBuffer.getLast()->next = aline;
 	else
-		scrollBuffer->setFirst(aline);
-	scrollBuffer->setLast(aline);
+		scrollBuffer.setFirst(aline);
+	scrollBuffer.setLast(aline);
 
-	scrollBuffer->incrementCount();
+	scrollBuffer.incrementCount();
 }
 
 void Console::scrollScreenUp(size_t num)

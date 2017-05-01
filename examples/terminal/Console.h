@@ -7,8 +7,8 @@
 
 #include <stdio.h>
 
-class ScrollbackBuffer;
 
+#include "ScrollbackBuffer.h"
 #include "ScreenSelection.h"
 
 struct tsm_screen;
@@ -113,7 +113,7 @@ class Console {
 	size_t Height;
 	struct tsm_screen screen;
 	struct tsm_screen_attr defaultattr; // = { -1,-1, 255, 255, 255, 0,0,0,0,0,0,0,0 };
-	ScrollbackBuffer * scrollBuffer;
+	ScrollbackBuffer scrollBuffer;
 	ScreenSelection selection;
 
 	// internal routines
@@ -138,7 +138,7 @@ public:
 	void alignAge() {	screen.age = screen.age_cnt;}
 
 	struct line ** getLines() { return screen.lines; }
-	ScrollbackBuffer *getScrollbackBuffer() { return scrollBuffer; }
+	ScrollbackBuffer *getScrollbackBuffer() { return &scrollBuffer; }
 	ScreenSelection & getSelection() { return selection; }
 
 	void setFlags(unsigned int flags);

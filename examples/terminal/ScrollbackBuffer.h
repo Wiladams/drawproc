@@ -1,7 +1,9 @@
 #pragma once
 
+#include <inttypes.h>
 
-#include "Console.h"
+class Console;
+struct line;
 
 class ScrollbackBuffer {
 	Console & con;
@@ -13,7 +15,7 @@ class ScrollbackBuffer {
 	struct line *sb_pos;		// current position in sb or NULL
 	uint64_t sb_last_id;		// last id given to sb-line
 
-	void setMax(size_t num);
+
 
 public:
 	ScrollbackBuffer(Console &con, size_t max);
@@ -30,6 +32,7 @@ public:
 	// setters
 	void setFirst(struct line * aline) { sb_first = aline; }
 	void setLast(struct line * aline) { sb_last = aline; }
+	void setMax(size_t num);
 	void setPosition(struct line * pos) { sb_pos = pos; }
 
 	// Operations
