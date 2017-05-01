@@ -62,6 +62,7 @@
 
 #define LLOG_SUBSYSTEM "tsm_selection"
 
+
 static void selection_set(struct tsm_screen *con, struct selection_pos *sel,
 			  unsigned int x, unsigned int y)
 {

@@ -159,7 +159,6 @@
     <ClCompile Include="SymbolTable.cpp" />
     <ClCompile Include="terminal.cpp" />
     <ClCompile Include="tsm_screen.cpp" />
-    <ClCompile Include="tsm_selection.cpp" />
     <ClCompile Include="Unicode.cpp" />
   </ItemGroup>
   <ItemGroup>

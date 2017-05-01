@@ -2,8 +2,78 @@
 #include "libtsm.h"
 #include "Console.h"
 #include "ScrollbackBuffer.h"
+#include "ScreenSelection.h"
 
 #include <stdio.h>
+
+
+void cell::init(struct tsm_screen *con)
+{
+	ch = 0;
+	width = 1;
+	age = con->age_cnt;
+	memcpy(&attr, &con->def_attr, sizeof(attr));
+}
+
+cell::cell()
+{
+	ch = 0;
+	width = 1;
+	age = 0;
+}
+
+cell::cell(struct tsm_screen *con)
+{
+	init(con);
+}
+
+line::line(struct tsm_screen *con, size_t width)
+{
+	next = nullptr;
+	prev = nullptr;
+	size = width;
+	this->age = con->age_cnt;
+
+	cells = (cell *)malloc(sizeof(struct cell) * width);
+
+	initCells(*con);
+}
+
+
+line::~line()
+{
+	free(cells);
+}
+
+void line::initCells(struct tsm_screen &con)
+{
+	for (int i = 0; i < size; i++) {
+		cells[i].init(&con);
+	}
+}
+
+int line::resize(struct tsm_screen *con, size_t width)
+{
+	struct cell *tmp;
+
+	if (!width)
+		return -EINVAL;
+
+	if (size < width) {
+		tmp = (cell *)realloc(cells, width * sizeof(struct cell));
+		if (!tmp)
+			return -ENOMEM;
+
+		cells = tmp;
+
+		while (size < width) {
+			cells[size].init(con);
+			++size;
+		}
+	}
+
+	return 0;
+}
 
 
 
@@ -54,6 +124,7 @@ int Console::_init(const size_t width, const size_t height)
 	screen.def_attr.fg = 255;
 	screen.def_attr.fb = 255;
 
+
 	ret = resize(width, height);
 	if (ret)
 		goto err_free;
@@ -77,6 +148,7 @@ err_free:
 }
 
 Console::Console(const size_t width, const size_t height) 
+	:selection(*this)
 {
 		int err = _init(width, height);
 }
@@ -111,7 +183,6 @@ void Console::incrementAge()
 
 void Console::setDefaultAttribute(const struct tsm_screen_attr & attr)
 {
-	//memcpy(&con->def_attr, attr, sizeof(*attr));
 	screen.def_attr = attr;
 }
 
@@ -454,14 +525,6 @@ void Console::writeLine(const char *str)
 
 
 
-
-
-
-
-
-
-
-
 void Console::moveCursor(unsigned int x, unsigned int y)
 {
 	struct cell *c;
@@ -651,6 +714,85 @@ void Console::scrollBufferDown(size_t num)
 // 
 // Screen Scrolling, without scroll buffer
 //
+/* This links the given line into the scrollback-buffer */
+void Console::link_to_scrollback(struct line *aline)
+{
+	struct line *tmp;
+
+	alignAge();
+
+	if (scrollBuffer->getMax() == 0) {
+		if (selection.isActive()) {
+			if (selection.getStart().line == aline) {
+				selection.getStart().line = nullptr;
+				selection.getStart().y = SELECTION_TOP;
+			}
+			if (selection.getEnd().line == aline) {
+				selection.getEnd().line = nullptr;
+				selection.getEnd().y = SELECTION_TOP;
+			}
+		}
+		delete aline;
+
+		return;
+	}
+
+	/* Remove a line from the scrollback buffer if it reaches its maximum.
+	* We must take care to correctly keep the current position as the new
+	* line is linked in after we remove the top-most line here.
+	* sb_max == 0 is tested earlier so we can assume sb_max > 0 here. In
+	* other words, buf->sb_first is a valid line if sb_count >= sb_max. */
+	if (scrollBuffer->getCount() >= scrollBuffer->getMax()) {
+		tmp = scrollBuffer->getFirst();
+		scrollBuffer->setFirst(tmp->next);
+		if (tmp->next)
+			tmp->next->prev = nullptr;
+		else
+			scrollBuffer->setLast(nullptr);
+
+		scrollBuffer->decrementCount();
+
+
+		/* (position == tmp && !next) means we have sb_max=1 so set
+		* position to the new line. Otherwise, set to new first line.
+		* If position!=tmp and we have a fixed-position then nothing
+		* needs to be done because we can stay at the same line. If we
+		* have no fixed-position, we need to set the position to the
+		* next inserted line, which can be "line", too. */
+		if (scrollBuffer->getPosition()) {
+			if (scrollBuffer->getPosition() == tmp ||
+				!(screen.flags & TSM_SCREEN_FIXED_POS)) {
+				if (scrollBuffer->getPosition()->next)
+					scrollBuffer->setPosition(scrollBuffer->getPosition()->next);
+				else
+					scrollBuffer->setPosition(aline);
+			}
+		}
+
+		if (selection.isActive()) {
+			if (selection.getStart().line == tmp) {
+				selection.getStart().line = nullptr;
+				selection.getStart().y = SELECTION_TOP;
+			}
+			if (selection.getEnd().line == tmp) {
+				selection.getEnd().line = nullptr;
+				selection.getEnd().y = SELECTION_TOP;
+			}
+		}
+		delete tmp;
+	}
+
+	aline->sb_id = scrollBuffer->incrementLastId();
+	aline->next = nullptr;
+	aline->prev = scrollBuffer->getLast();
+	if (scrollBuffer->getLast())
+		scrollBuffer->getLast()->next = aline;
+	else
+		scrollBuffer->setFirst(aline);
+	scrollBuffer->setLast(aline);
+
+	scrollBuffer->incrementCount();
+}
 
 void Console::scrollScreenUp(size_t num)
 {
@@ -686,11 +828,10 @@ void Console::scrollScreenUp(size_t num)
 			ret = -EAGAIN;
 
 		if (!ret) {
-			link_to_scrollback(&screen, screen.lines[pos]);
+			link_to_scrollback(screen.lines[pos]);
 		} else {
 			cache[i] = screen.lines[pos];
 			for (j = 0; j < screen.size_x; ++j) {
-				//screen_cell_init(con, &cache[i]->cells[j]);
 				cache[i]->cells[j].init(&screen);
 			}
 		}
@@ -705,23 +846,23 @@ void Console::scrollScreenUp(size_t num)
 	memcpy(&screen.lines[screen.margin_top + (max - num)],
 		cache, num * sizeof(struct line*));
 
-	if (screen.sel_active) {
-		if (!screen.sel_start.line && screen.sel_start.y >= 0) {
-			screen.sel_start.y -= num;
-			if (screen.sel_start.y < 0) {
-				screen.sel_start.line = screen.sb_last;
-				while (screen.sel_start.line && ++screen.sel_start.y < 0)
-					screen.sel_start.line = screen.sel_start.line->prev;
-				screen.sel_start.y = SELECTION_TOP;
+	if (selection.isActive()) {
+		if (!selection.getStart().line && selection.getStart().y >= 0) {
+			selection.getStart().y -= num;
+			if (selection.getStart().y < 0) {
+				selection.getStart().line = screen.sb_last;
+				while (selection.getStart().line && ++selection.getStart().y < 0)
+					selection.getStart().line = selection.getStart().line->prev;
+				selection.getStart().y = SELECTION_TOP;
 			}
 		}
-		if (!screen.sel_end.line && screen.sel_end.y >= 0) {
-			screen.sel_end.y -= num;
-			if (screen.sel_end.y < 0) {
-				screen.sel_end.line = screen.sb_last;
-				while (screen.sel_end.line && ++screen.sel_end.y < 0)
-					screen.sel_end.line = screen.sel_end.line->prev;
-				screen.sel_end.y = SELECTION_TOP;
+		if (!selection.getEnd().line && selection.getEnd().y >= 0) {
+			selection.getEnd().y -= num;
+			if (selection.getEnd().y < 0) {
+				selection.getEnd().line = screen.sb_last;
+				while (selection.getEnd().line && ++selection.getEnd().y < 0)
+					selection.getEnd().line = selection.getEnd().line->prev;
+				selection.getEnd().y = SELECTION_TOP;
 			}
 		}
 	}
@@ -767,12 +908,12 @@ unsigned int i, j, max;
 
 	memcpy(&screen.lines[screen.margin_top], cache, num * sizeof(struct line*));
 
-	if (screen.sel_active) {
-		if (!screen.sel_start.line && screen.sel_start.y >= 0)
-			screen.sel_start.y += num;
+	if (selection.isActive()) {
+		if (!selection.getStart().line && selection.getStart().y >= 0)
+			selection.incrementYStart(num);
 		
-		if (!screen.sel_end.line && screen.sel_end.y >= 0)
-			screen.sel_end.y += num;
+		if (!selection.getEnd().line && selection.getEnd().y >= 0)
+			selection.incrementYEnd(num);
 	}
 
 	free(cache);
@@ -1258,17 +1399,17 @@ tsm_age_t Console::drawScreen(void *data)
 	iter = screen.sb_pos;
 	k = 0;
 
-	if (screen.sel_active) {
-		if (!screen.sel_start.line && screen.sel_start.y == SELECTION_TOP)
+	if (selection.isActive()) {
+		if (!selection.getStart().line && selection.getStart().y == SELECTION_TOP)
 			in_sel = !in_sel;
-		if (!screen.sel_end.line && screen.sel_end.y == SELECTION_TOP)
+		if (!selection.getEnd().line && selection.getEnd().y == SELECTION_TOP)
 			in_sel = !in_sel;
 
-		if (screen.sel_start.line &&
-			(!iter || screen.sel_start.line->sb_id < iter->sb_id))
+		if (selection.getStart().line &&
+			(!iter || selection.getStart().line->sb_id < iter->sb_id))
 			in_sel = !in_sel;
-		if (screen.sel_end.line &&
-			(!iter || screen.sel_end.line->sb_id < iter->sb_id))
+		if (selection.getEnd().line &&
+			(!iter || selection.getEnd().line->sb_id < iter->sb_id))
 			in_sel = !in_sel;
 	}
 
@@ -1282,16 +1423,16 @@ tsm_age_t Console::drawScreen(void *data)
 			k++;
 		}
 
-		if (screen.sel_active) {
-			if (screen.sel_start.line == line ||
-				(!screen.sel_start.line &&
-					screen.sel_start.y == k - 1))
+		if (selection.isActive()) {
+			if (selection.getStart().line == line ||
+				(!selection.getStart().line &&
+					selection.getStart().y == k - 1))
 				sel_start = true;
 			else
 				sel_start = false;
-			if (screen.sel_end.line == line ||
-				(!screen.sel_end.line &&
-					screen.sel_end.y == k - 1))
+			if (selection.getEnd().line == line ||
+				(!selection.getEnd().line &&
+					selection.getEnd().y == k - 1))
 				sel_end = true;
 			else
 				sel_end = false;
@@ -1307,14 +1448,14 @@ tsm_age_t Console::drawScreen(void *data)
 
 			memcpy(&attr, &cell->attr, sizeof(attr));
 
-			if (screen.sel_active) {
+			if (selection.isActive()) {
 				if (sel_start &&
-					j == screen.sel_start.x) {
+					j == selection.getStart().x) {
 					was_sel = in_sel;
 					in_sel = !in_sel;
 				}
 				if (sel_end &&
-					j == screen.sel_end.x) {
+					j == selection.getEnd().x) {
 					was_sel = in_sel;
 					in_sel = !in_sel;
 				}
@@ -1324,10 +1465,10 @@ tsm_age_t Console::drawScreen(void *data)
 				!(screen.flags & TSM_SCREEN_HIDE_CURSOR))
 				attr.inverse = !attr.inverse;
 
-			/* TODO: do some more sophisticated inverse here. When
-			* INVERSE mode is set, we should instead just select
-			* inverse colors instead of switching background and
-			* foreground */
+			// TODO: do some more sophisticated inverse here. When
+			// INVERSE mode is set, we should instead just select
+			// inverse colors instead of switching background and
+			// foreground
 			if (screen.flags & TSM_SCREEN_INVERSE)
 				attr.inverse = !attr.inverse;
 

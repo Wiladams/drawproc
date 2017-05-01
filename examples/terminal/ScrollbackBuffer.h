@@ -18,6 +18,24 @@ class ScrollbackBuffer {
 public:
 	ScrollbackBuffer(Console &con, size_t max);
 
+	// getters
+	size_t getCount() { return sb_count; }
+	struct line * getFirst() { return sb_first; }
+	struct line * getLast() { return sb_last; }
+	uint64_t getLastId() { return sb_last_id; }
+
+	size_t getMax() { return sb_max; }
+	struct line * getPosition() { return sb_pos; }
+
+	// setters
+	void setFirst(struct line * aline) { sb_first = aline; }
+	void setLast(struct line * aline) { sb_last = aline; }
+	void setPosition(struct line * pos) { sb_pos = pos; }
+
+	// Operations
+	void decrementCount() { sb_count = sb_count - 1; }
+	void incrementCount() { sb_count = sb_count + 1; }
+	uint64_t incrementLastId() { sb_last_id = sb_last_id + 1; return sb_last_id; }
 
 	void reset();
 	void clear();

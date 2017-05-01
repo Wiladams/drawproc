@@ -27,9 +27,6 @@
     <ClCompile Include="tsm_screen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tsm_selection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Unicode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -35,7 +35,9 @@
 #include "shl_llog.h"
 #include "Unicode.h"
 
+#include "Console.h"
 #include "ScreenSelection.h"
+#include "ScrollbackBuffer.h"
 
 ScreenSelection::ScreenSelection(Console &con)
 	:con(con)
@@ -66,8 +68,7 @@ void ScreenSelection::setSelection(struct selection_pos &sel, size_t x, size_t y
 void ScreenSelection::reset()
 {
 	con.incrementAge();
-	// TODO: more sophisticated ageing
-	//con->age = con->age_cnt;
+	con.alignAge();
 
 	sel_active = false;
 }
@@ -76,8 +77,7 @@ void ScreenSelection::reset()
 void ScreenSelection::start(size_t posx, size_t posy)
 {
 	con.incrementAge();
-	// TODO: more sophisticated ageing
-	//con->age = con->age_cnt;
+	con.alignAge();
 
 	sel_active = true;
 	setSelection(sel_start, posx, posy);
@@ -90,8 +90,7 @@ void ScreenSelection::target(size_t posx, size_t posy)
 		return;
 
 	con.incrementAge();
-	/* TODO: more sophisticated ageing */
-	//con->age = con->age_cnt;
+	con.alignAge();
 
 	setSelection(sel_end, posx, posy);
 }
@@ -124,6 +123,7 @@ int ScreenSelection::copySelection(char **out)
 	struct selection_pos *start, *end;
 	struct line *iter;
 	char *str, *pos;
+	ScrollbackBuffer *sb = con.getScrollbackBuffer();
 
 	if (!out)
 		return -EINVAL;
@@ -194,7 +194,7 @@ int ScreenSelection::copySelection(char **out)
 	len = 0;
 	iter = start->line;
 	if (!iter && start->y == SELECTION_TOP)
-		iter = con->sb_first;
+		iter = sb->getFirst();
 
 	while (iter) {
 		if (iter == start->line && iter == end->line) {
@@ -270,7 +270,7 @@ int ScreenSelection::copySelection(char **out)
 	/* copy data into buffer */
 	iter = start->line;
 	if (!iter && start->y == SELECTION_TOP)
-		iter = con->sb_first;
+		iter = sb->getFirst();
 
 	while (iter) {
 		if (iter == start->line && iter == end->line) {
