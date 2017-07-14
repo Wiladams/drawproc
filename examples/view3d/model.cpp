@@ -6,7 +6,8 @@
 
 
 Model::Model(const char *filename) 
-	: verts_(), faces_(), norms_(), uv_(), diffusemap_(), normalmap_(), specularmap_() 
+	//: verts_(), faces_(), norms_(), uv_(), diffusemap_(), normalmap_(), specularmap_() 
+	: diffusemap_(), normalmap_(), specularmap_()
 {
 	std::ifstream in;
 	in.open(filename, std::ifstream::in);
@@ -20,20 +21,22 @@ Model::Model(const char *filename)
 		if (!line.compare(0, 2, "v ")) {
 			iss >> trash;
 			Vec3f v;
-			for (int i = 0; i<3; i++) iss >> v[i];
-			verts_.push_back(v);
+			for (int i = 0; i<3; i++) 
+				iss >> v[i];
+			mesh.addVert(v);
 		}
 		else if (!line.compare(0, 3, "vn ")) {
 			iss >> trash >> trash;
 			Vec3f n;
-			for (int i = 0; i<3; i++) iss >> n[i];
-			norms_.push_back(n);
+			for (int i = 0; i<3; i++) 
+				iss >> n[i];
+			mesh.addNormal(n);
 		}
 		else if (!line.compare(0, 3, "vt ")) {
 			iss >> trash >> trash;
 			Vec2f uv;
 			for (int i = 0; i<2; i++) iss >> uv[i];
-			uv_.push_back(uv);
+			mesh.addUV(uv);
 		}
 		else if (!line.compare(0, 2, "f ")) {
 			std::vector<Vec3i> f;
@@ -43,10 +46,10 @@ Model::Model(const char *filename)
 				for (int i = 0; i<3; i++) tmp[i]--; // in wavefront obj all indices start at 1, not zero
 				f.push_back(tmp);
 			}
-			faces_.push_back(f);
+			mesh.addFace(f);
 		}
 	}
-	std::cerr << "# v# " << verts_.size() << " f# " << faces_.size() << " vt# " << uv_.size() << " vn# " << norms_.size() << std::endl;
+	std::cerr << "# v# " << mesh.nverts() << " f# " << mesh.nfaces << " vt# " << mesh.nuvs() << " vn# " << mesh.nnormals() << std::endl;
 	load_texture(filename, "_diffuse.tga", diffusemap_);
 	load_texture(filename, "_nm_tangent.tga", normalmap_);
 	load_texture(filename, "_spec.tga", specularmap_);
@@ -109,8 +112,9 @@ float Model::specular(Vec2f uvf) {
 	return specularmap_.get(uv[0], uv[1])[0] / 1.f;
 }
 
+/*
 Vec3f Model::normal(int iface, int nthvert) {
 	int idx = faces_[iface][nthvert][2];
 	return norms_[idx].normalize();
 }
-
+*/

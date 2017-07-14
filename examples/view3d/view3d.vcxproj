@@ -155,6 +155,7 @@
     <ClInclude Include="diffuseshader.h" />
     <ClInclude Include="dproc_gl.h" />
     <ClInclude Include="geometry.h" />
+    <ClInclude Include="GMesh.h" />
     <ClInclude Include="IShader.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="quaternion.h" />
