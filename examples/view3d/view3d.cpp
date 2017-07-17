@@ -93,6 +93,8 @@ void setup()
 	Viewport = ogl_viewport(width / 8, height / 8, width * 3 / 4, height * 3 / 4);
 	onCameraChange();
 	light_dir = proj<3>((Projection*ModelView*embed<4>(light_dir, 0.f))).normalize();
+
+	//noLoop();
 }
 
 void keyReleased()
@@ -134,6 +136,8 @@ void keyReleased()
 		}
 		onCameraChange();
 	}
+
+	//draw();
 }
 
 void mouseWheel()
@@ -145,5 +149,4 @@ void mouseWheel()
 
 	mouseDelta = 0;
 	onCameraChange();
-
 }

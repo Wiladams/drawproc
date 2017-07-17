@@ -10,7 +10,7 @@ class checkerboard : public AView
 	COLOR color2;
 
 public:
-	checkerboard(const int x, const int y, const int width, const int height, const size_t cols, const size_t rows, const COLOR c1, const COLOR c2)
+	checkerboard(const int x, const int y, const size_t width, const size_t height, const size_t cols, const size_t rows, const COLOR c1, const COLOR c2)
 		: AView(x,y,width,height),
 		cols(cols), rows(rows),
 		color1(c1), color2(c2)

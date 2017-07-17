@@ -4,7 +4,10 @@
 int appWidth = 640;
 int appHeight = 480;
 
-checkerboard cboard(0,0,appWidth,appHeight, 8, 8, pBlack, pWhite);
+COLOR color1(60, 10, 60, 255);
+COLOR color2(190, 190, 190, 255);
+
+checkerboard cboard(0,0,appWidth,appHeight, 16, 16, color1, color2);
 
 
 void draw()

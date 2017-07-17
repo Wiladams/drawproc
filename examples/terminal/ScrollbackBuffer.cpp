@@ -5,7 +5,6 @@
 /* set maximum scrollback buffer size */
 void ScrollbackBuffer::setMax(size_t max)
 {
-
 	con.incrementAge();
 	con.alignAge();
 	

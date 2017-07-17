@@ -1,5 +1,7 @@
 #pragma once
 
+#define BUILD_AS_DLL true
+
 #if defined(BUILD_AS_DLL)
   #define DPROC_API		__declspec(dllexport)
 #else

@@ -41,7 +41,7 @@ void AView::drawBackground()
 
 void AView::drawChildren()
 {
-	for (int idx = 0; idx < fChildren.size(); idx++)
+	for (size_t idx = 0; idx < fChildren.size(); idx++)
 		fChildren[idx]->Draw();
 }
 

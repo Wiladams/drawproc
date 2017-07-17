@@ -1,8 +1,12 @@
-// There are various sources for high precision numbers.  The well known
-// CRC books are one.  The ones used here come variously from the Graphics Gems
+// There are various sources for high precision numbers.  
+// The well known CRC books are one.  
+//
+// The ones used here come variously from the Graphics Gems
 // books, as well as the glm library, or direct derivation
+//
 // the 'G_' prefix is used to avoid potential conflict with the 'M_' prefix that might
 // be used in math.h
+
 #define G_PI     3.141592653589793238462643383279502884197169399375105820975
 #define G_E      2.718281828459045235360287471352662497757247093699959574967
 #define G_SQRT2  1.414213562373095048801688724209698078569671875376948073177
