@@ -116,10 +116,10 @@ void keyReleased()
 	case KC_RIGHT:
 	case KC_LEFT:
 		if (keyCode == KC_LEFT) {
-			eye.x += 0.2;
+			eye.x += 0.2f;
 		}
 		else if (keyCode == KC_RIGHT) {
-			eye.x -= 0.2;
+			eye.x -= 0.2f;
 			}
 
 		onCameraChange();
@@ -129,10 +129,10 @@ void keyReleased()
 	case KC_UP:
 	case KC_DOWN:
 		if (keyCode == KC_UP) {
-			eye.y += 0.2;
+			eye.y += 0.2f;
 		}
 		else if (keyCode == KC_DOWN) {
-			eye.y -= 0.2;
+			eye.y -= 0.2f;
 		}
 		onCameraChange();
 	}
@@ -143,9 +143,9 @@ void keyReleased()
 void mouseWheel()
 {
 	if (mouseDelta > 0) 
-		eye.z -= 0.2;
+		eye.z -= 0.2f;
 	else if (mouseDelta < 0) 
-		eye.z += 0.2;
+		eye.z += 0.2f;
 
 	mouseDelta = 0;
 	onCameraChange();
