@@ -3,12 +3,15 @@
 #include "model.h"
 
 
-Model::Model(const char *filename) 
+GMesh * Model::loadModel(const char *filename) 
 {
 	std::ifstream in;
 	in.open(filename, std::ifstream::in);
-	if (in.fail()) return;
+	if (in.fail()) 
+			return nullptr;
+
 	std::string line;
+	GMesh *amesh = new GMesh();
 
 	while (!in.eof()) {
 		std::getline(in, line);
@@ -19,20 +22,20 @@ Model::Model(const char *filename)
 			Vec3f v;
 			for (int i = 0; i<3; i++) 
 				iss >> v[i];
-			addVert(v);
+			amesh->addVert(v);
 		}
 		else if (!line.compare(0, 3, "vn ")) {
 			iss >> trash >> trash;
 			Vec3f n;
 			for (int i = 0; i<3; i++) 
 				iss >> n[i];
-			addNormal(n);
+			amesh->addNormal(n);
 		}
 		else if (!line.compare(0, 3, "vt ")) {
 			iss >> trash >> trash;
 			Vec2f uv;
 			for (int i = 0; i<2; i++) iss >> uv[i];
-			addUV(uv);
+			amesh->addUV(uv);
 		}
 		else if (!line.compare(0, 2, "f ")) {
 			std::vector<Vec3i> f;
@@ -42,16 +45,17 @@ Model::Model(const char *filename)
 				for (int i = 0; i<3; i++) tmp[i]--; // in wavefront obj all indices start at 1, not zero
 				f.push_back(tmp);
 			}
-			addFace(f);
+			amesh->addFace(f);
 		}
 	}
-	std::cerr << "# v# " << nverts() << " f# " << nfaces() << " vt# " << nuvs() << " vn# " << nnormals() << std::endl;
-	load_texture(filename, "_diffuse.tga", diffusemap_);
-	load_texture(filename, "_nm_tangent.tga", normalmap_);
-	load_texture(filename, "_spec.tga", specularmap_);
+	//std::cerr << "# v# " << nverts() << " f# " << nfaces() << " vt# " << nuvs() << " vn# " << nnormals() << std::endl;
+	amesh->load_texture(filename, "_diffuse.tga", amesh->diffusemap_);
+	amesh->load_texture(filename, "_nm_tangent.tga", amesh->normalmap_);
+	amesh->load_texture(filename, "_spec.tga", amesh->specularmap_);
+
+	return amesh;
 }
 
-Model::~Model() {}
 
 
 

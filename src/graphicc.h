@@ -21,7 +21,8 @@ limitations under the License.
 
 #include "dproc_config.h"
 #include "dproc_constants.h"
-
+#include "dptypes.h"
+#include "dpdevice.h"
 
 
 #include <stdint.h>
@@ -54,7 +55,10 @@ inline real RADIANS(const real degrees) { return (real)(G_DTOR * degrees); }
 #define MAX(a,b) __max(a,b)
 
 
-// map a value (a) from between rlo <= a <= rhi to  shi <= b <= slo
+// Map a value from one range to another
+// A fraction is created to relate value (a) to the range (rlo - rhi).  This fraction
+// is then applied to the second range (slo - shi).
+// This will work for values of a both inside and outside the range itself
 inline double MAP(double a, double rlo, double rhi, double slo, double shi) { return slo + (a - rlo) * (shi - slo) / (rhi - rlo); }
 #define map MAP
 

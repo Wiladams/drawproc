@@ -92,9 +92,13 @@
     <ClInclude Include="src\animwin32.h" />
     <ClInclude Include="src\AView.h" />
     <ClInclude Include="src\bezier.h" />
+    <ClInclude Include="src\dpdevice.h" />
     <ClInclude Include="src\dproc_config.h" />
     <ClInclude Include="src\dproc_constants.h" />
     <ClInclude Include="src\dproc_clock.h" />
+    <ClInclude Include="src\dptypes.h" />
+    <ClInclude Include="src\dp_gddevice.h" />
+    <ClInclude Include="src\dp_keymouse.h" />
     <ClInclude Include="src\graphicc.h" />
     <ClInclude Include="src\guistyle.h" />
     <ClInclude Include="src\key_scancodes.h" />

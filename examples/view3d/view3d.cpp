@@ -21,10 +21,10 @@ Matrix Projection;
 Matrix Viewport;
 
 size_t modelIndex = 0;
-Model *model = nullptr;
-Model *floorModel = nullptr;
+GMesh *model = nullptr;
+GMesh *floorModel = nullptr;
 
-std::vector<Model *> models;
+std::vector<GMesh *> models;
 float *zbuffer = nullptr;
 
 Vec3f light_dir(1, 1, 1);
@@ -37,11 +37,11 @@ Vec3f        up(0, -1, 0);
 
 void loadModels()
 {
-	floorModel = new Model("obj/floor.obj");
+	floorModel = Model::loadModel("obj/floor.obj");
 
-	models.push_back(new Model("obj/african_head/african_head.obj"));
-	models.push_back(new Model("obj/diablo3_pose/diablo3_pose.obj"));
-	models.push_back(new Model("obj/boggie/body.obj"));
+	models.push_back(Model::loadModel("obj/african_head/african_head.obj"));
+	models.push_back(Model::loadModel("obj/diablo3_pose/diablo3_pose.obj"));
+	models.push_back(Model::loadModel("obj/boggie/body.obj"));
 	//models.push_back(new Model("obj/Vanquish/vanquish.obj"));
 
 	model = models.at(0);
@@ -53,7 +53,7 @@ void onCameraChange()
 	Projection = ogl_projection(-1.0f / (eye - center).norm());
 }
 
-void renderModel(Model *aModel)
+void renderMesh(GMesh *aModel)
 {
 	DiffuseShader shader(aModel, light_dir, ModelView, Projection, Viewport);
 
@@ -74,8 +74,8 @@ void draw()
 	ogl_clearzbuffer(zbuffer, width, height);
 
 
-	renderModel(floorModel);
-	renderModel(model);
+	renderMesh(floorModel);
+	renderMesh(model);
 
 	char str[255];
 	sprintf_s(str, "delta: %d", mouseDelta);
