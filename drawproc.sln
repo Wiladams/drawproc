@@ -86,6 +86,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sliders", "examples\sliders
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "terminal", "examples\terminal\terminal.vcxproj", "{75806348-0AB0-4D89-B8EB-7B75FB235C4E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nanowindow", "examples\nanowindow\nanowindow.vcxproj", "{931D099E-DE69-4932-AB6A-771EC0D63410}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -250,6 +252,14 @@ Global
 		{75806348-0AB0-4D89-B8EB-7B75FB235C4E}.Release|Win32.Build.0 = Release|Win32
 		{75806348-0AB0-4D89-B8EB-7B75FB235C4E}.Release|x64.ActiveCfg = Release|x64
 		{75806348-0AB0-4D89-B8EB-7B75FB235C4E}.Release|x64.Build.0 = Release|x64
+		{931D099E-DE69-4932-AB6A-771EC0D63410}.Debug|Win32.ActiveCfg = Debug|Win32
+		{931D099E-DE69-4932-AB6A-771EC0D63410}.Debug|Win32.Build.0 = Debug|Win32
+		{931D099E-DE69-4932-AB6A-771EC0D63410}.Debug|x64.ActiveCfg = Debug|x64
+		{931D099E-DE69-4932-AB6A-771EC0D63410}.Debug|x64.Build.0 = Debug|x64
+		{931D099E-DE69-4932-AB6A-771EC0D63410}.Release|Win32.ActiveCfg = Release|Win32
+		{931D099E-DE69-4932-AB6A-771EC0D63410}.Release|Win32.Build.0 = Release|Win32
+		{931D099E-DE69-4932-AB6A-771EC0D63410}.Release|x64.ActiveCfg = Release|x64
+		{931D099E-DE69-4932-AB6A-771EC0D63410}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

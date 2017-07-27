@@ -850,6 +850,8 @@ typedef struct {
 #define MWNOCOLOR	0x01000000L			/* MWRGBA(1, 0, 0, 0)*/
 
 
+// Color and pixel handling
+#include "dp_pixmanip.h"
 
 /* Mouse button bits*/
 #define MWBUTTON_L	04

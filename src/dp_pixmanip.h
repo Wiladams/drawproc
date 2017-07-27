@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef MWINCLUDECOLORS
+//#ifdef MWINCLUDECOLORS
 /*
 * Alpha blending evolution
 *
@@ -548,4 +548,4 @@
 #define WHITE		PALINDEX(15)	/* 255, 255, 255*/
 #endif
 
-#endif /* MWINCLUDECOLORS*/
+//#endif /* MWINCLUDECOLORS*/

@@ -1,6 +1,8 @@
 #pragma once
 
-
+/*
+	This file contains all the calls that are related to GDI-like drawing.
+*/
 
 /* entry points*/
 
