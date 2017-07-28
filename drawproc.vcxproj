@@ -96,6 +96,7 @@
     <ClInclude Include="src\dproc_config.h" />
     <ClInclude Include="src\dproc_constants.h" />
     <ClInclude Include="src\dproc_clock.h" />
+    <ClInclude Include="src\dpsystem.h" />
     <ClInclude Include="src\dptypes.h" />
     <ClInclude Include="src\dp_gddevice.h" />
     <ClInclude Include="src\dp_keymouse.h" />

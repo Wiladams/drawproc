@@ -5,13 +5,15 @@
 */
 
 /* entry points*/
-
-/* devdraw.c*/
+// devopen.cpp
 PSD		GdOpenScreen(void);
 void	GdCloseScreen(PSD psd);
 int		GdSetPortraitMode(PSD psd, int portraitmode);
+
+/* devdraw.c*/
+
 int		GdSetMode(int mode);
-DPBOOL	GdSetUseBackground(DPBOOL flag);
+bool	GdSetUseBackground(bool flag);
 DPPIXELVAL GdSetForegroundPixelVal(PSD psd, DPPIXELVAL fg);
 DPPIXELVAL GdSetBackgroundPixelVal(PSD psd, DPPIXELVAL bg);
 DPPIXELVAL GdSetForegroundColor(PSD psd, DPCOLORVAL fg);
@@ -26,10 +28,10 @@ int		GdCaptureScreen(PSD psd, char *pathname);	/* debug only*/
 void	GdPrintBitmap(PDPBLITPARMS gc, int SSZ);	/* debug only*/
 void	GdGetScreenInfo(PSD psd, PDPSCREENINFO psi);
 void	GdPoint(PSD psd, DPCOORD x, DPCOORD y);
-void	GdLine(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2, DPBOOL bDrawLastPoint);
+void	GdLine(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2, bool bDrawLastPoint);
 void	GdRect(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height);
 void	GdFillRect(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height);
-DPBOOL	GdColorInPalette(DPCOLORVAL cr, MWPALENTRY *palette, int palsize);
+bool	GdColorInPalette(DPCOLORVAL cr, MWPALENTRY *palette, int palsize);
 void	GdMakePaletteConversionTable(PSD psd, MWPALENTRY *palette, int palsize,
 	DPPIXELVALHW *convtable, int fLoadType);
 void	GdDrawImage(PSD psd, DPCOORD x, DPCOORD y, PDPIMAGEHDR pimage);
@@ -47,7 +49,7 @@ void	drawrow(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y);
 extern SCREENDEVICE scrdev;
 extern DPPIXELVAL gr_foreground;		/* current foreground color */
 extern DPPIXELVAL gr_background;		/* current background color */
-extern DPBOOL 	  gr_usebg;			/* TRUE if background drawn in pixmaps */
+extern bool 	  gr_usebg;			/* TRUE if background drawn in pixmaps */
 extern DPCOLORVAL gr_foreground_rgb;/* current fg color in 0xAARRGGBB format*/
 extern DPCOLORVAL gr_background_rgb;
 
@@ -68,7 +70,7 @@ void	GdArcAngle(PSD psd, DPCOORD x0, DPCOORD y0, DPCOORD rx, DPCOORD ry,
 void	GdArc(PSD psd, DPCOORD x0, DPCOORD y0, DPCOORD rx, DPCOORD ry,
 	DPCOORD ax, DPCOORD ay, DPCOORD bx, DPCOORD by, int type);
 void	GdEllipse(PSD psd, DPCOORD x, DPCOORD y, DPCOORD rx, DPCOORD ry,
-	DPBOOL fill);
+	bool fill);
 
 /* devfont.c*/
 void	GdClearFontList(void);
@@ -81,7 +83,7 @@ void 	GdFreeFontList(MWFONTLIST ***list, int num);
 int		GdSetFontRotation(PMWFONT pfont, int tenthdegrees);
 int		GdSetFontAttr(PMWFONT pfont, int setflags, int clrflags);
 void	GdDestroyFont(PMWFONT pfont);
-DPBOOL	GdGetFontInfo(PMWFONT pfont, PMWFONTINFO pfontinfo);
+bool	GdGetFontInfo(PMWFONT pfont, PMWFONTINFO pfontinfo);
 int		GdConvertEncoding(const void *istr, DPTEXTFLAGS iflags, int cc, void *ostr, DPTEXTFLAGS oflags);
 void	GdGetTextSize(PMWFONT pfont, const void *str, int cc, DPCOORD *pwidth,
 	DPCOORD *pheight, DPCOORD *pbase, DPTEXTFLAGS flags);
@@ -95,7 +97,7 @@ PMWFONT	GdDuplicateFont(PSD psd, PMWFONT psrcfont, DPCOORD height, DPCOORD width
 
 
 /* both devclip1.c and devclip2.c */
-DPBOOL	GdClipPoint(PSD psd, DPCOORD x, DPCOORD y);
+bool	GdClipPoint(PSD psd, DPCOORD x, DPCOORD y);
 int		GdClipArea(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2);
 extern DPCOORD clipminx, clipminy, clipmaxx, clipmaxy;
 
@@ -107,10 +109,10 @@ void	GdSetClipRegion(PSD psd, DPCLIPREGION *reg);
 void	GdPrintClipRects(PDPBLITPARMS gc);
 
 /* devrgn.c - multi-rectangle region entry points*/
-DPBOOL GdPtInRegion(DPCLIPREGION *rgn, DPCOORD x, DPCOORD y);
+bool GdPtInRegion(DPCLIPREGION *rgn, DPCOORD x, DPCOORD y);
 int    GdRectInRegion(DPCLIPREGION *rgn, const DPRECT *rect);
-DPBOOL GdEqualRegion(DPCLIPREGION *r1, DPCLIPREGION *r2);
-DPBOOL GdEmptyRegion(DPCLIPREGION *rgn);
+bool GdEqualRegion(DPCLIPREGION *r1, DPCLIPREGION *r2);
+bool GdEmptyRegion(DPCLIPREGION *rgn);
 DPCLIPREGION *GdAllocRegion(void);
 DPCLIPREGION *GdAllocRectRegion(DPCOORD left, DPCOORD top, DPCOORD right, DPCOORD bottom);
 DPCLIPREGION *GdAllocRectRegionIndirect(DPRECT *prc);
@@ -141,7 +143,7 @@ void	GdSetAccelMouse(int newthresh, int newscale);
 void	GdMoveMouse(DPCOORD newx, DPCOORD newy);
 int		GdReadMouse(DPCOORD *px, DPCOORD *py, int *pb);
 void	GdMoveCursor(DPCOORD x, DPCOORD y);
-DPBOOL	GdGetCursorPos(DPCOORD *px, DPCOORD *py);
+bool	GdGetCursorPos(DPCOORD *px, DPCOORD *py);
 void	GdSetCursor(PDPCURSOR pcursor);
 int 	GdShowCursor(PSD psd);
 int 	GdHideCursor(PSD psd);
@@ -173,7 +175,7 @@ void	GdDrawImageFromBuffer(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width,
 	DPCOORD height, void *buffer, int size, int flags);
 void	GdDrawImagePartToFit(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height,
 	DPCOORD sx, DPCOORD sy, DPCOORD swidth, DPCOORD sheight, PSD pmd);
-DPBOOL	GdGetImageInfo(PSD pmd, PDPIMAGEINFO pii);
+bool	GdGetImageInfo(PSD pmd, PDPIMAGEINFO pii);
 void	GdStretchImage(PDPIMAGEHDR src, DPCLIPRECT *srcrect, PDPIMAGEHDR dst, DPCLIPRECT *dstrect);
 
 // Buffered input functions to replace stdio functions
@@ -195,10 +197,10 @@ PSD		GdConvertImageRGBA(PSD pmd);		/* convert palettized image to RGBA*/
 
 											/* individual decoders*/
 #ifdef HAVE_BMP_SUPPORT
-PSD	GdDecodeBMP(buffer_t *src, DPBOOL readfilehdr);
+PSD	GdDecodeBMP(buffer_t *src, bool readfilehdr);
 #endif
 #ifdef HAVE_JPEG_SUPPORT
-PSD	GdDecodeJPEG(buffer_t *src, DPBOOL fast_grayscale);
+PSD	GdDecodeJPEG(buffer_t *src, bool fast_grayscale);
 #endif
 #ifdef HAVE_PNG_SUPPORT
 PSD	GdDecodePNG(buffer_t *src);
@@ -265,8 +267,8 @@ MWTIMER		*GdAddTimer(MWTIMEOUT timeout, MWTIMERCB callback, void *arg);
 MWTIMER         *GdAddPeriodicTimer(MWTIMEOUT timeout, MWTIMERCB callback, void *arg);
 void		GdDestroyTimer(MWTIMER *timer);
 MWTIMER		*GdFindTimer(void *arg);
-DPBOOL		GdGetNextTimeout(struct timeval *tv, MWTIMEOUT timeout);
-DPBOOL		GdTimeout(void);
+bool		GdGetNextTimeout(struct timeval *tv, MWTIMEOUT timeout);
+bool		GdTimeout(void);
 
 #endif // MW_FEATURE_TIMERS
 */

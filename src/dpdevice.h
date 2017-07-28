@@ -6,7 +6,7 @@
 
 
 #include "dptypes.h"			// public export typedefs
-//#include "mwsystem.h"
+#include "dpsystem.h"
 
 // Changeable limits and options
 #define UNIFORMPALETTE	1		/* =1 for 256 entry uniform palette (required for palette alpha blending)*/
@@ -154,7 +154,7 @@ typedef struct _mwscreendevice {
 	void(*SetPalette)(PSD psd, int first, int count, MWPALENTRY *pal);
 	void(*GetScreenInfo)(PSD psd, PDPSCREENINFO psi);
 	PSD(*AllocateMemGC)(PSD psd);
-	DPBOOL(*MapMemGC)(PSD mempsd, DPCOORD w, DPCOORD h, int planes, int bpp,
+	bool(*MapMemGC)(PSD mempsd, DPCOORD w, DPCOORD h, int planes, int bpp,
 		int data_format, unsigned int pitch, int size, void *addr);
 	void(*FreeMemGC)(PSD mempsd);
 	void(*SetPortrait)(PSD psd, int portraitmode);

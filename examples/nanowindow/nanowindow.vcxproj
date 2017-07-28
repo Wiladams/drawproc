@@ -154,12 +154,19 @@
     <ClInclude Include="convblit.h" />
     <ClInclude Include="fb.h" />
     <ClInclude Include="genmem.h" />
+    <ClInclude Include="swap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="convblit_8888.cpp" />
     <ClCompile Include="convblit_mask.cpp" />
     <ClCompile Include="conv_blit_frameb.cpp" />
+    <ClCompile Include="devblit.cpp" />
+    <ClCompile Include="devclip2.cpp" />
+    <ClCompile Include="devdraw.cpp" />
+    <ClCompile Include="devmouse.cpp" />
     <ClCompile Include="devopen.cpp" />
+    <ClCompile Include="devrgn.cpp" />
+    <ClCompile Include="error.cpp" />
     <ClCompile Include="fblin32.cpp" />
     <ClCompile Include="genmem.cpp" />
     <ClCompile Include="nanowindow.cpp" />

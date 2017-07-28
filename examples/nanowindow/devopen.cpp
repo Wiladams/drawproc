@@ -33,7 +33,7 @@
 
 DPPIXELVAL gr_foreground;	/* current foreground color */
 DPPIXELVAL gr_background;	/* current background color */
-DPBOOL 	gr_usebg;    	    /* TRUE if background drawn in pixmaps */
+bool 	gr_usebg;    	    /* TRUE if background drawn in pixmaps */
 int 	gr_mode = DPROP_COPY; 	    /* drawing mode */
 /*static*/ MWPALENTRY	gr_palette[256];    /* current palette*/
 /*static*/ int	gr_firstuserpalentry;/* first user-changable palette entry*/
@@ -45,7 +45,7 @@ uint32_t gr_dashmask;     /* An actual bitmask of the dash values */
 uint32_t gr_dashcount;    /* The number of bits defined in the dashmask */
 
 int        gr_fillmode;
-MWSTIPPLE  gr_stipple;
+DPSTIPPLE  gr_stipple;
 DPTILE     gr_tile;
 
 DPPOINT    gr_ts_offset;
@@ -130,8 +130,8 @@ GdOpenScreen(void)
 	GdSetMode(DPROP_COPY);
 	GdSetFillMode(DPFILL_SOLID);  /* Set the fill mode to solid */
 
-	GdSetForegroundColor(psd, MWRGB(255, 255, 255));	/* WHITE*/
-	GdSetBackgroundColor(psd, MWRGB(0, 0, 0));		/* BLACK*/
+	GdSetForegroundColor(psd, DPRGB(255, 255, 255));	/* WHITE*/
+	GdSetBackgroundColor(psd, DPRGB(0, 0, 0));		/* BLACK*/
 	GdSetUseBackground(true);
 	/* select first builtin font (usually MWFONT_SYSTEM_VAR)*/
 	//GdSetFont(GdCreateFont(psd, NULL, 0, 0, NULL));
@@ -186,7 +186,7 @@ GdSetPortraitMode(PSD psd, int portraitmode)
 * @param psi Destination for screen information.
 */
 void
-GdGetScreenInfo(PSD psd, PMWSCREENINFO psi)
+GdGetScreenInfo(PSD psd, PDPSCREENINFO psi)
 {
 	psd->GetScreenInfo(psd, psi);
 	GdGetButtonInfo(&psi->buttons);
@@ -221,7 +221,7 @@ GdSetPalette(PSD psd, int first, int count, MWPALENTRY *palette)
 	int	i;
 
 	/* no palette management needed if running truecolor*/
-	if (psd->pixtype != MWPF_PALETTE)
+	if (psd->pixtype != DPPF_PALETTE)
 		return;
 
 	/* bounds check against # of device color entries*/
@@ -250,7 +250,7 @@ GdGetPalette(PSD psd, int first, int count, MWPALENTRY *palette)
 	int	i;
 
 	/* no palette if running truecolor*/
-	if (psd->pixtype != MWPF_PALETTE)
+	if (psd->pixtype != DPPF_PALETTE)
 		return 0;
 
 	/* bounds check against # of device color entries*/
@@ -278,50 +278,50 @@ GdFindColor(PSD psd, DPCOLORVAL c)
 	* Handle truecolor displays.
 	*/
 	switch (psd->pixtype) {
-	case MWPF_TRUECOLOR8888:
+	case DPPF_TRUECOLOR8888:
 		/* create 32 bit ARGB pixel (0xAARRGGBB) from ABGR colorval (0xAABBGGRR)*/
 		/*RGB2PIXEL8888(REDVALUE(c), GREENVALUE(c), BLUEVALUE(c))*/
 		return COLOR2PIXEL8888(c);
 
-	case MWPF_TRUECOLORABGR:
+	case DPPF_TRUECOLORABGR:
 		/* create 32 bit ABGR pixel (0xAABBGGRR) from ABGR colorval (0xAABBGGRR)*/
 		/*RGB2PIXELABGR(REDVALUE(c), GREENVALUE(c), BLUEVALUE(c))*/
 		return COLOR2PIXELABGR(c);
 
-	case MWPF_TRUECOLOR888:
+	case DPPF_TRUECOLOR888:
 		/* create 24 bit 0RGB pixel (0x00RRGGBB) from ABGR colorval (0xAABBGGRR)*/
 		/*RGB2PIXEL888(REDVALUE(c), GREENVALUE(c), BLUEVALUE(c))*/
 		return COLOR2PIXEL888(c);
 
-	case MWPF_TRUECOLOR565:
+	case DPPF_TRUECOLOR565:
 		/* create 16 bit RGB5/6/5 format pixel from ABGR colorval (0xAABBGGRR)*/
 		/*RGB2PIXEL565(REDVALUE(c), GREENVALUE(c), BLUEVALUE(c))*/
 		return COLOR2PIXEL565(c);
 
-	case MWPF_TRUECOLOR555:
+	case DPPF_TRUECOLOR555:
 		/* create 16 bit RGB5/5/5 format pixel from ABGR colorval (0xAABBGGRR)*/
 		/*RGB2PIXEL555(REDVALUE(c), GREENVALUE(c), BLUEVALUE(c))*/
 		return COLOR2PIXEL555(c);
 
-	case MWPF_TRUECOLOR1555:
+	case DPPF_TRUECOLOR1555:
 		/* create 16 bit RGB5/5/5 format pixel from ABGR colorval (0xAABBGGRR)*/
 		/*RGB2PIXEL1555(REDVALUE(c), GREENVALUE(c), BLUEVALUE(c))*/
 		return COLOR2PIXEL1555(c);
 
-	case MWPF_TRUECOLOR332:
+	case DPPF_TRUECOLOR332:
 		/* create 8 bit RGB3/3/2 format pixel from ABGR colorval (0xAABBGGRR)*/
 		/*RGB2PIXEL332(REDVALUE(c), GREENVALUE(c), BLUEVALUE(c))*/
 		return COLOR2PIXEL332(c);
-	case MWPF_TRUECOLOR233:
+	case DPPF_TRUECOLOR233:
 		/* create 8 bit BGR2/3/3 format pixel from ABGR colorval (0xAABBGGRR)*/
 		/*RGB2PIXEL332(REDVALUE(c), GREENVALUE(c), BLUEVALUE(c))*/
 		return COLOR2PIXEL233(c);
 	}
 
-	/* case MWPF_PALETTE: must be running 1, 2, 4 or 8 bit palette*/
+	/* case DPPF_PALETTE: must be running 1, 2, 4 or 8 bit palette*/
 
 	/* handle 1bpp pixmaps, not running in palette mode*/
-	if (psd->ncolors == 2 && scrdev.pixtype != MWPF_PALETTE)
+	if (psd->ncolors == 2 && scrdev.pixtype != DPPF_PALETTE)
 		return c & 1;
 
 	/* search palette for closest match*/
@@ -383,31 +383,31 @@ DPCOLORVAL
 GdGetColorRGB(PSD psd, DPPIXELVAL pixel)
 {
 	switch (psd->pixtype) {
-	case MWPF_TRUECOLOR8888:
+	case DPPF_TRUECOLOR8888:
 		return PIXEL8888TOCOLORVAL(pixel);
 
-	case MWPF_TRUECOLORABGR:
+	case DPPF_TRUECOLORABGR:
 		return PIXELABGRTOCOLORVAL(pixel);
 
-	case MWPF_TRUECOLOR888:
+	case DPPF_TRUECOLOR888:
 		return PIXEL888TOCOLORVAL(pixel);
 
-	case MWPF_TRUECOLOR565:
+	case DPPF_TRUECOLOR565:
 		return PIXEL565TOCOLORVAL(pixel);
 
-	case MWPF_TRUECOLOR555:
+	case DPPF_TRUECOLOR555:
 		return PIXEL555TOCOLORVAL(pixel);
 
-	case MWPF_TRUECOLOR1555:
+	case DPPF_TRUECOLOR1555:
 		return PIXEL1555TOCOLORVAL(pixel);
 
-	case MWPF_TRUECOLOR332:
+	case DPPF_TRUECOLOR332:
 		return PIXEL332TOCOLORVAL(pixel);
 
-	case MWPF_TRUECOLOR233:
+	case DPPF_TRUECOLOR233:
 		return PIXEL233TOCOLORVAL(pixel);
 
-	case MWPF_PALETTE:
+	case DPPF_PALETTE:
 		return GETPALENTRY(gr_palette, pixel);
 
 	default:

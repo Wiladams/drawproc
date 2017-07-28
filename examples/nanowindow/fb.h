@@ -264,5 +264,4 @@ void fbportrait_down_convblit_copy_mask_mono_byte_msb(PSD psd, PDPBLITPARMS gc);
 void fbportrait_down_convblit_copy_mask_mono_byte_lsb(PSD psd, PDPBLITPARMS gc);
 
 /* rasterops.c*/
-void GdRasterOp(PMWIMAGEHDR pixd, DPCOORD dx, DPCOORD dy, DPCOORD dw, DPCOORD dh, int op,
-	PMWIMAGEHDR pixs, DPCOORD sx, DPCOORD sy);
+void GdRasterOp(PDPIMAGEHDR pixd, DPCOORD dx, DPCOORD dy, DPCOORD dw, DPCOORD dh, int op, PDPIMAGEHDR pixs, DPCOORD sx, DPCOORD sy);

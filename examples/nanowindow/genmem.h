@@ -16,7 +16,7 @@ PSD		GdCreatePixmap(PSD rootpsd, DPCOORD width, DPCOORD height, int format, void
 void	GdFreePixmap(PSD pmd);
 
 PSD 	gen_allocatememgc(PSD psd);
-DPBOOL	gen_mapmemgc(PSD mempsd, DPCOORD w, DPCOORD h, int planes, int bpp, int data_format,
+bool	gen_mapmemgc(PSD mempsd, DPCOORD w, DPCOORD h, int planes, int bpp, int data_format,
 	unsigned int pitch, int size, void *addr);
 void	gen_freememgc(PSD mempsd);
 

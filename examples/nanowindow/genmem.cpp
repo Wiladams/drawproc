@@ -157,7 +157,7 @@ gen_allocatememgc(PSD psd)
 	mempsd->Update = NULL;				/* no external updates required for mem device*/
 	mempsd->palette = NULL;				/* don't copy any palette*/
 	mempsd->palsize = 0;
-	mempsd->transcolor = MWNOCOLOR;		/* no transparent colors unless set by image loader*/
+	mempsd->transcolor = DPNOCOLOR;		/* no transparent colors unless set by image loader*/
 
 	return mempsd;
 }
@@ -170,7 +170,7 @@ gen_allocatememgc(PSD psd)
 * Pixmaps are always drawn using linear fb drivers
 * in non-portrait mode.
 */
-DPBOOL
+bool
 gen_mapmemgc(PSD mempsd, DPCOORD w, DPCOORD h, int planes, int bpp, int data_format,
 	unsigned int pitch, int size, void *addr)
 {

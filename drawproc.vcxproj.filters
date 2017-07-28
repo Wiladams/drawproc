@@ -128,5 +128,8 @@
     <ClInclude Include="src\dp_pixmanip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\dpsystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

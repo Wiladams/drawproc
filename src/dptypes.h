@@ -249,7 +249,7 @@ typedef uint32_t DPPIXELVALHW;
 * Type definitions
 */
 typedef int				DPCOORD;	/* device coordinates*/
-typedef int				DPBOOL;		/* boolean value*/
+//typedef int				DPBOOL;		/* boolean value*/
 typedef unsigned char	DPUCHAR;	/* unsigned char*/
 typedef uint32_t		DPCOLORVAL;	/* device-independent color value (0xAABBGGRR)*/
 typedef uint32_t		DPPIXELVAL;	/* pixel value parameter type, not for packing*/
@@ -275,15 +275,15 @@ typedef uint32_t		DPTEXTFLAGS;/* MWTF_ text flag*/
 
 // DPIMAGEBITS macros
 #define DPIMAGE_WORDS(x)	(((x)+15)/16)
-#define DPIMAGE_BYTES(x)	(MWIMAGE_WORDS(x)*sizeof(DPIMAGEBITS))
+#define DPIMAGE_BYTES(x)	(DPIMAGE_WORDS(x)*sizeof(DPIMAGEBITS))
 									// size of image in words
 #define	DPIMAGE_SIZE(width, height)  	\
-	((height) * (((width) + MWIMAGE_BITSPERIMAGE - 1) / MWIMAGE_BITSPERIMAGE))
+	((height) * (((width) + DPIMAGE_BITSPERIMAGE - 1) / DPIMAGE_BITSPERIMAGE))
 #define	DPIMAGE_BITSPERIMAGE	(sizeof(DPIMAGEBITS) * 8)
 #define	DPIMAGE_BITVALUE(n)	((DPIMAGEBITS) (((DPIMAGEBITS) 1) << (n)))
-#define	DPIMAGE_FIRSTBIT	(MWIMAGE_BITVALUE(MWIMAGE_BITSPERIMAGE - 1))
+#define	DPIMAGE_FIRSTBIT	(DPIMAGE_BITVALUE(DPIMAGE_BITSPERIMAGE - 1))
 #define	DPIMAGE_NEXTBIT(m)	((DPIMAGEBITS) ((m) >> 1))
-#define	DPIMAGE_TESTBIT(m)	((m) & MWIMAGE_FIRSTBIT)	// use with shiftbit
+#define	DPIMAGE_TESTBIT(m)	((m) & DPIMAGE_FIRSTBIT)	// use with shiftbit
 #define	DPIMAGE_SHIFTBIT(m)	((DPIMAGEBITS) ((m) << 1))  // for testbit
 
 // dbl linked list data structure
@@ -317,7 +317,7 @@ typedef struct {
 	MWKEYMOD modifiers;	/* modifiers which are implemented */
 	int	 	pixtype;	/* format of pixel value*/
 	int	 	portrait;	/* current portrait mode*/
-	DPBOOL	fbdriver;	/* true if running mwin fb screen driver*/
+	bool	fbdriver;	/* true if running mwin fb screen driver*/
 	uint32_t rmask;		/* red mask bits in pixel*/
 	uint32_t gmask;		/* green mask bits in pixel*/
 	uint32_t bmask;		/* blue mask bits in pixel*/
@@ -373,9 +373,9 @@ typedef struct _mwfontinfo *	PMWFONTINFO;
 typedef struct {
 	int		capabilities;		/* flags for font subdriver capabilities*/
 	DPTEXTFLAGS	encoding;	/* routines expect this encoding*/
-	DPBOOL(*Init)(PSD psd);
+	bool(*Init)(PSD psd);
 	PMWFONT(*CreateFont)(const char *name, DPCOORD height, DPCOORD width, int attr);
-	DPBOOL(*GetFontInfo)(PMWFONT pfont, PMWFONTINFO pfontinfo);
+	bool(*GetFontInfo)(PMWFONT pfont, PMWFONTINFO pfontinfo);
 	void(*GetTextSize)(PMWFONT pfont, const void *text, int cc,
 		DPTEXTFLAGS flags, DPCOORD *pwidth, DPCOORD *pheight,
 		DPCOORD *pbase);
@@ -433,7 +433,7 @@ typedef struct {
 	DPCOLORVAL	bg_colorval;
 	uint32_t	fg_pixelval;	/* fg color, hw pixel format*/
 	uint32_t	bg_pixelval;
-	DPBOOL		usebg;			/* set =1 to draw background*/
+	bool		usebg;			/* set =1 to draw background*/
 	void *		data;			/* input image data GdConversionBlit*/
 
 								/* these items filled in by GdConversionBlit*/
@@ -541,7 +541,7 @@ typedef struct _mwfontinfo {
 	* True (nonzero) if font is fixed width.  In that case, maxwidth
 	* gives the width for every character in the font.
 	*/
-	DPBOOL fixed;
+	bool fixed;
 
 	/**
 	* Table of character advance widths for characters 0-255.
@@ -808,8 +808,8 @@ typedef struct {
 	MWPALENTRY 	palette[256];	/* palette*/
 } DPIMAGEINFO, *PDPIMAGEINFO;
 
-#define	MWMAX_CURSOR_SIZE	32		/* maximum cursor x and y size*/
-#define	MWMAX_CURSOR_BUFLEN	MWIMAGE_SIZE(MWMAX_CURSOR_SIZE,MWMAX_CURSOR_SIZE)
+#define	DPMAX_CURSOR_SIZE	32		/* maximum cursor x and y size*/
+#define	DPMAX_CURSOR_BUFLEN	DPIMAGE_SIZE(DPMAX_CURSOR_SIZE,DPMAX_CURSOR_SIZE)
 
 /* In-core software cursor structure*/
 typedef struct {
@@ -819,8 +819,8 @@ typedef struct {
 	DPCOORD		hoty;			/* relative y pos of hot spot*/
 	DPCOLORVAL	fgcolor;		/* foreground color*/
 	DPCOLORVAL	bgcolor;		/* background color*/
-	DPIMAGEBITS	image[MWMAX_CURSOR_SIZE * 2];/* cursor image bits*/
-	DPIMAGEBITS	mask[MWMAX_CURSOR_SIZE * 2];/* cursor mask bits*/
+	DPIMAGEBITS	image[DPMAX_CURSOR_SIZE * 2];/* cursor image bits*/
+	DPIMAGEBITS	mask[DPMAX_CURSOR_SIZE * 2];/* cursor mask bits*/
 } DPCURSOR, *PDPCURSOR;
 
 /** touchscreen device transform coefficients for GdSetTransform*/
@@ -843,8 +843,8 @@ typedef struct {
 				(((uint32_t)(unsigned char)(g))<<8))|\
 				(((uint32_t)(unsigned char)(b))<<16)|\
 				(((uint32_t)(unsigned char)(a))<<24)))
-#define DPRGB(r,g,b)	MWARGB(255,(r),(g),(b))		/* argb 255 alpha*/
-#define DP0RGB(r,g,b)	MWARGB(0,(r),(g),(b))		/* rgb 0 alpha*/
+#define DPRGB(r,g,b)	DPARGB(255,(r),(g),(b))		/* argb 255 alpha*/
+#define DP0RGB(r,g,b)	DPARGB(0,(r),(g),(b))		/* rgb 0 alpha*/
 
 /* no color, used for transparency, should not be 0, -1 or any MWRGB color*/
 #define DPNOCOLOR	0x01000000L			/* MWRGBA(1, 0, 0, 0)*/
