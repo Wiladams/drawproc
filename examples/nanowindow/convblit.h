@@ -4,6 +4,20 @@
 */
 #include "drawproc.h"
 
+/* for convenience in specifying inline parms*/
+#define R		0		/* RGBA parms*/
+#define G		1
+#define B		2
+#define A		3
+
+#define NONE	DPPORTRAIT_NONE
+#define LEFT	DPPORTRAIT_LEFT
+#define RIGHT	DPPORTRAIT_RIGHT
+#define DOWN	DPPORTRAIT_DOWN
+
+#define COPY	0		/* mode parm*/
+#define SRCOVER	1
+
 /* convblit_8888.c*/
 
 /* ----- 32bpp output -----*/

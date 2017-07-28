@@ -494,7 +494,7 @@
 //only required for compiling in palette pixel size, not supported in convblits
 //extern MWPALENTRY	gr_palette[256];
 //extern int32_t	gr_ncolors;
-//#define RGB2PIXEL(r,g,b)	GdFindNearestColor(gr_palette, gr_ncolors, MWRGB(r,g,b))
+//#define RGB2PIXEL(r,g,b)	GdFindNearestColor(gr_palette, gr_ncolors, DPRGB(r,g,b))
 #define RGB2PIXEL(r,g,b)	0
 #endif
 
@@ -506,24 +506,24 @@
 * These colors are the first 16 entries in the std palette,
 * and are written to the system palette if writable.
 */
-#define BLACK		MWRGB( 0  , 0  , 0   )
-#define BLUE		MWRGB( 0  , 0  , 128 )
-#define GREEN		MWRGB( 0  , 128, 0   )
-#define CYAN		MWRGB( 0  , 128, 128 )
-#define RED			MWRGB( 128, 0  , 0   )
-#define MAGENTA		MWRGB( 128, 0  , 128 )
-#define BROWN		MWRGB( 128, 64 , 0   )
-#define LTGRAY		MWRGB( 192, 192, 192 )
-#define GRAY		MWRGB( 128, 128, 128 )
-#define LTBLUE		MWRGB( 0  , 0  , 255 )
-#define LTGREEN		MWRGB( 0  , 255, 0   )
-#define LTCYAN		MWRGB( 0  , 255, 255 )
-#define LTRED		MWRGB( 255, 0  , 0   )
-#define LTMAGENTA	MWRGB( 255, 0  , 255 )
-#define YELLOW		MWRGB( 255, 255, 0   )
-#define WHITE		MWRGB( 255, 255, 255 )
+#define BLACK		DPRGB( 0  , 0  , 0   )
+#define BLUE		DPRGB( 0  , 0  , 128 )
+#define GREEN		DPRGB( 0  , 128, 0   )
+#define CYAN		DPRGB( 0  , 128, 128 )
+#define RED			DPRGB( 128, 0  , 0   )
+#define MAGENTA		DPRGB( 128, 0  , 128 )
+#define BROWN		DPRGB( 128, 64 , 0   )
+#define LTGRAY		DPRGB( 192, 192, 192 )
+#define GRAY		DPRGB( 128, 128, 128 )
+#define LTBLUE		DPRGB( 0  , 0  , 255 )
+#define LTGREEN		DPRGB( 0  , 255, 0   )
+#define LTCYAN		DPRGB( 0  , 255, 255 )
+#define LTRED		DPRGB( 255, 0  , 0   )
+#define LTMAGENTA	DPRGB( 255, 0  , 255 )
+#define YELLOW		DPRGB( 255, 255, 0   )
+#define WHITE		DPRGB( 255, 255, 255 )
 /* other common colors*/
-#define DKGRAY		MWRGB( 32,  32,  32)
+#define DKGRAY		DPRGB( 32,  32,  32)
 
 #if 0000
 /* colors assumed in first 16 palette entries*/

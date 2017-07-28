@@ -32,7 +32,7 @@ void	GdFillRect(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height);
 DPBOOL	GdColorInPalette(DPCOLORVAL cr, MWPALENTRY *palette, int palsize);
 void	GdMakePaletteConversionTable(PSD psd, MWPALENTRY *palette, int palsize,
 	DPPIXELVALHW *convtable, int fLoadType);
-void	GdDrawImage(PSD psd, DPCOORD x, DPCOORD y, PMWIMAGEHDR pimage);
+void	GdDrawImage(PSD psd, DPCOORD x, DPCOORD y, PDPIMAGEHDR pimage);
 void	GdBitmap(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height, const DPIMAGEBITS *imagebits);
 void	GdBitmapByPoint(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height,
 	const DPIMAGEBITS *imagebits, int clipresult);
@@ -147,7 +147,7 @@ int 	GdShowCursor(PSD psd);
 int 	GdHideCursor(PSD psd);
 void	GdCheckCursor(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2);
 void 	GdFixCursor(PSD psd);
-void    GdSetTransform(MWTRANSFORM *);
+void    GdSetTransform(DPTRANSFORM *);
 
 extern MOUSEDEVICE mousedev;
 
@@ -173,10 +173,10 @@ void	GdDrawImageFromBuffer(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width,
 	DPCOORD height, void *buffer, int size, int flags);
 void	GdDrawImagePartToFit(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height,
 	DPCOORD sx, DPCOORD sy, DPCOORD swidth, DPCOORD sheight, PSD pmd);
-DPBOOL	GdGetImageInfo(PSD pmd, PMWIMAGEINFO pii);
-void	GdStretchImage(PMWIMAGEHDR src, DPCLIPRECT *srcrect, PMWIMAGEHDR dst, DPCLIPRECT *dstrect);
+DPBOOL	GdGetImageInfo(PSD pmd, PDPIMAGEINFO pii);
+void	GdStretchImage(PDPIMAGEHDR src, DPCLIPRECT *srcrect, PDPIMAGEHDR dst, DPCLIPRECT *dstrect);
 
-/* Buffered input functions to replace stdio functions*/
+// Buffered input functions to replace stdio functions
 typedef struct {  /* structure for reading images from buffer   */
 	unsigned char *start;	/* The pointer to the beginning of the buffer */
 	unsigned long offset;	/* The current offset within the buffer       */
@@ -190,7 +190,7 @@ int		GdImageBufferGetChar(buffer_t *buffer);
 char *	GdImageBufferGetString(buffer_t *buffer, char *dest, unsigned int size);
 int		GdImageBufferEOF(buffer_t *buffer);
 
-/* image conversion*/
+// image conversion
 PSD		GdConvertImageRGBA(PSD pmd);		/* convert palettized image to RGBA*/
 
 											/* individual decoders*/

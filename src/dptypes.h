@@ -757,25 +757,25 @@ typedef struct {
 } DPTILE;
 
 /* region types */
-#define MWREGION_ERROR		0
-#define MWREGION_NULL		1
-#define MWREGION_SIMPLE		2
-#define MWREGION_COMPLEX	3
+#define DPREGION_ERROR		0
+#define DPREGION_NULL		1
+#define DPREGION_SIMPLE		2
+#define DPREGION_COMPLEX	3
 
 /* GdRectInRegion return codes*/
-#define MWRECT_OUT	0	/* rectangle not in region*/
-#define MWRECT_ALLIN	1	/* rectangle all in region*/
-#define MWRECT_PARTIN	2	/* rectangle partly in region*/
+#define DPRECT_OUT	0	/* rectangle not in region*/
+#define DPRECT_ALLIN	1	/* rectangle all in region*/
+#define DPRECT_PARTIN	2	/* rectangle partly in region*/
 
 /* GdAllocPolyRegion types*/
-#define MWPOLY_EVENODD		1
-#define MWPOLY_WINDING		2
+#define DPPOLY_EVENODD		1
+#define DPPOLY_WINDING		2
 
 typedef struct {
 	DPCOORD		width;
 	DPCOORD		height;
 	DPIMAGEBITS *	bitmap;
-} MWSTIPPLE;
+} DPSTIPPLE;
 
 /* image structure - if changed, convbmp.c and client.c::GrDrawImageBits needs updating*/
 typedef struct {
@@ -792,7 +792,7 @@ typedef struct {
 	MWPALENTRY *palette;/* palette*/
 	uint32_t transcolor;/* transparent color or MWNOCOLOR if none*/
 						/* end of shared header*/
-} MWIMAGEHDR, *PMWIMAGEHDR;
+} DPIMAGEHDR, *PDPIMAGEHDR;
 
 /* image information structure - returned by GdGetImageInfo*/
 typedef struct {
@@ -806,7 +806,7 @@ typedef struct {
 	uint32_t transcolor;/* transparent color or MWNOCOLOR if none*/
 	int		palsize;	/* palette size*/
 	MWPALENTRY 	palette[256];	/* palette*/
-} MWIMAGEINFO, *PMWIMAGEINFO;
+} DPIMAGEINFO, *PDPIMAGEINFO;
 
 #define	MWMAX_CURSOR_SIZE	32		/* maximum cursor x and y size*/
 #define	MWMAX_CURSOR_BUFLEN	MWIMAGE_SIZE(MWMAX_CURSOR_SIZE,MWMAX_CURSOR_SIZE)
@@ -828,26 +828,26 @@ typedef struct {
 	int	a, b, c;	/* xpos = (a*jitx + b*jity + c)/denom */
 	int	d, e, f;	/* ypos = (d*jitx + e*jity + f)/denom */
 	int	s;			/* denom*/
-} MWTRANSFORM;
+} DPTRANSFORM;
 
 /* outline and filled arc and pie types*/
-#define MWARC		0x0001	/* arc*/
-#define MWOUTLINE	0x0002
-#define MWARCOUTLINE	0x0003	/* arc + outline*/
-#define MWPIE		0x0004	/* pie (filled)*/
-#define MWELLIPSE	0x0008	/* ellipse outline*/
-#define MWELLIPSEFILL	0x0010	/* ellipse filled*/
+#define DPARC		0x0001	/* arc*/
+#define DPOUTLINE	0x0002
+#define DPARCOUTLINE	0x0003	/* arc + outline*/
+#define DPPIE		0x0004	/* pie (filled)*/
+#define DPELLIPSE	0x0008	/* ellipse outline*/
+#define DPELLIPSEFILL	0x0010	/* ellipse filled*/
 
 /* create DPCOLORVAL (0xAABBGGRR format)*/
-#define MWARGB(a,r,g,b)	((DPCOLORVAL)(((unsigned char)(r)|\
+#define DPARGB(a,r,g,b)	((DPCOLORVAL)(((unsigned char)(r)|\
 				(((uint32_t)(unsigned char)(g))<<8))|\
 				(((uint32_t)(unsigned char)(b))<<16)|\
 				(((uint32_t)(unsigned char)(a))<<24)))
-#define MWRGB(r,g,b)	MWARGB(255,(r),(g),(b))		/* argb 255 alpha*/
-#define MW0RGB(r,g,b)	MWARGB(0,(r),(g),(b))		/* rgb 0 alpha*/
+#define DPRGB(r,g,b)	MWARGB(255,(r),(g),(b))		/* argb 255 alpha*/
+#define DP0RGB(r,g,b)	MWARGB(0,(r),(g),(b))		/* rgb 0 alpha*/
 
 /* no color, used for transparency, should not be 0, -1 or any MWRGB color*/
-#define MWNOCOLOR	0x01000000L			/* MWRGBA(1, 0, 0, 0)*/
+#define DPNOCOLOR	0x01000000L			/* MWRGBA(1, 0, 0, 0)*/
 
 
 // Color and pixel handling
