@@ -19,11 +19,11 @@ DPPIXELVAL GdSetBackgroundPixelVal(PSD psd, DPPIXELVAL bg);
 DPPIXELVAL GdSetForegroundColor(PSD psd, DPCOLORVAL fg);
 DPPIXELVAL GdSetBackgroundColor(PSD psd, DPCOLORVAL bg);
 void	GdResetPalette(void);
-void	GdSetPalette(PSD psd, int first, int count, MWPALENTRY *palette);
-int		GdGetPalette(PSD psd, int first, int count, MWPALENTRY *palette);
+void	GdSetPalette(PSD psd, int first, int count, DPPALENTRY *palette);
+int		GdGetPalette(PSD psd, int first, int count, DPPALENTRY *palette);
 DPCOLORVAL GdGetColorRGB(PSD psd, DPPIXELVAL pixel);
 DPPIXELVAL GdFindColor(PSD psd, DPCOLORVAL c);
-DPPIXELVAL GdFindNearestColor(MWPALENTRY *pal, int size, DPCOLORVAL cr);
+DPPIXELVAL GdFindNearestColor(DPPALENTRY *pal, int size, DPCOLORVAL cr);
 int		GdCaptureScreen(PSD psd, char *pathname);	/* debug only*/
 void	GdPrintBitmap(PDPBLITPARMS gc, int SSZ);	/* debug only*/
 void	GdGetScreenInfo(PSD psd, PDPSCREENINFO psi);
@@ -31,8 +31,8 @@ void	GdPoint(PSD psd, DPCOORD x, DPCOORD y);
 void	GdLine(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2, bool bDrawLastPoint);
 void	GdRect(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height);
 void	GdFillRect(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height);
-bool	GdColorInPalette(DPCOLORVAL cr, MWPALENTRY *palette, int palsize);
-void	GdMakePaletteConversionTable(PSD psd, MWPALENTRY *palette, int palsize,
+bool	GdColorInPalette(DPCOLORVAL cr, DPPALENTRY *palette, int palsize);
+void	GdMakePaletteConversionTable(PSD psd, DPPALENTRY *palette, int palsize,
 	DPPIXELVALHW *convtable, int fLoadType);
 void	GdDrawImage(PSD psd, DPCOORD x, DPCOORD y, PDPIMAGEHDR pimage);
 void	GdBitmap(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height, const DPIMAGEBITS *imagebits);
@@ -74,26 +74,26 @@ void	GdEllipse(PSD psd, DPCOORD x, DPCOORD y, DPCOORD rx, DPCOORD ry,
 
 /* devfont.c*/
 void	GdClearFontList(void);
-int		GdAddFont(char *fndry, char *family, char *fontname, PMWLOGFONT lf, unsigned int flags);
-PMWFONT GdCreateFont(PSD psd, const char *name, DPCOORD height, DPCOORD width,
-	const PMWLOGFONT plogfont);
-DPCOORD	GdSetFontSize(PMWFONT pfont, DPCOORD height, DPCOORD width);
-void 	GdGetFontList(MWFONTLIST ***list, int *num);
-void 	GdFreeFontList(MWFONTLIST ***list, int num);
-int		GdSetFontRotation(PMWFONT pfont, int tenthdegrees);
-int		GdSetFontAttr(PMWFONT pfont, int setflags, int clrflags);
-void	GdDestroyFont(PMWFONT pfont);
-bool	GdGetFontInfo(PMWFONT pfont, PMWFONTINFO pfontinfo);
+int		GdAddFont(char *fndry, char *family, char *fontname, PDPLOGFONT lf, unsigned int flags);
+PDPFONT GdCreateFont(PSD psd, const char *name, DPCOORD height, DPCOORD width,
+	const PDPLOGFONT plogfont);
+DPCOORD	GdSetFontSize(PDPFONT pfont, DPCOORD height, DPCOORD width);
+void 	GdGetFontList(DPFONTLIST ***list, int *num);
+void 	GdFreeFontList(DPFONTLIST ***list, int num);
+int		GdSetFontRotation(PDPFONT pfont, int tenthdegrees);
+int		GdSetFontAttr(PDPFONT pfont, int setflags, int clrflags);
+void	GdDestroyFont(PDPFONT pfont);
+bool	GdGetFontInfo(PDPFONT pfont, PDPFONTINFO pfontinfo);
 int		GdConvertEncoding(const void *istr, DPTEXTFLAGS iflags, int cc, void *ostr, DPTEXTFLAGS oflags);
-void	GdGetTextSize(PMWFONT pfont, const void *str, int cc, DPCOORD *pwidth,
+void	GdGetTextSize(PDPFONT pfont, const void *str, int cc, DPCOORD *pwidth,
 	DPCOORD *pheight, DPCOORD *pbase, DPTEXTFLAGS flags);
-int		GdGetTextSizeEx(PMWFONT pfont, const void *str, int cc, int nMaxExtent,
+int		GdGetTextSizeEx(PDPFONT pfont, const void *str, int cc, int nMaxExtent,
 	int *lpnFit, int *alpDx, DPCOORD *pwidth,
 	DPCOORD *pheight, DPCOORD *pbase, DPTEXTFLAGS flags);
-void	GdText(PSD psd, PMWFONT pfont, DPCOORD x, DPCOORD y, const void *str, int count, DPTEXTFLAGS flags);
-PMWFONT	GdCreateFontFromBuffer(PSD psd, const unsigned char *buffer,
+void	GdText(PSD psd, PDPFONT pfont, DPCOORD x, DPCOORD y, const void *str, int count, DPTEXTFLAGS flags);
+PDPFONT	GdCreateFontFromBuffer(PSD psd, const unsigned char *buffer,
 	unsigned length, const char *format, DPCOORD height, DPCOORD width);
-PMWFONT	GdDuplicateFont(PSD psd, PMWFONT psrcfont, DPCOORD height, DPCOORD width);
+PDPFONT	GdDuplicateFont(PSD psd, PDPFONT psrcfont, DPCOORD height, DPCOORD width);
 
 
 /* both devclip1.c and devclip2.c */

@@ -127,6 +127,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>drawproc.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -153,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="convblit.h" />
     <ClInclude Include="fb.h" />
+    <ClInclude Include="genfont.h" />
     <ClInclude Include="genmem.h" />
     <ClInclude Include="swap.h" />
   </ItemGroup>
@@ -166,10 +168,18 @@
     <ClCompile Include="devmouse.cpp" />
     <ClCompile Include="devopen.cpp" />
     <ClCompile Include="devrgn.cpp" />
+    <ClCompile Include="devstipple.cpp" />
     <ClCompile Include="error.cpp" />
+    <ClCompile Include="fb.cpp" />
+    <ClCompile Include="fblin24.cpp" />
     <ClCompile Include="fblin32.cpp" />
+    <ClCompile Include="fbportrain_left.cpp" />
+    <ClCompile Include="fbportrait_down.cpp" />
+    <ClCompile Include="fbportrait_right.cpp" />
     <ClCompile Include="genmem.cpp" />
+    <ClCompile Include="mou_null.cpp" />
     <ClCompile Include="nanowindow.cpp" />
+    <ClCompile Include="scr_win32.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

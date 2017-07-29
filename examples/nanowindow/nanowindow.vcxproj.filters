@@ -30,6 +30,9 @@
     <ClInclude Include="swap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="genfont.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="nanowindow.cpp">
@@ -69,6 +72,30 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="devrgn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="devstipple.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fbportrain_left.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fbportrait_right.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mou_null.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scr_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fbportrait_down.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fblin24.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

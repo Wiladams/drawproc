@@ -137,7 +137,7 @@ typedef struct _mwscreendevice {
 	size_t	pitch;		/* row length in bytes*/
 	uint8_t *addr;		/* address of memory allocated (memdc or fb)*/
 	int		palsize;	/* palette size*/
-	MWPALENTRY *palette;/* palette*/
+	DPPALENTRY *palette;/* palette*/
 	int32_t	transcolor;	/* not used*/
 						/* end of shared header*/
 
@@ -148,10 +148,10 @@ typedef struct _mwscreendevice {
 	int	pixtype;		/* format of pixel value*/
 
 						/* driver entry points*/
-	PMWCOREFONT builtin_fonts;
+	PDPCOREFONT builtin_fonts;
 	PSD(*Open)(PSD psd);
 	void(*Close)(PSD psd);
-	void(*SetPalette)(PSD psd, int first, int count, MWPALENTRY *pal);
+	void(*SetPalette)(PSD psd, int first, int count, DPPALENTRY *pal);
 	void(*GetScreenInfo)(PSD psd, PDPSCREENINFO psi);
 	PSD(*AllocateMemGC)(PSD psd);
 	bool(*MapMemGC)(PSD mempsd, DPCOORD w, DPCOORD h, int planes, int bpp,

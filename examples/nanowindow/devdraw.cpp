@@ -16,12 +16,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+
 #include "swap.h"
 #include "dpdevice.h"
 #include "convblit.h"
 
 extern int 	  gr_mode; 	      /* drawing mode */
-extern MWPALENTRY gr_palette[256];    /* current palette*/
+extern DPPALENTRY gr_palette[256];    /* current palette*/
 extern int	  gr_firstuserpalentry;/* first user-changable palette entry*/
 extern int 	  gr_nextpalentry;    /* next available palette entry*/
 
@@ -554,7 +555,7 @@ GdFillRect(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD width, DPCOORD height)
 * @return TRUE iff the color is in palette.
 */
 bool
-GdColorInPalette(DPCOLORVAL cr, MWPALENTRY *palette, int palsize)
+GdColorInPalette(DPCOLORVAL cr, DPPALENTRY *palette, int palsize)
 {
 	int	i;
 
@@ -581,13 +582,13 @@ GdColorInPalette(DPCOLORVAL cr, MWPALENTRY *palette, int palsize)
 * palette without removing existing colors, or 0.
 */
 void
-GdMakePaletteConversionTable(PSD psd, MWPALENTRY *palette, int palsize,
+GdMakePaletteConversionTable(PSD psd, DPPALENTRY *palette, int palsize,
 	DPPIXELVALHW *convtable, int fLoadType)
 {
 	int		i;
 	DPCOLORVAL	cr;
 	int		newsize, nextentry;
-	MWPALENTRY	newpal[256];
+	DPPALENTRY	newpal[256];
 
 	/*
 	* Check for load palette completely, or add colors

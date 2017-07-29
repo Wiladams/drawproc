@@ -35,7 +35,7 @@ DPPIXELVAL gr_foreground;	/* current foreground color */
 DPPIXELVAL gr_background;	/* current background color */
 bool 	gr_usebg;    	    /* TRUE if background drawn in pixmaps */
 int 	gr_mode = DPROP_COPY; 	    /* drawing mode */
-/*static*/ MWPALENTRY	gr_palette[256];    /* current palette*/
+/*static*/ DPPALENTRY	gr_palette[256];    /* current palette*/
 /*static*/ int	gr_firstuserpalentry;/* first user-changable palette entry*/
 /*static*/ int 	gr_nextpalentry;    /* next available palette entry*/
 DPCOLORVAL gr_foreground_rgb;	/* current fg color in 0xAARRGGBB format for mono convblits*/
@@ -59,7 +59,7 @@ PSD
 GdOpenScreen(void)
 {
 	PSD			psd;
-	MWPALENTRY *		stdpal;
+	DPPALENTRY *		stdpal;
 
 	psd = scrdev.Open(&scrdev);
 	if (!psd)
@@ -74,7 +74,7 @@ GdOpenScreen(void)
 #if !defined(NOSTDPAL1) /* don't require stdpal1 if not needed */
 	case 2:		/* 1bpp*/
 	{
-		extern MWPALENTRY	mwstdpal1[2];
+		extern DPPALENTRY	mwstdpal1[2];
 		stdpal = mwstdpal1;
 	}
 	break;
@@ -83,7 +83,7 @@ GdOpenScreen(void)
 #if !defined(NOSTDPAL2) /* don't require stdpal2 if not needed */
 	case 4:		/* 2bpp*/
 	{
-		extern MWPALENTRY	mwstdpal2[4];
+		extern DPPALENTRY	mwstdpal2[4];
 		stdpal = mwstdpal2;
 	}
 	break;
@@ -94,7 +94,7 @@ GdOpenScreen(void)
 	case 8:		/* 3bpp - not fully supported*/
 	case 16:	/* 4bpp*/
 	{
-		extern MWPALENTRY	mwstdpal4[16];
+		extern DPPALENTRY	mwstdpal4[16];
 		stdpal = mwstdpal4;
 	}
 	break;
@@ -103,7 +103,7 @@ GdOpenScreen(void)
 #if !defined(NOSTDPAL8) /* don't require large stdpal8 if not needed */
 	case 256:	/* 8bpp*/
 	{
-		extern MWPALENTRY	mwstdpal8[256];
+		extern DPPALENTRY	mwstdpal8[256];
 #if UNIFORMPALETTE
 		/* don't change uniform palette if alpha blending*/
 		gr_firstuserpalentry = 256;
@@ -216,7 +216,7 @@ GdResetPalette(void)
 * @param palette New palette entries (array of size @param count).
 */
 void
-GdSetPalette(PSD psd, int first, int count, MWPALENTRY *palette)
+GdSetPalette(PSD psd, int first, int count, DPPALENTRY *palette)
 {
 	int	i;
 
@@ -245,7 +245,7 @@ GdSetPalette(PSD psd, int first, int count, MWPALENTRY *palette)
 * @param palette Recieves palette entries (array of size @param count).
 */
 int
-GdGetPalette(PSD psd, int first, int count, MWPALENTRY *palette)
+GdGetPalette(PSD psd, int first, int count, DPPALENTRY *palette)
 {
 	int	i;
 
@@ -337,9 +337,9 @@ GdFindColor(PSD psd, DPCOLORVAL c)
 * @param cr Color to look for.
 */
 DPPIXELVAL
-GdFindNearestColor(MWPALENTRY *pal, int size, DPCOLORVAL cr)
+GdFindNearestColor(DPPALENTRY *pal, int size, DPCOLORVAL cr)
 {
-	MWPALENTRY *	rgb;
+	DPPALENTRY *	rgb;
 	int		r, g, b;
 	int		R, G, B;
 	int32_t		diff = 0x7fffffffL;

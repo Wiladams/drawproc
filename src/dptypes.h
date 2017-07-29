@@ -36,45 +36,45 @@
 #endif
 
 /* builtin font std names*/
-#define MWFONT_SYSTEM_VAR	"System"	/* winFreeSansSerif 11x13 (ansi)*/
-#define MWFONT_SYSTEM_FIXED	"SystemFixed"	/* X6x13 (should be ansi)*/
-#define MWFONT_GUI_VAR		"System"	/* deprecated (was "Helvetica")*/
-#define MWFONT_OEM_FIXED	"SystemFixed"	/* deprecated (was "Terminal")*/
+#define DPFONT_SYSTEM_VAR	"System"	/* winFreeSansSerif 11x13 (ansi)*/
+#define DPFONT_SYSTEM_FIXED	"SystemFixed"	/* X6x13 (should be ansi)*/
+#define DPFONT_GUI_VAR		"System"	/* deprecated (was "Helvetica")*/
+#define DPFONT_OEM_FIXED	"SystemFixed"	/* deprecated (was "Terminal")*/
 
 /* Text/GetTextSize encoding flags*/
-#define MWTF_ASCII	0x00000000L	/* 8 bit packing, ascii*/
-#define MWTF_UTF8	0x00000001L	/* 8 bit packing, utf8*/
-#define MWTF_UC16	0x00000002L	/* 16 bit packing, unicode 16*/
-#define MWTF_UC32	0x00000004L	/* 32 bit packing, unicode 32*/
-#define MWTF_XCHAR2B	0x00000008L	/* 16 bit packing, X11 big endian PCF*/
-#define MWTF_PACKMASK	0x0000000FL	/* packing bits mask*/
+#define DPTF_ASCII	0x00000000L	/* 8 bit packing, ascii*/
+#define DPTF_UTF8	0x00000001L	/* 8 bit packing, utf8*/
+#define DPTF_UC16	0x00000002L	/* 16 bit packing, unicode 16*/
+#define DPTF_UC32	0x00000004L	/* 32 bit packing, unicode 32*/
+#define DPTF_XCHAR2B	0x00000008L	/* 16 bit packing, X11 big endian PCF*/
+#define DPTF_PACKMASK	0x0000000FL	/* packing bits mask*/
 
 /* asian double-byte encodings*/
-#define MWTF_DBCS_BIG5	0x00000100L	/* chinese big5*/
-#define MWTF_DBCS_EUCCN	0x00000200L	/* chinese EUCCN (gb2312+0x80)*/
-#define MWTF_DBCS_EUCKR	0x00000300L	/* korean EUCKR (ksc5601+0x80)*/
-#define MWTF_DBCS_EUCJP	0x00000400L	/* japanese EUCJP*/
-#define MWTF_DBCS_JIS	0x00000500L	/* japanese JISX0213*/
-#define MWTF_DBCSMASK	0x00000700L	/* DBCS encodings bitmask*/
+#define DPTF_DBCS_BIG5	0x00000100L	/* chinese big5*/
+#define DPTF_DBCS_EUCCN	0x00000200L	/* chinese EUCCN (gb2312+0x80)*/
+#define DPTF_DBCS_EUCKR	0x00000300L	/* korean EUCKR (ksc5601+0x80)*/
+#define DPTF_DBCS_EUCJP	0x00000400L	/* japanese EUCJP*/
+#define DPTF_DBCS_JIS	0x00000500L	/* japanese JISX0213*/
+#define DPTF_DBCSMASK	0x00000700L	/* DBCS encodings bitmask*/
 
 /* Text alignment flags*/
-#define MWTF_TOP	0x01000000L	/* align on top*/
-#define MWTF_BASELINE	0x02000000L	/* align on baseline*/
-#define MWTF_BOTTOM	0x04000000L	/* align on bottom*/
+#define DPTF_TOP	0x01000000L	/* align on top*/
+#define DPTF_BASELINE	0x02000000L	/* align on baseline*/
+#define DPTF_BOTTOM	0x04000000L	/* align on bottom*/
 
-/* SetFontAttr and capabilities flags (not used with MWTF_ above)*/
-#define MWTF_KERNING	0x0001		/* font kerning*/
-#define MWTF_ANTIALIAS	0x0002		/* antialiased output*/
-#define MWTF_UNDERLINE	0x0004		/* draw underline*/
-#define MWTF_BOLD		0x0008		/* draw bold glyph (not present on all renderers)*/
+/* SetFontAttr and capabilities flags (not used with DPTF_ above)*/
+#define DPTF_KERNING	0x0001		/* font kerning*/
+#define DPTF_ANTIALIAS	0x0002		/* antialiased output*/
+#define DPTF_UNDERLINE	0x0004		/* draw underline*/
+#define DPTF_BOLD		0x0008		/* draw bold glyph (not present on all renderers)*/
 
-#define MWTF_CMAP_DEFAULT 0x0010	/* use default (unicode) charset in truetype font (not required)*/
-#define MWTF_CMAP_0		  0x0020	/* use charmap 0 in truetype font*/
-#define MWTF_CMAP_1       0x0040	/* use charmap 1 in truetype font*/
+#define DPTF_CMAP_DEFAULT 0x0010	/* use default (unicode) charset in truetype font (not required)*/
+#define DPTF_CMAP_0		  0x0020	/* use charmap 0 in truetype font*/
+#define DPTF_CMAP_1       0x0040	/* use charmap 1 in truetype font*/
 
-#define MWTF_FREETYPE	0x1000		/* FIXME: remove*/
-#define MWTF_SCALEHEIGHT 0x2000		/* font can scale height seperately*/
-#define MWTF_SCALEWIDTH	0x4000		/* font can scale width seperately*/
+#define DPTF_FREETYPE	0x1000		/* FIXME: remove*/
+#define DPTF_SCALEHEIGHT 0x2000		/* font can scale height seperately*/
+#define DPTF_SCALEWIDTH	0x4000		/* font can scale width seperately*/
 
 /* Image data formats, used by GdConversionBlit*/
 
@@ -255,7 +255,7 @@ typedef uint32_t		DPCOLORVAL;	/* device-independent color value (0xAABBGGRR)*/
 typedef uint32_t		DPPIXELVAL;	/* pixel value parameter type, not for packing*/
 typedef unsigned short	DPIMAGEBITS;/* bitmap image unit size*/
 typedef uint32_t		DPTIMEOUT;	/* timeout value */
-typedef uint32_t		DPTEXTFLAGS;/* MWTF_ text flag*/
+typedef uint32_t		DPTEXTFLAGS;/* DPTF_ text flag*/
 
 #define DPCOORD_MAX	0x7fff		/* maximum coordinate value*/
 #define DPCOORD_MIN	(-DPCOORD_MAX)	/* minimum coordinate value*/
@@ -363,55 +363,55 @@ typedef struct {
 	const unsigned char *width;	/* character widths or 0 if fixed*/
 	int				defaultchar;/* default char (not glyph index)*/
 	int32_t			bits_size;	/* # words of DPIMAGEBITS bits*/
-} MWCFONT, *PMWCFONT;
+} DPCFONT, *PDPCFONT;
 
 /* draw procs associated with fonts.  Strings are [re]packed using defencoding*/
 typedef struct _mwscreendevice *PSD;
-typedef struct _mwfont *		PMWFONT;
-typedef struct _mwfontinfo *	PMWFONTINFO;
+typedef struct _mwfont *		PDPFONT;
+typedef struct _mwfontinfo *	PDPFONTINFO;
 
 typedef struct {
 	int		capabilities;		/* flags for font subdriver capabilities*/
 	DPTEXTFLAGS	encoding;	/* routines expect this encoding*/
 	bool(*Init)(PSD psd);
-	PMWFONT(*CreateFont)(const char *name, DPCOORD height, DPCOORD width, int attr);
-	bool(*GetFontInfo)(PMWFONT pfont, PMWFONTINFO pfontinfo);
-	void(*GetTextSize)(PMWFONT pfont, const void *text, int cc,
+	PDPFONT(*CreateFont)(const char *name, DPCOORD height, DPCOORD width, int attr);
+	bool(*GetFontInfo)(PDPFONT pfont, PDPFONTINFO pfontinfo);
+	void(*GetTextSize)(PDPFONT pfont, const void *text, int cc,
 		DPTEXTFLAGS flags, DPCOORD *pwidth, DPCOORD *pheight,
 		DPCOORD *pbase);
-	void(*GetTextBits)(PMWFONT pfont, int ch, const DPIMAGEBITS **retmap,
+	void(*GetTextBits)(PDPFONT pfont, int ch, const DPIMAGEBITS **retmap,
 		DPCOORD *pwidth, DPCOORD *pheight, DPCOORD *pbase);
-	void(*DestroyFont)(PMWFONT pfont);
-	void(*DrawText)(PMWFONT pfont, PSD psd, DPCOORD x, DPCOORD y,
+	void(*DestroyFont)(PDPFONT pfont);
+	void(*DrawText)(PDPFONT pfont, PSD psd, DPCOORD x, DPCOORD y,
 		const void *str, int count, DPTEXTFLAGS flags);
-	int(*SetFontSize)(PMWFONT pfont, DPCOORD height, DPCOORD width);
-	void(*SetFontRotation)(PMWFONT pfont, int tenthdegrees);
-	int(*SetFontAttr)(PMWFONT pfont, int setflags, int clrflags);
-	PMWFONT(*Duplicate) (PMWFONT psrcfont, DPCOORD height, DPCOORD width);
-} MWFONTPROCS, *PMWFONTPROCS;
+	int(*SetFontSize)(PDPFONT pfont, DPCOORD height, DPCOORD width);
+	void(*SetFontRotation)(PDPFONT pfont, int tenthdegrees);
+	int(*SetFontAttr)(PDPFONT pfont, int setflags, int clrflags);
+	PDPFONT(*Duplicate) (PDPFONT psrcfont, DPCOORD height, DPCOORD width);
+} DPFONTPROCS, *PDPFONTPROCS;
 
 /* new multi-renderer font struct*/
 typedef struct _mwfont {		/* common hdr for all font structures*/
-	PMWFONTPROCS	fontprocs;	/* font-specific rendering routines*/
+	PDPFONTPROCS	fontprocs;	/* font-specific rendering routines*/
 	DPCOORD			fontsize;	/* font height in pixels*/
 	DPCOORD			fontwidth;	/* font width in pixels*/
 	int				fontrotation; /* font rotation*/
 	int				fontattr;	/* font attributes: kerning/antialias*/
 								/* font-specific rendering data here*/
-} MWFONT;
+} DPFONT;
 
 /* builtin core font struct*/
 typedef struct {
 	/* common hdr*/
-	PMWFONTPROCS	fontprocs;
+	PDPFONTPROCS	fontprocs;
 	DPCOORD			fontsize;	/* font height in pixels*/
 	DPCOORD			fontwidth;	/* font width in pixels*/
 	int				fontrotation;
 	int				fontattr;
 	/* core font specific data*/
 	char *		name;			/* Microwindows font name*/
-	PMWCFONT	cfont;			/* builtin font data*/
-} MWCOREFONT, *PMWCOREFONT;
+	PDPCFONT	cfont;			/* builtin font data*/
+} DPCOREFONT, *PDPCOREFONT;
 
 // In-core color palette structure
 typedef struct {
@@ -419,7 +419,7 @@ typedef struct {
 	DPUCHAR	g;
 	DPUCHAR	b;
 	DPUCHAR _padding;
-} MWPALENTRY;
+} DPPALENTRY;
 
 // GdConversionBlit parameter structure
 typedef struct {
@@ -460,7 +460,7 @@ typedef struct {
 	int			y_denominator;
 
 	// used in palette conversions only
-	MWPALENTRY *palette;		// palette for image
+	DPPALENTRY *palette;		// palette for image
 	uint32_t	transcolor;		// transparent color in image
 
 								//	PSD			alphachan;		/* alpha chan for DPROP_BLENDCHANNEL*/
@@ -552,69 +552,69 @@ typedef struct _mwfontinfo {
 	* the sum of the advance widths for the characters 'A' and 'V'.
 	*/
 	DPUCHAR widths[256];
-} MWFONTINFO;
+} DPFONTINFO;
 
 
 /* GetFontList structure */
 typedef struct {
 	char *ttname;		/* TrueType name, eg "Times New Roman Bold" */
 	char *mwname;		/* microwin name, eg "timesb" */
-} MWFONTLIST, *PMWFONTLIST;
+} DPFONTLIST, *PDPFONTLIST;
 
 /* logical font descriptor*/
 
 /* font classes - used to specify a particular renderer*/
-#define MWLF_CLASS_ANY		0	/* any font*/
-#define MWLF_CLASS_BUILTIN	1	/* builtin fonts*/
-#define MWLF_CLASS_FNT		2	/* FNT native fonts*/
-#define MWLF_CLASS_PCF		3	/* X11 PCF/PCF.GZ fonts*/
-#define MWLF_CLASS_FREETYPE	4	/* FreeType 1 or 2 fonts in TT format*/
-#define MWLF_CLASS_T1LIB	5	/* T1LIB outlined Adobe Type 1 fonts*/
-#define MWLF_CLASS_MGL		6	/* MGL (EUCJP) fonts*/
-#define MWLF_CLASS_HZK		7	/* chinese HZK fonts*/
+#define DPLF_CLASS_ANY		0	/* any font*/
+#define DPLF_CLASS_BUILTIN	1	/* builtin fonts*/
+#define DPLF_CLASS_FNT		2	/* FNT native fonts*/
+#define DPLF_CLASS_PCF		3	/* X11 PCF/PCF.GZ fonts*/
+#define DPLF_CLASS_FREETYPE	4	/* FreeType 1 or 2 fonts in TT format*/
+#define DPLF_CLASS_T1LIB	5	/* T1LIB outlined Adobe Type 1 fonts*/
+#define DPLF_CLASS_MGL		6	/* MGL (EUCJP) fonts*/
+#define DPLF_CLASS_HZK		7	/* chinese HZK fonts*/
 
-#define MWLF_FACESIZE		64	/* max facename size*/
+#define DPLF_FACESIZE		64	/* max facename size*/
 
 /* font type selection - lfOutPrecision*/
-#define MWLF_TYPE_DEFAULT	0	/* any font*/
-#define MWLF_TYPE_SCALED	4	/* outlined font (tt or adobe)*/
-#define MWLF_TYPE_RASTER	5	/* raster only*/
-#define MWLF_TYPE_TRUETYPE	7	/* truetype only*/
-#define MWLF_TYPE_ADOBE		10	/* adobe type 1 only*/
+#define DPLF_TYPE_DEFAULT	0	/* any font*/
+#define DPLF_TYPE_SCALED	4	/* outlined font (tt or adobe)*/
+#define DPLF_TYPE_RASTER	5	/* raster only*/
+#define DPLF_TYPE_TRUETYPE	7	/* truetype only*/
+#define DPLF_TYPE_ADOBE		10	/* adobe type 1 only*/
 
 /* font weights - lfWeight*/
-#define MWLF_WEIGHT_DEFAULT	0	/* any weight*/
-#define MWLF_WEIGHT_THIN	100	/* thin*/
-#define MWLF_WEIGHT_EXTRALIGHT	200
-#define MWLF_WEIGHT_LIGHT	300	/* light */
-#define MWLF_WEIGHT_NORMAL	400	/* regular*/
-#define MWLF_WEIGHT_REGULAR	400
-#define MWLF_WEIGHT_MEDIUM	500	/* medium */
-#define MWLF_WEIGHT_DEMIBOLD	600
-#define MWLF_WEIGHT_BOLD	700	/* bold*/
-#define MWLF_WEIGTH_EXTRABOLD	800
-#define MWLF_WEIGHT_BLACK	900	/* black */
+#define DPLF_WEIGHT_DEFAULT	0	/* any weight*/
+#define DPLF_WEIGHT_THIN	100	/* thin*/
+#define DPLF_WEIGHT_EXTRALIGHT	200
+#define DPLF_WEIGHT_LIGHT	300	/* light */
+#define DPLF_WEIGHT_NORMAL	400	/* regular*/
+#define DPLF_WEIGHT_REGULAR	400
+#define DPLF_WEIGHT_MEDIUM	500	/* medium */
+#define DPLF_WEIGHT_DEMIBOLD	600
+#define DPLF_WEIGHT_BOLD	700	/* bold*/
+#define DPLF_WEIGTH_EXTRABOLD	800
+#define DPLF_WEIGHT_BLACK	900	/* black */
 
 /* font charset - lfCharSet*/
-#define MWLF_CHARSET_ANSI	0	/* win32 ansi*/
-#define MWLF_CHARSET_DEFAULT	1	/* any charset*/
-#define MWLF_CHARSET_UNICODE	254	/* unicode*/
-#define MWLF_CHARSET_OEM	255	/* local hw*/
+#define DPLF_CHARSET_ANSI	0	/* win32 ansi*/
+#define DPLF_CHARSET_DEFAULT	1	/* any charset*/
+#define DPLF_CHARSET_UNICODE	254	/* unicode*/
+#define DPLF_CHARSET_OEM	255	/* local hw*/
 
 /* font pitch - lfPitch */
-#define MWLF_PITCH_DEFAULT		0	/* any pitch */
-#define MWLF_PITCH_ULTRACONDENSED	10
-#define MWLF_PITCH_EXTRACONDENSED	20
-#define MWLF_PITCH_CONDENSED		30
-#define MWLF_PITCH_SEMICONDENSED	40
-#define MWLF_PITCH_NORMAL		50
-#define MWLF_PITCH_SEMIEXPANDED		60
-#define MWLF_PITCH_EXPANDED		70
-#define MWLF_PITCH_EXTRAEXPANDED	80
-#define MWLF_PITCH_ULTRAEXPANDED	90
+#define DPLF_PITCH_DEFAULT		0	/* any pitch */
+#define DPLF_PITCH_ULTRACONDENSED	10
+#define DPLF_PITCH_EXTRACONDENSED	20
+#define DPLF_PITCH_CONDENSED		30
+#define DPLF_PITCH_SEMICONDENSED	40
+#define DPLF_PITCH_NORMAL		50
+#define DPLF_PITCH_SEMIEXPANDED		60
+#define DPLF_PITCH_EXPANDED		70
+#define DPLF_PITCH_EXTRAEXPANDED	80
+#define DPLF_PITCH_ULTRAEXPANDED	90
 
 /* flags for the GdAddFont function */
-#define MWLF_FLAGS_ALIAS	1
+#define DPLF_FLAGS_ALIAS	1
 
 /* windows-compatible MWLOGFONT structure*/
 typedef struct {
@@ -651,24 +651,24 @@ typedef struct {
 							/* End of fontmapper-only variables */
 
 							/* render-dependent full path or facename here*/
-	char	lfFaceName[MWLF_FACESIZE];/* font name, may be aliased*/
+	char	lfFaceName[DPLF_FACESIZE];/* font name, may be aliased*/
 
-} MWLOGFONT, *PMWLOGFONT;
+} DPLOGFONT, *PDPLOGFONT;
 
 /*
 * Macros to initialize the MWLOGFONT structure to the most common defaults
 * needed by application programs and the nano-X server program.
 */
 
-#define MWLF_Clear(lf)					\
+#define DPLF_Clear(lf)					\
 	do {						\
 		(lf)->lfHeight = 0;			\
 		(lf)->lfWidth = 0;			\
 		(lf)->lfEscapement = 0;			\
 		(lf)->lfOrientation = 0;		\
-		(lf)->lfWeight = MWLF_WEIGHT_REGULAR;	\
+		(lf)->lfWeight = DPLF_WEIGHT_REGULAR;	\
 		(lf)->lfPitch = 0;			\
-		(lf)->lfClass = MWLF_CLASS_ANY;		\
+		(lf)->lfClass = DPLF_CLASS_ANY;		\
 		(lf)->lfItalic = 0;			\
 		(lf)->lfOblique = 0;			\
 		(lf)->lfRoman = 0;			\
@@ -688,24 +688,24 @@ typedef struct {
 		(lf)->lfFaceName[0] = '\0';		\
 	} while (0)
 
-#define MWLF_SetBold(lf)				\
+#define DPLF_SetBold(lf)				\
 	do {						\
-		(lf)->lfWeight = MWLF_WEIGHT_BOLD;	\
+		(lf)->lfWeight = DPLF_WEIGHT_BOLD;	\
 	} while (0)
 
-#define MWLF_SetRegular(lf)				\
+#define DPLF_SetRegular(lf)				\
 	do {						\
-		(lf)->lfWeight = MWLF_WEIGHT_REGULAR;	\
+		(lf)->lfWeight = DPLF_WEIGHT_REGULAR;	\
 	} while (0)
 
-#define MWLF_SetItalics(lf)				\
+#define DPLF_SetItalics(lf)				\
 	do {						\
 		(lf)->lfItalic = 1;			\
 		(lf)->lfOblique = 0;			\
 		(lf)->lfRoman = 0;			\
 	} while (0)
 
-#define MWLF_SetRoman(lf)				\
+#define DPLF_SetRoman(lf)				\
 	do {						\
 		(lf)->lfItalic = 0;			\
 		(lf)->lfOblique = 0;			\
@@ -789,7 +789,7 @@ typedef struct {
 	unsigned int pitch;	/* bytes per line*/
 	DPUCHAR *imagebits;	/* image bits (dword padded)*/
 	int		palsize;	/* palette size*/
-	MWPALENTRY *palette;/* palette*/
+	DPPALENTRY *palette;/* palette*/
 	uint32_t transcolor;/* transparent color or MWNOCOLOR if none*/
 						/* end of shared header*/
 } DPIMAGEHDR, *PDPIMAGEHDR;
@@ -805,7 +805,7 @@ typedef struct {
 	unsigned int pitch;	/* bytes per line*/
 	uint32_t transcolor;/* transparent color or MWNOCOLOR if none*/
 	int		palsize;	/* palette size*/
-	MWPALENTRY 	palette[256];	/* palette*/
+	DPPALENTRY 	palette[256];	/* palette*/
 } DPIMAGEINFO, *PDPIMAGEINFO;
 
 #define	DPMAX_CURSOR_SIZE	32		/* maximum cursor x and y size*/
@@ -854,9 +854,9 @@ typedef struct {
 #include "dp_pixmanip.h"
 
 /* Mouse button bits*/
-#define MWBUTTON_L	04
-#define MWBUTTON_M	02
-#define MWBUTTON_R	01
+#define DPBUTTON_L	04
+#define DPBUTTON_M	02
+#define DPBUTTON_R	01
 
 /* Keyboard values*/
 typedef unsigned short	MWKEY;

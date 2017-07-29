@@ -118,7 +118,7 @@ GdCreatePixmap(PSD rootpsd, DPCOORD width, DPCOORD height, int format, void *pix
 	}
 
 	/* allocate palette*/
-	if (palsize && (pmd->palette = (MWPALENTRY *)calloc(palsize * sizeof(MWPALENTRY), 1)) == NULL)
+	if (palsize && (pmd->palette = (DPPALENTRY *)calloc(palsize * sizeof(DPPALENTRY), 1)) == NULL)
 		goto err;
 	pmd->palsize = palsize;
 
