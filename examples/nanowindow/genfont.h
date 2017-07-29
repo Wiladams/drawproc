@@ -10,6 +10,8 @@
 */
 #include "dpdevice.h"
 
+#define NOFONTS true
+
 #define NUMBER_FONTS	4	/* number of compiled-in fonts*/
 
 /* entry points*/

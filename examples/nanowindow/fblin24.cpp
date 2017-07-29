@@ -34,9 +34,9 @@ linear24_drawpixel(PSD psd, DPCOORD x, DPCOORD y, DPPIXELVAL c)
 	}
 	else
 	{
-		APPLYOP(gr_mode, 1, (MWUCHAR), b, *(ADDR8), addr, 0, 1);
-		APPLYOP(gr_mode, 1, (MWUCHAR), g, *(ADDR8), addr, 0, 1);
-		APPLYOP(gr_mode, 1, (MWUCHAR), r, *(ADDR8), addr, 0, 1);
+		APPLYOP(gr_mode, 1, (DPUCHAR), b, *(ADDR8), addr, 0, 1);
+		APPLYOP(gr_mode, 1, (DPUCHAR), g, *(ADDR8), addr, 0, 1);
+		APPLYOP(gr_mode, 1, (DPUCHAR), r, *(ADDR8), addr, 0, 1);
 	}
 	DRAWOFF;
 
@@ -61,9 +61,9 @@ static void
 linear24_drawhorzline(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL c)
 {
 	register unsigned char *addr = psd->addr + y * psd->pitch + x1 * 3;
-	MWUCHAR r = PIXEL888RED(c);
-	MWUCHAR g = PIXEL888GREEN(c);
-	MWUCHAR b = PIXEL888BLUE(c);
+	DPUCHAR r = PIXEL888RED(c);
+	DPUCHAR g = PIXEL888GREEN(c);
+	DPUCHAR b = PIXEL888BLUE(c);
 	int w = x2 - x1 + 1;
 #if DEBUG
 	assert(x1 >= 0 && x1 < psd->xres);
@@ -72,7 +72,7 @@ linear24_drawhorzline(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL c)
 	assert(y >= 0 && y < psd->yres);
 #endif
 	DRAWON;
-	if (gr_mode == MWROP_COPY)
+	if (gr_mode == DPROP_COPY)
 	{
 		while (--w >= 0)
 		{
@@ -85,9 +85,9 @@ linear24_drawhorzline(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL c)
 	{
 		while (--w >= 0)
 		{
-			APPLYOP(gr_mode, 1, (MWUCHAR), b, *(ADDR8), addr, 0, 1);
-			APPLYOP(gr_mode, 1, (MWUCHAR), g, *(ADDR8), addr, 0, 1);
-			APPLYOP(gr_mode, 1, (MWUCHAR), r, *(ADDR8), addr, 0, 1);
+			APPLYOP(gr_mode, 1, (DPUCHAR), b, *(ADDR8), addr, 0, 1);
+			APPLYOP(gr_mode, 1, (DPUCHAR), g, *(ADDR8), addr, 0, 1);
+			APPLYOP(gr_mode, 1, (DPUCHAR), r, *(ADDR8), addr, 0, 1);
 		}
 	}
 	DRAWOFF;
@@ -102,9 +102,9 @@ linear24_drawvertline(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2, DPPIXELVAL c)
 {
 	int	pitch = psd->pitch;
 	register unsigned char *addr = psd->addr + y1 * pitch + x * 3;
-	MWUCHAR r = PIXEL888RED(c);
-	MWUCHAR g = PIXEL888GREEN(c);
-	MWUCHAR b = PIXEL888BLUE(c);
+	DPUCHAR r = PIXEL888RED(c);
+	DPUCHAR g = PIXEL888GREEN(c);
+	DPUCHAR b = PIXEL888BLUE(c);
 	int height = y2 - y1 + 1;
 #if DEBUG
 	assert(x >= 0 && x < psd->xres);
@@ -113,7 +113,7 @@ linear24_drawvertline(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2, DPPIXELVAL c)
 	assert(y2 >= y1);
 #endif
 	DRAWON;
-	if (gr_mode == MWROP_COPY)
+	if (gr_mode == DPROP_COPY)
 	{
 		while (--height >= 0)
 		{
@@ -127,9 +127,9 @@ linear24_drawvertline(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2, DPPIXELVAL c)
 	{
 		while (--height >= 0)
 		{
-			APPLYOP(gr_mode, 1, (MWUCHAR), b, *(ADDR8), addr, 0, 1);
-			APPLYOP(gr_mode, 1, (MWUCHAR), g, *(ADDR8), addr, 0, 1);
-			APPLYOP(gr_mode, 1, (MWUCHAR), r, *(ADDR8), addr, 0, 1);
+			APPLYOP(gr_mode, 1, (DPUCHAR), b, *(ADDR8), addr, 0, 1);
+			APPLYOP(gr_mode, 1, (DPUCHAR), g, *(ADDR8), addr, 0, 1);
+			APPLYOP(gr_mode, 1, (DPUCHAR), r, *(ADDR8), addr, 0, 1);
 			addr += pitch - 3;
 		}
 	}

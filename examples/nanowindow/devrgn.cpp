@@ -116,7 +116,7 @@ typedef void(*REGION_NonOverlapBandFunctionPtr) (DPCLIPREGION * pReg, DPRECT * r
          }\
        }
 
-#define REGION_NOT_EMPTY(pReg) pReg->numRects
+#define REGION_NOT_EMPTY(pReg) (pReg->numRects != 0)
 
 #define EMPTY_REGION(pReg) { \
     (pReg)->numRects = 0; \
