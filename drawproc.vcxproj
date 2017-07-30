@@ -72,6 +72,7 @@
   <ItemGroup>
     <ClCompile Include="src\agg_embedded_raster_fonts.cpp" />
     <ClCompile Include="src\AView.cpp" />
+    <ClCompile Include="src\dp_win32.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\bezier.cpp" />
     <ClCompile Include="src\dproc_clock.cpp" />
@@ -101,6 +102,7 @@
     <ClInclude Include="src\dp_gddevice.h" />
     <ClInclude Include="src\dp_keymouse.h" />
     <ClInclude Include="src\dp_pixmanip.h" />
+    <ClInclude Include="src\dp_win32.h" />
     <ClInclude Include="src\graphicc.h" />
     <ClInclude Include="src\guistyle.h" />
     <ClInclude Include="src\key_scancodes.h" />

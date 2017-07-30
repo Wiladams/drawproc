@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "dpdevice.h"
+#include "dp_win32.h"
 #include "fb.h"
 #include "genmem.h"
 
@@ -216,72 +217,6 @@ gen_freememgc(PSD mempsd)
 	if (mempsd->palette)
 		free(mempsd->palette);
 	free(mempsd);
-}
-
-/*
-* Calculate size and pitch of memory gc.
-* If bpp or planes is 0, use passed psd's bpp/planes.
-* Pitch is calculated to be DWORD right aligned for speed.
-*/
-int
-GdCalcMemGCAlloc(PSD psd, int width, int height, int planes, int bpp,
-	unsigned int *psize, unsigned int *ppitch)
-{
-	unsigned int pitch;
-
-	if (!planes)
-		planes = psd->planes;
-	if (!bpp)
-		bpp = psd->bpp;
-	/*
-	* swap width and height in left/right portrait modes,
-	* so imagesize is calculated properly
-	*/
-	if (psd->portrait & (DPPORTRAIT_LEFT | DPPORTRAIT_RIGHT)) {
-		int tmp = width;
-		width = height;
-		height = tmp;
-	}
-
-	/* use 4bpp linear for VGA 4 planes memdc format*/
-	if (planes == 4)
-		bpp = 4;
-
-	/* compute pitch: bytes per line*/
-	switch (bpp) {
-	case 1:
-		pitch = (width + 7) / 8;
-		break;
-	case 2:
-		pitch = (width + 3) / 4;
-		break;
-	case 4:
-		pitch = (width + 1) / 2;
-		break;
-	case 8:
-		pitch = width;
-		break;
-	case 16:
-		pitch = width * 2;
-		break;
-	case 18:
-	case 24:
-		pitch = width * 3;
-		break;
-	case 32:
-		pitch = width * 4;
-		break;
-	default:
-		*ppitch = *psize = 0;
-		return 0;
-	}
-
-	/* right align pitch to DWORD boundary*/
-	pitch = (pitch + 3) & ~3;
-
-	*psize = pitch * height;
-	*ppitch = pitch;
-	return 1;
 }
 
 void

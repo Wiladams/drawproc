@@ -22,7 +22,7 @@ HINSTANCE hInst;								// current instance
 HMODULE clientModule;
 
 char szTitle[] = "Window";					// The title bar text
-char szWindowClass[] = "animwin";			// the main window class name
+#define CLASS_NAME "animwin"			// the main window class name
 HWND ghWnd;
 
 // offscreen bitmap
@@ -75,10 +75,12 @@ void setMouseHandler(MouseHandler handler)
 	gmouseHandler = handler;
 }
 
-void quit()
+LRESULT quit()
 {
 	PostQuitMessage(0);
 	continueRunning = false;
+
+	return 0;
 }
 
 void forceDraw()
@@ -195,11 +197,11 @@ void CreateWindowHandle(int lwidth, int lheight)
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInst;
-	wcex.hIcon = NULL;				//LoadIcon(hInst, MAKEINTRESOURCE(IDI_APPLICATION));
+	wcex.hIcon = LoadIcon(NULL, IDI_APPLICATION);;				//LoadIcon(hInst, MAKEINTRESOURCE(IDI_APPLICATION));
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wcex.hbrBackground = NULL;		//(HBRUSH)(COLOR_WINDOW + 1);
+	wcex.hbrBackground = NULL;	// (HBRUSH)GetStockObject(WHITE_BRUSH);		//(HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = szWindowClass;
+	wcex.lpszClassName = CLASS_NAME;
 	wcex.hIconSm = NULL;			//LoadIcon(hInst, MAKEINTRESOURCE(IDI_APPLICATION));
 
 	ATOM winclassatom = ::RegisterClassExA(&wcex);
@@ -222,7 +224,7 @@ void CreateWindowHandle(int lwidth, int lheight)
 
 	ghWnd = ::CreateWindowExA(
 		0,
-		szWindowClass,
+		CLASS_NAME,
 		szTitle,
 		winstyle,
 		x, y, clientRECT.right - clientRECT.left, clientRECT.bottom - clientRECT.top,
@@ -249,14 +251,27 @@ void * SetWindowSize(const int width, const int height)
 
 
 
-void OnPaint(HDC hdc, PAINTSTRUCT &ps)
+LRESULT OnPaint(HDC hdc, PAINTSTRUCT &ps)
 {
+	LRESULT ret = 0;
+
 	// bitblt bmhandle to client area
 	// we should actually look at the paint struct
 	// and only blit the part that needs to be drawn
+	//if ((NULL != ghMemDC) && (nullptr != gPixelData)) {
+	//	::BitBlt(hdc, 0, 0, gbmWidth, gbmHeight, ghMemDC, 0, 0, SRCCOPY);
+	//}
+
 	if ((NULL != ghMemDC) && (nullptr != gPixelData)) {
-		::BitBlt(hdc, 0, 0, gbmWidth, gbmHeight, ghMemDC, 0, 0, SRCCOPY);
+		::BitBlt(hdc, 
+			ps.rcPaint.left, ps.rcPaint.top, 
+			ps.rcPaint.right - ps.rcPaint.left, ps.rcPaint.bottom - ps.rcPaint.top,
+			ghMemDC, 
+			ps.rcPaint.left, ps.rcPaint.top, 
+			SRCCOPY);
 	}
+
+	return ret;
 }
 
 
@@ -283,12 +298,12 @@ uint32_t bitops32_extract_range(const uint32_t value, const int offset, const in
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	LRESULT ret = 0;
 	PAINTSTRUCT ps;
 	HDC hdc;
 
 	switch (message)
 	{
-		case WM_CHAR:
 		case WM_KEYDOWN:
 		case WM_KEYUP:{
 			uint32_t scanCode = bitops32_extract_range((uint32_t)lParam, 16, 8);
@@ -296,15 +311,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			uint32_t previousState = bitops32_extract_range((uint32_t)lParam, 30, 1);
 			uint32_t transitionState = bitops32_extract_range((uint32_t)lParam, 31, 1);
 
-			printf("scan code: %d context: %d  previous: %d  transition: %d\n", scanCode, context, previousState, transitionState);
+			//printf("scan code: %d context: %d  previous: %d  transition: %d\n", scanCode, context, previousState, transitionState);
 
 			if (gkbdHandler != nullptr)
-						  {
-							  return gkbdHandler(hWnd, message, wParam, lParam);
-						  }
+			{
+				return gkbdHandler(hWnd, message, wParam, lParam);
+			}
 		}
 		break;
 
+		case WM_CHAR:
+		case WM_DEADCHAR:
+		case WM_SYSCHAR:
+		case WM_SYSDEADCHAR:
+			if (gkbdHandler != nullptr)
+			{
+				return gkbdHandler(hWnd, message, wParam, lParam);
+			}
+		break;
+
+		case WM_LBUTTONDBLCLK:
+		case WM_MBUTTONDBLCLK:
+		case WM_RBUTTONDBLCLK:
+			if (gmouseHandler != nullptr) {
+				return gmouseHandler(hWnd, message, wParam, lParam);
+			}
+		break;
 
 		case WM_MOUSEWHEEL:
 		case WM_MOUSEMOVE:
@@ -328,14 +360,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 		case WM_DESTROY:
-			quit();
+			ret = quit();
 		break;
 		
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 
-	return 0;
+	return ret;
 }
 
 void setDrawInLoop(bool doDraw)

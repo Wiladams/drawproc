@@ -3,8 +3,18 @@
 
 #include "drawproc.h"
 
+PSD screen;
+
+void loop()
+{
+	screen->FillRect(screen, 10, 10, 100, 100, RED);
+
+}
+
 void setup()
 {
-	createCanvas(480, 480);
+	createCanvas(320, 240);
 	background(pWhite);
+
+	screen = GdOpenScreen();
 }

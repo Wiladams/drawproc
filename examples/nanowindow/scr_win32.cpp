@@ -14,13 +14,14 @@
 #include <assert.h>
 
 #include "dpdevice.h"
+#include "dp_win32.h"
 #include "fb.h"
 #include "genmem.h"
 #include "genfont.h"
 
 #define APP_NAME L"Microwindows"
 
-/* SCREEN_WIDTH, SCREEN_HEIGHT and MWPIXEL_FORMAT define window size*/
+/* SCREEN_WIDTH, SCREEN_HEIGHT and DPPIXEL_FORMAT define window size*/
 #ifndef SCREEN_WIDTH
 #define SCREEN_WIDTH	800
 #endif
@@ -29,8 +30,8 @@
 #define SCREEN_HEIGHT	600
 #endif
 
-#ifndef MWPIXEL_FORMAT
-#define MWPIXEL_FORMAT	MWPF_TRUECOLOR8888
+#ifndef DPPIXEL_FORMAT
+#define DPPIXEL_FORMAT	DPPF_TRUECOLOR8888
 #endif
 
 /* externally set override values from nanox/srvmain.c*/
@@ -141,11 +142,11 @@ win32_open(PSD psd)
 	psd->yres = psd->yvirtres;
 	psd->planes = 1;
 	psd->pixtype = DPPIXEL_FORMAT;
-#if (MWPIXEL_FORMAT == MWPF_TRUECOLOR8888) || (MWPIXEL_FORMAT == MWPF_TRUECOLORABGR)
+#if (DPPIXEL_FORMAT == DPPF_TRUECOLOR8888) || (DPPIXEL_FORMAT == DPPF_TRUECOLORABGR)
 	psd->bpp = 32;
-#elif (MWPIXEL_FORMAT == MWPF_TRUECOLOR888)
+#elif (DPPIXEL_FORMAT == DPPF_TRUECOLOR888)
 	psd->bpp = 24;
-#elif (MWPIXEL_FORMAT == MWPF_TRUECOLOR565) || (MWPIXEL_FORMAT == MWPF_TRUECOLOR555)
+#elif (DPPIXEL_FORMAT == DPPF_TRUECOLOR565) || (DPPIXEL_FORMAT == DPPF_TRUECOLOR555)
 	psd->bpp = 16;
 #else
 #error "No support bpp < 16"

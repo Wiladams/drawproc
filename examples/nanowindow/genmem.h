@@ -20,8 +20,8 @@ bool	gen_mapmemgc(PSD mempsd, DPCOORD w, DPCOORD h, int planes, int bpp, int dat
 	unsigned int pitch, int size, void *addr);
 void	gen_freememgc(PSD mempsd);
 
-int		GdCalcMemGCAlloc(PSD psd, int width, int height, int planes, int bpp,
-	unsigned int *size, unsigned int *ppitch);
+//int		GdCalcMemGCAlloc(PSD psd, int width, int height, int planes, int bpp,
+//	unsigned int *size, unsigned int *ppitch);
 
 void	gen_fillrect(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2, DPPIXELVAL c);
 

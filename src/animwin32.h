@@ -25,7 +25,7 @@ HMODULE getClientModule();
 void * GetPixelBuffer(const int width, const int height);
 void * SetWindowSize(const int width, const int height);
 
-void quit();
+LRESULT quit();
 DPROC_API double seconds();
 void resettime();
 

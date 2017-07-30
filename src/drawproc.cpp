@@ -219,6 +219,8 @@ int wmMouseToVKeys(const int wparam)
 
 LRESULT CALLBACK mouseHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	LRESULT ret = 0;	// return 0 means we handled the event
+
 	switch (message)
 	{
 		case WM_MOUSEWHEEL:
@@ -274,7 +276,7 @@ LRESULT CALLBACK mouseHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 			return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 
-	return 0;
+	return ret;
 }
 
 
