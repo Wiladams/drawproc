@@ -166,6 +166,7 @@
     <ClCompile Include="devclip2.cpp" />
     <ClCompile Include="devdraw.cpp" />
     <ClCompile Include="devkbd.cpp" />
+    <ClCompile Include="devlist.cpp" />
     <ClCompile Include="devmouse.cpp" />
     <ClCompile Include="devopen.cpp" />
     <ClCompile Include="devrgn.cpp" />

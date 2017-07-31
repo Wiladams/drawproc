@@ -122,5 +122,8 @@
     <ClCompile Include="rasterops.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="devlist.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
