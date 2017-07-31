@@ -11,9 +11,9 @@
 /* entry points*/
 
 /* genmem.c*/
-PSD		GdCreatePixmap(PSD rootpsd, DPCOORD width, DPCOORD height, int format, void *pixels,
-	int palsize);
-void	GdFreePixmap(PSD pmd);
+//PSD		GdCreatePixmap(PSD rootpsd, DPCOORD width, DPCOORD height, int format, void *pixels,
+//	int palsize);
+//void	GdFreePixmap(PSD pmd);
 
 PSD 	gen_allocatememgc(PSD psd);
 bool	gen_mapmemgc(PSD mempsd, DPCOORD w, DPCOORD h, int planes, int bpp, int data_format,

@@ -7,14 +7,21 @@ PSD screen;
 
 void loop()
 {
-	screen->FillRect(screen, 10, 10, 100, 100, RED);
 
 }
 
 void setup()
 {
-	createCanvas(320, 240);
-	background(pWhite);
+	//createCanvas(320, 240);
+	//background(pWhite);
 
+	// can create a screen, but need
+	// to have an event loop to actually run it.
+
+	// better to get the drawproc window to be a PSD
+	// and build up from there.
 	screen = GdOpenScreen();
+
+
+
 }

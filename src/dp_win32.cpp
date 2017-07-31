@@ -182,3 +182,12 @@ GdCreatePixmap(PSD rootpsd, DPCOORD width, DPCOORD height, int format, void *pix
 
 	return pmd;
 }
+
+
+
+void
+GdFreePixmap(PSD pmd)
+{
+	pmd->FreeMemGC(pmd);
+}
+

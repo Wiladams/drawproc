@@ -170,7 +170,6 @@
     <ClCompile Include="devopen.cpp" />
     <ClCompile Include="devrgn.cpp" />
     <ClCompile Include="devstipple.cpp" />
-    <ClCompile Include="error.cpp" />
     <ClCompile Include="fb.cpp" />
     <ClCompile Include="fblin1.cpp" />
     <ClCompile Include="fblin16.cpp" />

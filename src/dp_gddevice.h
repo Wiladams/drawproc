@@ -1,5 +1,7 @@
 #pragma once
 
+#include "dproc_config.h"
+
 /*
 	This file contains all the calls that are related to GDI-like drawing.
 */
@@ -273,5 +275,5 @@ bool		GdTimeout(void);
 #endif // MW_FEATURE_TIMERS
 */
 /* error.c*/
-int	GdError(const char *format, ...);
-int	GdErrorNull(const char *format, ...);  /* doesn't print msgs */
+int	DPROC_EXPORT GdError(const char *format, ...);
+int	DPROC_EXPORT GdErrorNull(const char *format, ...);  /* doesn't print msgs */

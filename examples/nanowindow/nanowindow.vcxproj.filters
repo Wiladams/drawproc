@@ -65,9 +65,6 @@
     <ClCompile Include="devmouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="error.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="devclip2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
