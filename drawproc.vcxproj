@@ -72,7 +72,18 @@
   <ItemGroup>
     <ClCompile Include="src\agg_embedded_raster_fonts.cpp" />
     <ClCompile Include="src\AView.cpp" />
+    <ClCompile Include="src\convblit_8888.cpp" />
+    <ClCompile Include="src\convblit_mask.cpp" />
+    <ClCompile Include="src\conv_blit_frameb.cpp" />
+    <ClCompile Include="src\devblit.cpp" />
+    <ClCompile Include="src\devclip2.cpp" />
+    <ClCompile Include="src\devdraw.cpp" />
+    <ClCompile Include="src\devkbd.cpp" />
+    <ClCompile Include="src\devlist.cpp" />
+    <ClCompile Include="src\devmouse.cpp" />
     <ClCompile Include="src\devopen.cpp" />
+    <ClCompile Include="src\devrgn.cpp" />
+    <ClCompile Include="src\devstipple.cpp" />
     <ClCompile Include="src\dp_error.cpp" />
     <ClCompile Include="src\dp_win32.cpp" />
     <ClCompile Include="src\fb.cpp" />
@@ -86,7 +97,10 @@
     <ClCompile Include="src\fbportrain_left.cpp" />
     <ClCompile Include="src\fbportrait_down.cpp" />
     <ClCompile Include="src\fbportrait_right.cpp" />
+    <ClCompile Include="src\genfont.cpp" />
     <ClCompile Include="src\genmem.cpp" />
+    <ClCompile Include="src\global_state.cpp" />
+    <ClCompile Include="src\kbd_win32.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\bezier.cpp" />
     <ClCompile Include="src\dproc_clock.cpp" />
@@ -94,9 +108,11 @@
     <ClCompile Include="src\guistyle.cpp" />
     <ClCompile Include="src\linearalgebra.cpp" />
     <ClCompile Include="src\Matrix.cpp" />
+    <ClCompile Include="src\mou_null.cpp" />
     <ClCompile Include="src\pbm.cpp" />
     <ClCompile Include="src\pb_rect.cpp" />
     <ClCompile Include="src\pixelbuffer.cpp" />
+    <ClCompile Include="src\rasterops.cpp" />
     <ClCompile Include="src\raster_rgba.cpp" />
     <ClCompile Include="src\raster_rgba_polygon.cpp" />
     <ClCompile Include="src\raster_rgba_triangle.cpp" />
@@ -112,6 +128,7 @@
     <ClInclude Include="src\dproc_config.h" />
     <ClInclude Include="src\dproc_constants.h" />
     <ClInclude Include="src\dproc_clock.h" />
+    <ClInclude Include="src\dproc_types.h" />
     <ClInclude Include="src\dpsystem.h" />
     <ClInclude Include="src\dptypes.h" />
     <ClInclude Include="src\dp_gddevice.h" />
@@ -121,12 +138,12 @@
     <ClInclude Include="src\fb.h" />
     <ClInclude Include="src\genfont.h" />
     <ClInclude Include="src\genmem.h" />
+    <ClInclude Include="src\global_state.h" />
     <ClInclude Include="src\graphicc.h" />
     <ClInclude Include="src\guistyle.h" />
     <ClInclude Include="src\key_scancodes.h" />
     <ClInclude Include="src\linearalgebra.h" />
     <ClInclude Include="src\Matrix.h" />
-    <ClInclude Include="src\pb_rect.h" />
     <ClInclude Include="src\raster_rgba.h" />
     <ClInclude Include="src\drawproc.h" />
     <ClInclude Include="src\swap.h" />

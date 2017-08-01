@@ -37,10 +37,7 @@ limitations under the License.
 #define BGR_DOMINANT 1
 
 
-
-#include "pb_rect.h"
-#include "Point3D.h"
-
+#include "dproc_types.h"
 
 
 inline bool isBigEndian() {int t = 1;return (*(char*)&t == 0);}
@@ -109,16 +106,7 @@ inline uint8_t GET_A(const uint32_t value) {return (((uint32_t)value & 0xff00000
 #define GET_A(value) (((uint32_t)value &0xff000000) >> 24)
 #endif
 
-// pixel buffer color
-typedef struct {
-	union {
-		struct {
-			uint8_t r, g, b, a;
-		};
-		uint8_t v_[4];
-		uint32_t value;
-	};
-} pix_rgba;
+
 
 
 
@@ -133,24 +121,6 @@ typedef struct {
 
 #endif
 
-/*
-A pixel buffer is an array of pixels.
-
-The pixelformat determines the layout of the
-individual elements.
-
-data		- pointer to the beginning of the data
-bitStride	- number of bits between rows
-pixelpitch	- number of pixels between rows
-*/
-
-typedef struct _pb_rgba {
-	uint8_t *		data;			// pointer to the actual data
-	unsigned int	pixelpitch;		// how many pixels per row, if alias
-	int				bitStride;		// how many bits per row
-	int				owndata;		// does this struct own the data pointer
-	pb_rect			frame;			// if alias, what portion of parent
-} pb_rgba;
 
 
 
@@ -181,44 +151,7 @@ inline void pb_rgba_set_pixel(pb_rgba *pb, const int x, const int y, const int32
 
 
 
-// Font information
-typedef uint8_t cover_type;    //----cover_type
-enum cover_scale_e
-{
-	cover_none = 0,                 //----cover_none 
-	cover_shift = 8,                 //----cover_shift
-	cover_size = 1 << cover_shift,  //----cover_size 
-	cover_mask = cover_size - 1,    //----cover_mask 
-	cover_full = cover_mask         //----cover_full 
-};
 
-
-
-
-typedef struct _font {
-	uint8_t	height;			// height in pixels of all characters
-	uint8_t baseline;		// baseline offset of character
-	uint8_t start_char;		// ordinal of first character in the set
-	uint8_t num_chars;		// number of characters in the font
-
-	bool bigendian;			// endianness of current machine
-	uint8_t *charbits;		// pointer to where the bits for the chars start
-
-} font_t;
-
-// Rectangle representing the boundary of a glyph
-struct glyph_rect
-{
-	int x1, y1, x2, y2;
-	double dx, dy;
-};
-
-typedef struct _glyph {
-	size_t width;
-	size_t byte_width;
-
-	uint8_t *data;
-} glyph_t;
 
 
 #ifdef __cplusplus

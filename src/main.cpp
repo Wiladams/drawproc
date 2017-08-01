@@ -27,7 +27,7 @@ char szTitle[] = "Window";					// The title bar text
 #define CLASS_NAME "animwin"			// the main window class name
 HWND ghWnd;
 
-SCREENDEVICE gsd;
+SCREENDEVICE scrdev;
 
 // offscreen bitmap
 HBITMAP gbmHandle;
@@ -320,33 +320,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_CREATE:
 			// Build up the screendevice
-			gsd.xvirtres = crStruct->cx;
-			gsd.yvirtres = crStruct->cy;
+			scrdev.xvirtres = crStruct->cx;
+			scrdev.yvirtres = crStruct->cy;
 
-			gsd.xres = gsd.xvirtres;
-			gsd.yres = gsd.yvirtres;
-			gsd.planes = 1;
-			gsd.pixtype = DPPIXEL_FORMAT;
+			scrdev.xres = scrdev.xvirtres;
+			scrdev.yres = scrdev.yvirtres;
+			scrdev.planes = 1;
+			scrdev.pixtype = DPPIXEL_FORMAT;
 #if (DPPIXEL_FORMAT == DPPF_TRUECOLOR8888) || (DPPIXEL_FORMAT == DPPF_TRUECOLORABGR)
-			gsd.bpp = 32;
+			scrdev.bpp = 32;
 #elif (DPPIXEL_FORMAT == DPPF_TRUECOLOR888)
-			gsd.bpp = 24;
+			scrdev.bpp = 24;
 #elif (DPPIXEL_FORMAT == DPPF_TRUECOLOR565) || (DPPIXEL_FORMAT == DPPF_TRUECOLOR555)
-			gsd.bpp = 16;
+			scrdev.bpp = 16;
 #else
 #error "No support bpp < 16"
 #endif 
 			/* set standard data format from bpp and pixtype*/
-			//gsd.data_format = set_data_format(&gsd);
+			//scrdev.data_format = set_data_format(&scrdev);
 
 			/* Calculate size and pitch*/
-			GdCalcMemGCAlloc(&gsd, gsd.xres, gsd.yres, gsd.planes, gsd.bpp,
-				&gsd.size, &gsd.pitch);
-			if ((gsd.addr = (uint8_t *)malloc(gsd.size)) == NULL)
+			GdCalcMemGCAlloc(&scrdev, scrdev.xres, scrdev.yres, scrdev.planes, scrdev.bpp,
+				&scrdev.size, &scrdev.pitch);
+			if ((scrdev.addr = (uint8_t *)malloc(scrdev.size)) == NULL)
 				return NULL;
-			gsd.ncolors = gsd.bpp >= 24 ? (1 << 24) : (1 << gsd.bpp);
-			gsd.flags = PSF_SCREEN | PSF_ADDRMALLOC;
-			gsd.portrait = DPPORTRAIT_NONE;
+			scrdev.ncolors = scrdev.bpp >= 24 ? (1 << 24) : (1 << scrdev.bpp);
+			scrdev.flags = PSF_SCREEN | PSF_ADDRMALLOC;
+			scrdev.portrait = DPPORTRAIT_NONE;
 			
 			/* select an fb subdriver matching our planes and bpp for backing store*/
 			//subdriver = select_fb_subdriver(psd);

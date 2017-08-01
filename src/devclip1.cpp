@@ -4,21 +4,21 @@
 *
 * Device-independent routines to determine clipping regions.
 */
-#include "device.h"
+#include "dpdevice.h"
 
 /* Clip cache rectangle information.
 * After calling GdClipPoint, this rectangle is guaranteed to contain the
 * specified point (among others), and all points in the rectangle are
 * plottable or not according to the value of clipresult.
 */
-MWCOORD clipminx;		/* minimum x value of cache rectangle */
-MWCOORD clipminy;		/* minimum y value of cache rectangle */
-MWCOORD clipmaxx;		/* maximum x value of cache rectangle */
-MWCOORD clipmaxy;		/* maximum y value of cache rectangle */
+DPCOORD clipminx;		/* minimum x value of cache rectangle */
+DPCOORD clipminy;		/* minimum y value of cache rectangle */
+DPCOORD clipmaxx;		/* maximum x value of cache rectangle */
+DPCOORD clipmaxy;		/* maximum y value of cache rectangle */
 
-static MWBOOL	clipresult;	/* whether clip rectangle is plottable */
+static bool	clipresult;	/* whether clip rectangle is plottable */
 int 	clipcount;		/* number of clip rectangles */
-MWCLIPRECT cliprects[MAX_CLIPRECTS];	/* clip rectangles */
+DPCLIPRECT cliprects[MAX_CLIPRECTS];	/* clip rectangles */
 
 										/**
 										* Set an array of clip rectangles for future drawing actions.
@@ -33,9 +33,9 @@ MWCLIPRECT cliprects[MAX_CLIPRECTS];	/* clip rectangles */
 										* @param table Clipping rectangles.
 										*/
 void
-GdSetClipRects(PSD psd, int count, MWCLIPRECT *table)
+GdSetClipRects(PSD psd, int count, DPCLIPRECT *table)
 {
-	register MWCLIPRECT *rp;		/* current rectangle */
+	register DPCLIPRECT *rp;		/* current rectangle */
 
 									/* If there are no clip rectangles, then default to the full device area. */
 	if (count <= 0) {
@@ -44,7 +44,7 @@ GdSetClipRects(PSD psd, int count, MWCLIPRECT *table)
 		clipmaxx = psd->xvirtres - 1;
 		clipmaxy = psd->yvirtres - 1;
 		clipcount = 0;
-		clipresult = TRUE;
+		clipresult = true;
 		return;
 	}
 
@@ -80,11 +80,11 @@ GdSetClipRects(PSD psd, int count, MWCLIPRECT *table)
 	* cache to prevent all drawing.
 	*/
 	if (clipcount == 0) {
-		clipminx = MIN_MWCOORD;
-		clipminy = MIN_MWCOORD;
-		clipmaxx = MAX_MWCOORD;
-		clipmaxy = MAX_MWCOORD;
-		clipresult = FALSE;
+		clipminx = MIN_DPCOORD;
+		clipminy = MIN_DPCOORD;
+		clipmaxx = MAX_DPCOORD;
+		clipmaxy = MAX_DPCOORD;
+		clipresult = false;
 		return;
 	}
 
@@ -95,14 +95,14 @@ GdSetClipRects(PSD psd, int count, MWCLIPRECT *table)
 	clipminy = cliprects[0].y;
 	clipmaxx = clipminx + cliprects[0].width - 1;
 	clipmaxy = clipminy + cliprects[0].height - 1;
-	clipresult = TRUE;
+	clipresult = true;
 }
 
 
 /**
 * Check a point against the list of clip rectangles.
 * Returns TRUE if the point is within one or more rectangles and thus
-* can be plotted, or FALSE if the point is not within any rectangle and
+* can be plotted, or false if the point is not within any rectangle and
 * thus cannot be plotted.  Also remembers the coordinates of a clip cache
 * rectangle containing the specified point such that every point in the
 * rectangle would give the same result.  By examining this clip cache
@@ -115,12 +115,12 @@ GdSetClipRects(PSD psd, int count, MWCLIPRECT *table)
 * @param y Y co-ordinate of point to check.
 * @return TRUE iff the point is visible.
 */
-MWBOOL
-GdClipPoint(PSD psd, MWCOORD x, MWCOORD y)
+bool
+GdClipPoint(PSD psd, DPCOORD x, DPCOORD y)
 {
 	int count;
-	MWCLIPRECT *rp;
-	MWCOORD temp;
+	DPCLIPRECT *rp;
+	DPCOORD temp;
 
 	/* First see whether the point lies within the current clip cache
 	* rectangle.  If so, then we already know the result.
@@ -136,36 +136,36 @@ GdClipPoint(PSD psd, MWCOORD x, MWCOORD y)
 	* outside of the screen area.
 	*/
 	if (x < 0) {
-		clipminx = MIN_MWCOORD;
+		clipminx = MIN_DPCOORD;
 		clipmaxx = -1;
-		clipminy = MIN_MWCOORD;
-		clipmaxy = MAX_MWCOORD;
-		clipresult = FALSE;
-		return FALSE;
+		clipminy = MIN_DPCOORD;
+		clipmaxy = MAX_DPCOORD;
+		clipresult = false;
+		return false;
 	}
 	if (y < 0) {
-		clipminx = MIN_MWCOORD;
-		clipmaxx = MAX_MWCOORD;
-		clipminy = MIN_MWCOORD;
+		clipminx = MIN_DPCOORD;
+		clipmaxx = MAX_DPCOORD;
+		clipminy = MIN_DPCOORD;
 		clipmaxy = -1;
-		clipresult = FALSE;
-		return FALSE;
+		clipresult = false;
+		return false;
 	}
 	if (x >= psd->xvirtres) {
 		clipminx = psd->xvirtres;
-		clipmaxx = MAX_MWCOORD;
-		clipminy = MIN_MWCOORD;
-		clipmaxy = MAX_MWCOORD;
-		clipresult = FALSE;
-		return FALSE;
+		clipmaxx = MAX_DPCOORD;
+		clipminy = MIN_DPCOORD;
+		clipmaxy = MAX_DPCOORD;
+		clipresult = false;
+		return false;
 	}
 	if (y >= psd->yvirtres) {
-		clipminx = MIN_MWCOORD;
-		clipmaxx = MAX_MWCOORD;
+		clipminx = MIN_DPCOORD;
+		clipmaxx = MAX_DPCOORD;
 		clipminy = psd->yvirtres;
-		clipmaxy = MAX_MWCOORD;
-		clipresult = FALSE;
-		return FALSE;
+		clipmaxy = MAX_DPCOORD;
+		clipresult = false;
+		return false;
 	}
 
 	/* The point is within the screen area. If there are no clip
@@ -178,9 +178,9 @@ GdClipPoint(PSD psd, MWCOORD x, MWCOORD y)
 		clipmaxx = psd->xvirtres - 1;
 		clipminy = 0;
 		clipmaxy = psd->yvirtres - 1;
-		clipresult = TRUE;
+		clipresult = true;
 		GdCheckCursor(psd, x, y, x, y);
-		return TRUE;
+		return true;
 	}
 
 	/* We need to scan the list of clip rectangles to calculate a new
@@ -197,9 +197,9 @@ GdClipPoint(PSD psd, MWCOORD x, MWCOORD y)
 			clipminy = rp->y;
 			clipmaxx = rp->x + rp->width - 1;
 			clipmaxy = rp->y + rp->height - 1;
-			clipresult = TRUE;
+			clipresult = true;
 			GdCheckCursor(psd, x, y, x, y);
-			return TRUE;
+			return true;
 		}
 	}
 
@@ -210,10 +210,10 @@ GdClipPoint(PSD psd, MWCOORD x, MWCOORD y)
 	* rectangles.  This is not necessarily the best result, but works ok
 	* and is fast.
 	*/
-	clipminx = MIN_MWCOORD;
-	clipminy = MIN_MWCOORD;
-	clipmaxx = MAX_MWCOORD;
-	clipmaxy = MAX_MWCOORD;
+	clipminx = MIN_DPCOORD;
+	clipminy = MIN_DPCOORD;
+	clipmaxx = MAX_DPCOORD;
+	clipmaxy = MAX_DPCOORD;
 	count = clipcount;
 	for (rp = cliprects; count-- > 0; rp++) {
 		if ((x < rp->x) && (rp->x <= clipmaxx)) clipmaxx = rp->x - 1;
@@ -223,8 +223,8 @@ GdClipPoint(PSD psd, MWCOORD x, MWCOORD y)
 		temp = rp->y + rp->height - 1;
 		if ((y > temp) && (temp >= clipminy)) clipminy = temp + 1;
 	}
-	clipresult = FALSE;
-	return FALSE;
+	clipresult = false;
+	return false;
 }
 
 
@@ -247,7 +247,7 @@ GdClipPoint(PSD psd, MWCOORD x, MWCOORD y)
 * @return CLIP_VISIBLE, CLIP_INVISIBLE, or CLIP_PARTIAL.
 */
 int
-GdClipArea(PSD psd, MWCOORD x1, MWCOORD y1, MWCOORD x2, MWCOORD y2)
+GdClipArea(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2)
 {
 	if ((x1 < clipminx) || (x1 > clipmaxx) ||
 		(y1 < clipminy) || (y1 > clipmaxy))

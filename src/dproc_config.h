@@ -18,11 +18,4 @@
 #include <stdint.h>
 
 
-typedef float	float32;
-typedef double	float64;
-typedef float32 real;
-typedef float coord;
 
-typedef real real2[2];
-typedef real real3[3];
-typedef real real4[4];

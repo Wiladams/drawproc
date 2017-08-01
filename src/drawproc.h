@@ -4,7 +4,7 @@
 #include "linearalgebra.h"
 #include "raster_rgba.h"
 #include "vkeys.h"
-
+#include "global_state.h"
 #include "agg_embedded_raster_fonts.h"
 
 
@@ -40,92 +40,11 @@ DPROC_API void redraw();
 /*
 Drawing API
 */
-struct COLOR
-{
-	COLOR() :value(0){}
-	//COLOR(const COLOR &other) :value(other.value){}
-	COLOR(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a):r(r),g(g),b(b),a(a){}
-
-	union {
-		struct {
-			uint8_t b, g, r, a;
-		};
-		uint32_t value;
-	};
-};
-
-typedef enum {
-	COLOR_MODE_RGB,
-	COLOR_MODE_HSB
-} COLORMODE;
-
-typedef enum {
-	CORNER,
-	CORNERS,
-	RADIUS,
-	CENTER
-} RECTMODE;
-
-typedef enum  {
-	TX_CENTER	= 0x00,
-	TX_LEFT		= 0x01,
-	TX_RIGHT	= 0x04,
-	TX_TOP		= 0x10,
-	TX_BOTTOM	= 0x40
-
-} ALIGNMENT;
-
-typedef enum  {
-	GR_POINTS,
-	GR_LINES,
-	GR_LINE_STRIP,
-	GR_LINE_LOOP,
-	GR_POLYGON,
-	GR_QUADS,
-	GR_QUAD_STRIP,
-	GR_TRIANGLES,
-	GR_TRIANGLE_STRIP,
-	GR_TRIANGLE_FAN
-} GEOMETRY;
-
-typedef enum  {
-	STROKE,
-	CLOSE
-} KindOfClose;
-
-
-struct Vector2d
-{
-	Vector2d(coord x, coord y)
-	:_x(x), _y(y)
-	{};
-
-	coord _x;
-	coord _y;
-};
-
-
-struct PImage
-{
-	pb_rgba fb;
-};
 
 
 
-// Global variables
-DPROC_API extern size_t width;
-DPROC_API extern size_t height;
 
 
-DPROC_API extern pb_rgba *gpb;
-DPROC_API extern pb_rect pixelFrame;
-
-
-DPROC_API extern COLOR bgColor;
-DPROC_API extern pb_rgba *bgImage;
-
-DPROC_API extern RECTMODE grectMode;
-DPROC_API extern RECTMODE gellipseMode;
 
 // Initialization
 //DPROC_API void init();
@@ -143,15 +62,7 @@ DPROC_API void size(const size_t width, const size_t height);
 
 
 
-// Mouse
-// Mouse
-DPROC_API extern int mouseX;
-DPROC_API extern int mouseY;
-DPROC_API extern int mouseButton;
-DPROC_API extern int mouseDelta;
-DPROC_API extern bool isMousePressed;
-// pmouseX
-// pmouseY
+
 
 
 // mouseClicked()
@@ -163,10 +74,6 @@ DPROC_API extern bool isMousePressed;
 
 
 
-// Keyboard
-DPROC_API extern int keyChar;
-DPROC_API extern int keyCode;
-DPROC_API extern bool isKeyPressed;
 
 
 // Setting colors

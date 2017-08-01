@@ -152,22 +152,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="convblit_8888.cpp" />
-    <ClCompile Include="convblit_mask.cpp" />
-    <ClCompile Include="conv_blit_frameb.cpp" />
-    <ClCompile Include="devblit.cpp" />
-    <ClCompile Include="devclip2.cpp" />
-    <ClCompile Include="devdraw.cpp" />
-    <ClCompile Include="devkbd.cpp" />
-    <ClCompile Include="devlist.cpp" />
-    <ClCompile Include="devmouse.cpp" />
-    <ClCompile Include="devrgn.cpp" />
-    <ClCompile Include="devstipple.cpp" />
-    <ClCompile Include="genfont.cpp" />
-    <ClCompile Include="kbd_win32.cpp" />
-    <ClCompile Include="mou_null.cpp" />
     <ClCompile Include="nanowindow.cpp" />
-    <ClCompile Include="rasterops.cpp" />
     <ClCompile Include="scr_win32.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
