@@ -152,13 +152,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="convblit.h" />
-    <ClInclude Include="fb.h" />
-    <ClInclude Include="genfont.h" />
-    <ClInclude Include="genmem.h" />
-    <ClInclude Include="swap.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="convblit_8888.cpp" />
     <ClCompile Include="convblit_mask.cpp" />
     <ClCompile Include="conv_blit_frameb.cpp" />
@@ -168,22 +161,9 @@
     <ClCompile Include="devkbd.cpp" />
     <ClCompile Include="devlist.cpp" />
     <ClCompile Include="devmouse.cpp" />
-    <ClCompile Include="devopen.cpp" />
     <ClCompile Include="devrgn.cpp" />
     <ClCompile Include="devstipple.cpp" />
-    <ClCompile Include="fb.cpp" />
-    <ClCompile Include="fblin1.cpp" />
-    <ClCompile Include="fblin16.cpp" />
-    <ClCompile Include="fblin2.cpp" />
-    <ClCompile Include="fblin24.cpp" />
-    <ClCompile Include="fblin32.cpp" />
-    <ClCompile Include="fblin4.cpp" />
-    <ClCompile Include="fblin8.cpp" />
-    <ClCompile Include="fbportrain_left.cpp" />
-    <ClCompile Include="fbportrait_down.cpp" />
-    <ClCompile Include="fbportrait_right.cpp" />
     <ClCompile Include="genfont.cpp" />
-    <ClCompile Include="genmem.cpp" />
     <ClCompile Include="kbd_win32.cpp" />
     <ClCompile Include="mou_null.cpp" />
     <ClCompile Include="nanowindow.cpp" />

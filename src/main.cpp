@@ -2,6 +2,8 @@
 
 #include "animwin32.h"
 #include "dproc_clock.h"
+#include "dpdevice.h"
+#include "dp_win32.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -18,12 +20,14 @@
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 
 // Global Windows Variables:
-HINSTANCE hInst;								// current instance
+//HINSTANCE hInst;								// current instance
 HMODULE clientModule;
 
 char szTitle[] = "Window";					// The title bar text
 #define CLASS_NAME "animwin"			// the main window class name
 HWND ghWnd;
+
+SCREENDEVICE gsd;
 
 // offscreen bitmap
 HBITMAP gbmHandle;
@@ -177,6 +181,8 @@ HDC CreateOffscreenDC(HWND hWnd, const size_t width, const size_t height, void *
 void * GetPixelBuffer(const int width, const int height)
 {
 	void *data;
+
+
 	ghMemDC = CreateOffscreenDC(ghWnd, width, height, &data);
 
 	return data;
@@ -221,6 +227,13 @@ void CreateWindowHandle(int lwidth, int lheight)
 
 	RECT clientRECT = { 0, 0, lwidth, lheight };
 	BOOL err = AdjustWindowRect(&clientRECT, WS_CAPTION, 0);
+
+	// The following sequence of messages will come in through the callback
+	// function before this function returns:
+	// WM_GETMINMAXINFO
+	// WM_NCCREATE
+	// WM_NCCALCSIZE
+	// WM_CREATE
 
 	ghWnd = ::CreateWindowExA(
 		0,
@@ -301,9 +314,49 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	LRESULT ret = 0;
 	PAINTSTRUCT ps;
 	HDC hdc;
+	CREATESTRUCT *crStruct = (CREATESTRUCT *)lParam;
 
 	switch (message)
 	{
+		case WM_CREATE:
+			// Build up the screendevice
+			gsd.xvirtres = crStruct->cx;
+			gsd.yvirtres = crStruct->cy;
+
+			gsd.xres = gsd.xvirtres;
+			gsd.yres = gsd.yvirtres;
+			gsd.planes = 1;
+			gsd.pixtype = DPPIXEL_FORMAT;
+#if (DPPIXEL_FORMAT == DPPF_TRUECOLOR8888) || (DPPIXEL_FORMAT == DPPF_TRUECOLORABGR)
+			gsd.bpp = 32;
+#elif (DPPIXEL_FORMAT == DPPF_TRUECOLOR888)
+			gsd.bpp = 24;
+#elif (DPPIXEL_FORMAT == DPPF_TRUECOLOR565) || (DPPIXEL_FORMAT == DPPF_TRUECOLOR555)
+			gsd.bpp = 16;
+#else
+#error "No support bpp < 16"
+#endif 
+			/* set standard data format from bpp and pixtype*/
+			//gsd.data_format = set_data_format(&gsd);
+
+			/* Calculate size and pitch*/
+			GdCalcMemGCAlloc(&gsd, gsd.xres, gsd.yres, gsd.planes, gsd.bpp,
+				&gsd.size, &gsd.pitch);
+			if ((gsd.addr = (uint8_t *)malloc(gsd.size)) == NULL)
+				return NULL;
+			gsd.ncolors = gsd.bpp >= 24 ? (1 << 24) : (1 << gsd.bpp);
+			gsd.flags = PSF_SCREEN | PSF_ADDRMALLOC;
+			gsd.portrait = DPPORTRAIT_NONE;
+			
+			/* select an fb subdriver matching our planes and bpp for backing store*/
+			//subdriver = select_fb_subdriver(psd);
+			//if (!subdriver)
+			//	return NULL;
+
+			/* set subdriver into screen driver*/
+			//set_subdriver(psd, subdriver);
+		break;
+
 		case WM_KEYDOWN:
 		case WM_KEYUP:{
 			uint32_t scanCode = bitops32_extract_range((uint32_t)lParam, 16, 8);

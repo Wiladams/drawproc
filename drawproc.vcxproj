@@ -72,8 +72,21 @@
   <ItemGroup>
     <ClCompile Include="src\agg_embedded_raster_fonts.cpp" />
     <ClCompile Include="src\AView.cpp" />
+    <ClCompile Include="src\devopen.cpp" />
     <ClCompile Include="src\dp_error.cpp" />
     <ClCompile Include="src\dp_win32.cpp" />
+    <ClCompile Include="src\fb.cpp" />
+    <ClCompile Include="src\fblin1.cpp" />
+    <ClCompile Include="src\fblin16.cpp" />
+    <ClCompile Include="src\fblin2.cpp" />
+    <ClCompile Include="src\fblin24.cpp" />
+    <ClCompile Include="src\fblin32.cpp" />
+    <ClCompile Include="src\fblin4.cpp" />
+    <ClCompile Include="src\fblin8.cpp" />
+    <ClCompile Include="src\fbportrain_left.cpp" />
+    <ClCompile Include="src\fbportrait_down.cpp" />
+    <ClCompile Include="src\fbportrait_right.cpp" />
+    <ClCompile Include="src\genmem.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\bezier.cpp" />
     <ClCompile Include="src\dproc_clock.cpp" />
@@ -94,6 +107,7 @@
     <ClInclude Include="src\animwin32.h" />
     <ClInclude Include="src\AView.h" />
     <ClInclude Include="src\bezier.h" />
+    <ClInclude Include="src\convblit.h" />
     <ClInclude Include="src\dpdevice.h" />
     <ClInclude Include="src\dproc_config.h" />
     <ClInclude Include="src\dproc_constants.h" />
@@ -104,6 +118,9 @@
     <ClInclude Include="src\dp_keymouse.h" />
     <ClInclude Include="src\dp_pixmanip.h" />
     <ClInclude Include="src\dp_win32.h" />
+    <ClInclude Include="src\fb.h" />
+    <ClInclude Include="src\genfont.h" />
+    <ClInclude Include="src\genmem.h" />
     <ClInclude Include="src\graphicc.h" />
     <ClInclude Include="src\guistyle.h" />
     <ClInclude Include="src\key_scancodes.h" />
@@ -112,6 +129,7 @@
     <ClInclude Include="src\pb_rect.h" />
     <ClInclude Include="src\raster_rgba.h" />
     <ClInclude Include="src\drawproc.h" />
+    <ClInclude Include="src\swap.h" />
     <ClInclude Include="src\vkeys.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
