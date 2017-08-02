@@ -3,51 +3,52 @@
 #include "dproc_config.h"
 #include "dproc_types.h"
 
-// Global variables
-extern size_t width;
-extern size_t height;
+
+	// Global variables
+DPROC_API extern	 size_t width;
+DPROC_API extern	 size_t height;
 
 
- extern pb_rgba *gpb;
- extern pb_rect pixelFrame;
+DPROC_API extern	 pb_rgba *gpb;
+DPROC_API extern	 pb_rect pixelFrame;
 
 
-extern COLOR bgColor;
-extern pb_rgba *bgImage;
+DPROC_API extern	 COLOR bgColor;
+DPROC_API extern	 pb_rgba *bgImage;
 
- extern RECTMODE grectMode;
- extern RECTMODE gellipseMode;
+DPROC_API extern	 RECTMODE grectMode;
+DPROC_API extern	 RECTMODE gellipseMode;
 
-// color setting
-extern COLORMODE gColorMode;
-extern float gColorMax1;
-extern float gColorMax2;
-extern float gColorMax3;
-extern float gColorMaxA;
+	// color setting
+DPROC_API extern	 COLORMODE gColorMode;
+DPROC_API extern	 float gColorMax1;
+DPROC_API extern	 float gColorMax2;
+DPROC_API extern	 float gColorMax3;
+DPROC_API extern	 float gColorMaxA;
 
-extern COLOR bgColor;
-extern pb_rgba *bgImage;
-extern COLOR strokeColor;
-extern float gstrokeWeight;
-extern COLOR fillColor;
+DPROC_API extern	COLOR bgColor;
+DPROC_API extern	COLOR strokeColor;
+DPROC_API extern	 float gstrokeWeight;
+DPROC_API extern	 COLOR fillColor;
+DPROC_API extern	 pb_rgba *bgImage;
 
-// Keyboard
- extern int keyChar;
- extern int keyCode;
- extern bool isKeyPressed;
+	// Keyboard
+DPROC_API extern	 int keyChar;
+DPROC_API extern	 int keyCode;
+DPROC_API extern	 bool isKeyPressed;
 
-// Mouse
-// Mouse
- extern int mouseX;
- extern int mouseY;
- extern int mouseButton;
- extern int mouseDelta;
- extern bool isMousePressed;
-// pmouseX
-// pmouseY
+	// Mouse
+	// Mouse
+DPROC_API extern	 int mouseX;
+DPROC_API extern	 int mouseY;
+DPROC_API extern	 int mouseButton;
+DPROC_API extern	 int mouseDelta;
+DPROC_API extern	 bool isMousePressed;
+	// pmouseX
+	// pmouseY
 
-// Text Settings
-extern font_t gfont;
-extern int gTextSize;
-extern int gTextAlignX;
-extern int gTextAlignY;
+	// Text Settings
+DPROC_API extern	 font_t gfont;
+DPROC_API extern	 int gTextSize;
+DPROC_API extern	 int gTextAlignX;
+DPROC_API extern	 int gTextAlignY;
