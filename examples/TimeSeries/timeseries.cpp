@@ -81,9 +81,9 @@ float getColumnMax(int col)
 float getDataMax()
 {
 	float m = FLT_MIN;
-	m = max(m, getColumnMax(COLUMN_MILK));
-	m = max(m, getColumnMax(COLUMN_TEA));
-	m = max(m, getColumnMax(COLUMN_COFFEE));
+	m = MAX(m, getColumnMax(COLUMN_MILK));
+	m = MAX(m, getColumnMax(COLUMN_TEA));
+	m = MAX(m, getColumnMax(COLUMN_COFFEE));
 
 	return m;
 }
