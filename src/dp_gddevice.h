@@ -8,20 +8,20 @@
 
 /* entry points*/
 // devopen.cpp
-DPROC_API extern	 PSD		GdOpenScreen(void);
+DPROC_API extern	 PSD	GdOpenScreen(void);
 DPROC_API extern	 void	GdCloseScreen(PSD psd);
-DPROC_API extern	 int		GdSetPortraitMode(PSD psd, int portraitmode);
+DPROC_API extern	 int	GdSetPortraitMode(PSD psd, int portraitmode);
 
 /* devdraw.c*/
 
 DPROC_API extern	 int		GdSetMode(int mode);
-DPROC_API extern	 bool	GdSetUseBackground(bool flag);
+DPROC_API extern	 bool		GdSetUseBackground(bool flag);
 DPROC_API extern	 DPPIXELVAL GdSetForegroundPixelVal(PSD psd, DPPIXELVAL fg);
 DPROC_API extern	 DPPIXELVAL GdSetBackgroundPixelVal(PSD psd, DPPIXELVAL bg);
 DPROC_API extern	 DPPIXELVAL GdSetForegroundColor(PSD psd, DPCOLORVAL fg);
 DPROC_API extern	 DPPIXELVAL GdSetBackgroundColor(PSD psd, DPCOLORVAL bg);
-DPROC_API extern	 void	GdResetPalette(void);
-DPROC_API extern	 void	GdSetPalette(PSD psd, int first, int count, DPPALENTRY *palette);
+DPROC_API extern	 void		GdResetPalette(void);
+DPROC_API extern	 void		GdSetPalette(PSD psd, int first, int count, DPPALENTRY *palette);
 DPROC_API extern	 int		GdGetPalette(PSD psd, int first, int count, DPPALENTRY *palette);
 DPROC_API extern	 DPCOLORVAL GdGetColorRGB(PSD psd, DPPIXELVAL pixel);
 DPROC_API extern	 DPPIXELVAL GdFindColor(PSD psd, DPCOLORVAL c);
@@ -48,7 +48,6 @@ DPROC_API extern	 void	GdTranslateArea(DPCOORD width, DPCOORD height, void *in, 
 	DPCOORD inpitch, void *out, int outpixtype, int outpitch);
 DPROC_API extern	 void	drawpoint(PSD psd, DPCOORD x, DPCOORD y);
 DPROC_API extern	 void	drawrow(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y);
-extern SCREENDEVICE scrdev;
 
 
 /* devblit.c*/
@@ -133,29 +132,29 @@ DPCLIPREGION *GdAllocPolygonRegion(DPPOINT *points, int count, int mode);
 DPCLIPREGION *GdAllocPolyPolygonRegion(DPPOINT *points, int *count, int nbpolygons, int mode);
 
 /* devmouse.c*/
-int	GdOpenMouse(void);
-void	GdCloseMouse(void);
-void	GdGetButtonInfo(int *buttons);
-void	GdRestrictMouse(DPCOORD newminx, DPCOORD newminy, DPCOORD newmaxx, DPCOORD newmaxy);
-void	GdSetAccelMouse(int newthresh, int newscale);
-void	GdMoveMouse(DPCOORD newx, DPCOORD newy);
-int		GdReadMouse(DPCOORD *px, DPCOORD *py, int *pb);
-void	GdMoveCursor(DPCOORD x, DPCOORD y);
-bool	GdGetCursorPos(DPCOORD *px, DPCOORD *py);
-void	GdSetCursor(PDPCURSOR pcursor);
-int 	GdShowCursor(PSD psd);
-int 	GdHideCursor(PSD psd);
-void	GdCheckCursor(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2);
-void 	GdFixCursor(PSD psd);
-void    GdSetTransform(DPTRANSFORM *);
+DPROC_API extern	 int	GdOpenMouse(void);
+DPROC_API extern	 void	GdCloseMouse(void);
+DPROC_API extern	 void	GdGetButtonInfo(int *buttons);
+DPROC_API extern	 void	GdRestrictMouse(DPCOORD newminx, DPCOORD newminy, DPCOORD newmaxx, DPCOORD newmaxy);
+DPROC_API extern	 void	GdSetAccelMouse(int newthresh, int newscale);
+DPROC_API extern	 void	GdMoveMouse(DPCOORD newx, DPCOORD newy);
+DPROC_API extern	 int		GdReadMouse(DPCOORD *px, DPCOORD *py, int *pb);
+DPROC_API extern	 void	GdMoveCursor(DPCOORD x, DPCOORD y);
+DPROC_API extern	 bool	GdGetCursorPos(DPCOORD *px, DPCOORD *py);
+DPROC_API extern	 void	GdSetCursor(PDPCURSOR pcursor);
+DPROC_API extern	 int 	GdShowCursor(PSD psd);
+DPROC_API extern	 int 	GdHideCursor(PSD psd);
+DPROC_API extern	 void	GdCheckCursor(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2);
+DPROC_API extern	 void 	GdFixCursor(PSD psd);
+DPROC_API extern	 void    GdSetTransform(DPTRANSFORM *);
 
 //extern MOUSEDEVICE mousedev;
 
 /* devkbd.c*/
-int  	GdOpenKeyboard(void);
-void 	GdCloseKeyboard(void);
-void 	GdGetModifierInfo(MWKEYMOD *modifiers, MWKEYMOD *curmodifiers);
-int  	GdReadKeyboard(MWKEY *buf, MWKEYMOD *modifiers, MWSCANCODE *scancode);
+DPROC_API extern	 int  	GdOpenKeyboard(void);
+DPROC_API extern	 void 	GdCloseKeyboard(void);
+DPROC_API extern	 void 	GdGetModifierInfo(MWKEYMOD *modifiers, MWKEYMOD *curmodifiers);
+DPROC_API extern	 int  	GdReadKeyboard(MWKEY *buf, MWKEYMOD *modifiers, MWSCANCODE *scancode);
 
 #ifdef MW_FEATURE_TWO_KEYBOARDS
 int  	GdOpenKeyboard2(void);
@@ -258,5 +257,5 @@ bool		GdTimeout(void);
 #endif // MW_FEATURE_TIMERS
 */
 /* error.c*/
-int	DPROC_EXPORT GdError(const char *format, ...);
-int	DPROC_EXPORT GdErrorNull(const char *format, ...);  /* doesn't print msgs */
+DPROC_API extern	 int	GdError(const char *format, ...);
+DPROC_API extern	 int	GdErrorNull(const char *format, ...);  /* doesn't print msgs */

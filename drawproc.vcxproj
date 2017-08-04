@@ -79,6 +79,7 @@
     <ClCompile Include="src\devblit.cpp" />
     <ClCompile Include="src\devclip2.cpp" />
     <ClCompile Include="src\devdraw.cpp" />
+    <ClCompile Include="src\devfont.cpp" />
     <ClCompile Include="src\devkbd.cpp" />
     <ClCompile Include="src\devlist.cpp" />
     <ClCompile Include="src\devmouse.cpp" />
@@ -119,6 +120,8 @@
     <ClCompile Include="src\raster_rgba_polygon.cpp" />
     <ClCompile Include="src\raster_rgba_triangle.cpp" />
     <ClCompile Include="src\drawproc.cpp" />
+    <ClCompile Include="src\winFreeSansSerif11x13.cpp" />
+    <ClCompile Include="src\X6x13.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\agg_embedded_raster_fonts.h" />
@@ -126,6 +129,7 @@
     <ClInclude Include="src\AView.h" />
     <ClInclude Include="src\bezier.h" />
     <ClInclude Include="src\convblit.h" />
+    <ClInclude Include="src\devfont.h" />
     <ClInclude Include="src\dpdevice.h" />
     <ClInclude Include="src\dproc_config.h" />
     <ClInclude Include="src\dproc_constants.h" />
@@ -139,11 +143,13 @@
     <ClInclude Include="src\dp_pixmanip.h" />
     <ClInclude Include="src\dp_win32.h" />
     <ClInclude Include="src\fb.h" />
+    <ClInclude Include="src\fblin32.h" />
     <ClInclude Include="src\genfont.h" />
     <ClInclude Include="src\genmem.h" />
     <ClInclude Include="src\global_state.h" />
     <ClInclude Include="src\graphicc.h" />
     <ClInclude Include="src\guistyle.h" />
+    <ClInclude Include="src\intl.h" />
     <ClInclude Include="src\key_scancodes.h" />
     <ClInclude Include="src\linearalgebra.h" />
     <ClInclude Include="src\Matrix.h" />

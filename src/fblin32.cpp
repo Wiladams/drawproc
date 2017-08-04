@@ -13,10 +13,11 @@
 #include "dpdevice.h"
 #include "convblit.h"
 #include "fb.h"
+#include "fblin32.h"
 #include "genmem.h"
 
 /* Set pixel at x, y, to pixelval c*/
-static void
+void
 linear32_drawpixel(PSD psd, DPCOORD x, DPCOORD y, DPPIXELVAL c)
 {
 	register unsigned char *addr = psd->addr + y * psd->pitch + (x << 2);
@@ -36,7 +37,7 @@ linear32_drawpixel(PSD psd, DPCOORD x, DPCOORD y, DPPIXELVAL c)
 }
 
 /* Read pixel at x, y*/
-static DPPIXELVAL
+DPPIXELVAL
 linear32_readpixel(PSD psd, DPCOORD x, DPCOORD y)
 {
 	register unsigned char *addr = psd->addr + y * psd->pitch + (x << 2);
@@ -48,7 +49,7 @@ linear32_readpixel(PSD psd, DPCOORD x, DPCOORD y)
 }
 
 /* Draw horizontal line from x1,y to x2,y including final point*/
-static void
+void
 linear32_drawhorzline(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL c)
 {
 	register unsigned char *addr = psd->addr + y * psd->pitch + (x1 << 2);
@@ -78,7 +79,7 @@ linear32_drawhorzline(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL c)
 }
 
 /* Draw a vertical line from x,y1 to x,y2 including final point*/
-static void
+void
 linear32_drawvertline(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2, DPPIXELVAL c)
 {
 	int	pitch = psd->pitch;
@@ -109,7 +110,7 @@ linear32_drawvertline(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2, DPPIXELVAL c)
 }
 
 /* BGRA subdriver*/
-static SUBDRIVER fblinear32bgra_none = {
+SUBDRIVER fblinear32bgra_none = {
 	linear32_drawpixel,
 	linear32_readpixel,
 	linear32_drawhorzline,
@@ -128,7 +129,7 @@ static SUBDRIVER fblinear32bgra_none = {
 	frameblit_stretch_rgba8888_bgra8888			/* RGBA stretchblit*/
 };
 
-static SUBDRIVER fblinear32bgra_left = {
+SUBDRIVER fblinear32bgra_left = {
 	fbportrait_left_drawpixel,
 	fbportrait_left_readpixel,
 	fbportrait_left_drawhorzline,
@@ -147,7 +148,7 @@ static SUBDRIVER fblinear32bgra_left = {
 	frameblit_stretch_rgba8888_bgra8888
 };
 
-static SUBDRIVER fblinear32bgra_right = {
+SUBDRIVER fblinear32bgra_right = {
 	fbportrait_right_drawpixel,
 	fbportrait_right_readpixel,
 	fbportrait_right_drawhorzline,
@@ -166,7 +167,7 @@ static SUBDRIVER fblinear32bgra_right = {
 	frameblit_stretch_rgba8888_bgra8888
 };
 
-static SUBDRIVER fblinear32bgra_down = {
+SUBDRIVER fblinear32bgra_down = {
 	fbportrait_down_drawpixel,
 	fbportrait_down_readpixel,
 	fbportrait_down_drawhorzline,
@@ -190,7 +191,7 @@ PSUBDRIVER fblinear32bgra[4] = {
 };
 
 /* RGBA subdriver*/
-static SUBDRIVER fblinear32rgba_none = {
+SUBDRIVER fblinear32rgba_none = {
 	linear32_drawpixel,
 	linear32_readpixel,
 	linear32_drawhorzline,
@@ -209,7 +210,7 @@ static SUBDRIVER fblinear32rgba_none = {
 	frameblit_stretch_xxxa8888					/* RGBA -> RGBA stretchblit*/
 };
 
-static SUBDRIVER fblinear32rgba_left = {
+SUBDRIVER fblinear32rgba_left = {
 	fbportrait_left_drawpixel,
 	fbportrait_left_readpixel,
 	fbportrait_left_drawhorzline,
@@ -228,7 +229,7 @@ static SUBDRIVER fblinear32rgba_left = {
 	frameblit_stretch_xxxa8888
 };
 
-static SUBDRIVER fblinear32rgba_right = {
+SUBDRIVER fblinear32rgba_right = {
 	fbportrait_right_drawpixel,
 	fbportrait_right_readpixel,
 	fbportrait_right_drawhorzline,
@@ -247,7 +248,7 @@ static SUBDRIVER fblinear32rgba_right = {
 	frameblit_stretch_xxxa8888
 };
 
-static SUBDRIVER fblinear32rgba_down = {
+SUBDRIVER fblinear32rgba_down = {
 	fbportrait_down_drawpixel,
 	fbportrait_down_readpixel,
 	fbportrait_down_drawhorzline,

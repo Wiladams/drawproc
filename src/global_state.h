@@ -75,5 +75,6 @@ DPROC_API extern DPTILE     gr_tile;
 DPROC_API extern DPPOINT    gr_ts_offset;
 
 
+DPROC_API extern SCREENDEVICE scrdev;
 DPROC_API extern KBDDEVICE kbddev;
 

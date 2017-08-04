@@ -2,7 +2,6 @@
 
 #include "dproc_config.h"
 
-
 #include <stdint.h>
 
 
@@ -159,7 +158,7 @@ typedef struct _mwlisthead {
 } MWLISTHEAD, *PMWLISTHEAD;
 
 
-static const int DPLF_FACESIZE = 64;	/* max facename size*/
+#define DPLF_FACESIZE 64	// max facename size
 
 
 

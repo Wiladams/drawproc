@@ -16,6 +16,7 @@ extern "C" {
 
 // These should be implemented by a module to be loaded
 DPROC_EXPORT void draw();
+DPROC_EXPORT void loop();
 DPROC_EXPORT void setup();
 
 
@@ -47,11 +48,10 @@ Drawing API
 
 
 // Initialization
-//DPROC_API void init();
 
 
 DPROC_API void noLoop();
-DPROC_API void loop();
+
 
 // time
 DPROC_API uint64_t millis();
@@ -116,7 +116,6 @@ DPROC_API void triangle(const int x1, const int y1, const int x2, const int y2, 
 DPROC_API void polygon(int nverts, int *a);
 
 // Text
-extern font_t gfont;
 
 // createFont
 // DPROC_API loadFont()

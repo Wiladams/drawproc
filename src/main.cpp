@@ -252,11 +252,52 @@ void CreateWindowHandle(int lwidth, int lheight)
 
 void * SetWindowSize(const int width, const int height)
 {
+	PSUBDRIVER subdriver = nullptr;
+
 	CreateWindowHandle(width, height);
 
 	// Create offscreen bitmap
-	// now done in WM_CREATE
-	//gPixelData = GetPixelBuffer(width, height);	// open the window
+	gPixelData = GetPixelBuffer(width, height);	// open the window
+
+																// Build up the screendevice
+	scrdev.xvirtres = width;
+	scrdev.yvirtres = height;
+
+	scrdev.xres = scrdev.xvirtres;
+	scrdev.yres = scrdev.yvirtres;
+	scrdev.planes = 1;
+	scrdev.pixtype = DPPIXEL_FORMAT;
+#if (DPPIXEL_FORMAT == DPPF_TRUECOLOR8888) || (DPPIXEL_FORMAT == DPPF_TRUECOLORABGR)
+	scrdev.bpp = 32;
+#elif (DPPIXEL_FORMAT == DPPF_TRUECOLOR888)
+	scrdev.bpp = 24;
+#elif (DPPIXEL_FORMAT == DPPF_TRUECOLOR565) || (DPPIXEL_FORMAT == DPPF_TRUECOLOR555)
+	scrdev.bpp = 16;
+#else
+#error "No support bpp < 16"
+#endif 
+	/* set standard data format from bpp and pixtype*/
+	//scrdev.data_format = set_data_format(&scrdev);
+
+	/* Calculate size and pitch*/
+	GdCalcMemGCAlloc(&scrdev, scrdev.xres, scrdev.yres, scrdev.planes, scrdev.bpp,
+		&scrdev.size, &scrdev.pitch);
+
+	//if ((scrdev.addr = (uint8_t *)malloc(scrdev.size)) == NULL)
+	//	break;
+	scrdev.addr = (uint8_t *)gPixelData;
+
+	scrdev.ncolors = scrdev.bpp >= 24 ? (1 << 24) : (1 << scrdev.bpp);
+	scrdev.flags = PSF_SCREEN | PSF_ADDRMALLOC;
+	scrdev.portrait = DPPORTRAIT_NONE;
+
+	// select an fb subdriver matching our planes and bpp for backing store
+	subdriver = select_fb_subdriver(&scrdev);
+	if (!subdriver)
+		return nullptr;
+
+	// set subdriver into screen driver
+	set_subdriver(&scrdev, subdriver);
 
 	// Display the window on the screen
 	ShowWindow(ghWnd, SW_SHOW);
@@ -318,54 +359,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	HDC hdc;
 	CREATESTRUCT *crStruct = (CREATESTRUCT *)lParam;
-	PSUBDRIVER subdriver = nullptr;
 
 	switch (message)
 	{
 		case WM_CREATE:
-			// Create offscreen bitmap
-			// now done in WM_CREATE
-			gPixelData = GetPixelBuffer(crStruct->cx, crStruct->cy);	// open the window
-
-			// Build up the screendevice
-			scrdev.xvirtres = crStruct->cx;
-			scrdev.yvirtres = crStruct->cy;
-
-			scrdev.xres = scrdev.xvirtres;
-			scrdev.yres = scrdev.yvirtres;
-			scrdev.planes = 1;
-			scrdev.pixtype = DPPIXEL_FORMAT;
-#if (DPPIXEL_FORMAT == DPPF_TRUECOLOR8888) || (DPPIXEL_FORMAT == DPPF_TRUECOLORABGR)
-			scrdev.bpp = 32;
-#elif (DPPIXEL_FORMAT == DPPF_TRUECOLOR888)
-			scrdev.bpp = 24;
-#elif (DPPIXEL_FORMAT == DPPF_TRUECOLOR565) || (DPPIXEL_FORMAT == DPPF_TRUECOLOR555)
-			scrdev.bpp = 16;
-#else
-#error "No support bpp < 16"
-#endif 
-			/* set standard data format from bpp and pixtype*/
-			//scrdev.data_format = set_data_format(&scrdev);
-
-			/* Calculate size and pitch*/
-			GdCalcMemGCAlloc(&scrdev, scrdev.xres, scrdev.yres, scrdev.planes, scrdev.bpp,
-				&scrdev.size, &scrdev.pitch);
-
-			//if ((scrdev.addr = (uint8_t *)malloc(scrdev.size)) == NULL)
-			//	break;
-			scrdev.addr = (uint8_t *)gPixelData;
-
-			scrdev.ncolors = scrdev.bpp >= 24 ? (1 << 24) : (1 << scrdev.bpp);
-			scrdev.flags = PSF_SCREEN | PSF_ADDRMALLOC;
-			scrdev.portrait = DPPORTRAIT_NONE;
-			
-			// select an fb subdriver matching our planes and bpp for backing store
-			subdriver = select_fb_subdriver(&scrdev);
-			if (!subdriver)
-				break;
-
-			// set subdriver into screen driver
-			set_subdriver(&scrdev, subdriver);
+			ret = DefWindowProc(hWnd, message, wParam, lParam);
 		break;
 
 		case WM_KEYDOWN:
@@ -427,6 +425,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			ret = quit();
 		break;
 		
+
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 	}

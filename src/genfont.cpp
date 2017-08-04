@@ -47,16 +47,16 @@ DPCOREFONT gen_fonts[NUMBER_FONTS] = {
 #else
 
 /* compiled in fonts*/
-extern MWCFONT font_winFreeSansSerif11x13;	/* new MWFONT_SYSTEM_VAR (was MWFONT_GUI_VAR)*/
-extern MWCFONT font_X6x13;			/* MWFONT_SYSTEM_FIXED (should be ansi)*/
+extern DPCFONT font_winFreeSansSerif11x13;	/* new MWFONT_SYSTEM_VAR (was MWFONT_GUI_VAR)*/
+extern DPCFONT font_X6x13;			/* MWFONT_SYSTEM_FIXED (should be ansi)*/
 									/*extern MWCFONT font_winFreeSystem14x16;*/	/* deprecated MWFONT_SYSTEM_VAR*/
 																				/*extern MWCFONT font_rom8x16;*/		/* deprecated MWFONT_OEM_FIXED*/
 																														/*extern MWCFONT font_rom8x8, font_X5x7;*/	/* unused*/
 
 																																									/* handling routines for MWCOREFONT*/
-MWFONTPROCS mwfontprocs = {
+DPFONTPROCS mwfontprocs = {
 	0,				/* capabilities*/
-	MWTF_ASCII,		/* routines expect ascii*/
+	DPTF_ASCII,		/* routines expect ascii*/
 	NULL,			/* init*/
 	NULL,			/* createfont*/
 	gen_getfontinfo,
@@ -89,9 +89,9 @@ MWFONTPROCS mwfontprocs = {
 */
 
 /* first font is default font*/
-MWCOREFONT gen_fonts[NUMBER_FONTS] = {
-	{ &mwfontprocs, 0, 0, 0, 0, MWFONT_SYSTEM_VAR,   &font_winFreeSansSerif11x13 },
-	{ &mwfontprocs, 0, 0, 0, 0, MWFONT_SYSTEM_FIXED, &font_X6x13 },
+DPCOREFONT gen_fonts[NUMBER_FONTS] = {
+	{ &mwfontprocs, 0, 0, 0, 0, DPFONT_SYSTEM_VAR,   &font_winFreeSansSerif11x13 },
+	{ &mwfontprocs, 0, 0, 0, 0, DPFONT_SYSTEM_FIXED, &font_X6x13 },
 	/* deprecated redirections for the time being*/
 	{ &mwfontprocs, 0, 0, 0, 0, "Helvetica",         &font_winFreeSansSerif11x13 }, /* redirect*/
 	{ &mwfontprocs, 0, 0, 0, 0, "Terminal",          &font_X6x13 }	/* redirect*/
