@@ -20,6 +20,7 @@
 #include "convblit.h"
 #include "fb.h"
 #include "genmem.h"
+#include "global_state.h"
 
 /*
 * Alpha lookup tables for 256 color palette systems
@@ -134,7 +135,6 @@ init_alpha_lookup(void)
 {
 	int	i, a;
 	int	r, g, b;
-	extern DPPALENTRY gr_palette[256];
 
 	if (!alpha_to_rgb)
 		alpha_to_rgb = (unsigned short *)malloc(sizeof(unsigned short) * 32 * 256);

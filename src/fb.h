@@ -222,47 +222,47 @@ void ioctl_setpalette(int start, int len, short *red, short *green, short *blue)
 void setfadelevel(PSD psd, int f);
 
 /* fb.c*/
-PSUBDRIVER select_fb_subdriver(PSD psd);
-int		set_data_format(PSD psd);
-void	gen_getscreeninfo(PSD psd, PDPSCREENINFO psi);
+DPROC_API extern	 PSUBDRIVER select_fb_subdriver(PSD psd);
+DPROC_API extern	 int		set_data_format(PSD psd);
+DPROC_API extern	 void	gen_getscreeninfo(PSD psd, PDPSCREENINFO psi);
 
 /* fbportrait_xxx.c*/
 extern SUBDRIVER fbportrait_left;
 extern SUBDRIVER fbportrait_right;
 extern SUBDRIVER fbportrait_down;
 
-void fbportrait_left_drawpixel(PSD psd, DPCOORD x, DPCOORD y, DPPIXELVAL c);
-DPPIXELVAL fbportrait_left_readpixel(PSD psd, DPCOORD x, DPCOORD y);
-void fbportrait_left_drawhorzline(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL c);
-void fbportrait_left_drawvertline(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2, DPPIXELVAL c);
-void fbportrait_left_fillrect(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2, DPPIXELVAL c);
-void fbportrait_left_blit(PSD dstpsd, DPCOORD destx, DPCOORD desty, DPCOORD w, DPCOORD h,
+DPROC_API extern	 void fbportrait_left_drawpixel(PSD psd, DPCOORD x, DPCOORD y, DPPIXELVAL c);
+DPROC_API extern	 DPPIXELVAL fbportrait_left_readpixel(PSD psd, DPCOORD x, DPCOORD y);
+DPROC_API extern	 void fbportrait_left_drawhorzline(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL c);
+DPROC_API extern	 void fbportrait_left_drawvertline(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2, DPPIXELVAL c);
+DPROC_API extern	 void fbportrait_left_fillrect(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2, DPPIXELVAL c);
+DPROC_API extern	 void fbportrait_left_blit(PSD dstpsd, DPCOORD destx, DPCOORD desty, DPCOORD w, DPCOORD h,
 	PSD srcpsd, DPCOORD srcx, DPCOORD srcy, int op);
-void fbportrait_left_convblit_blend_mask_alpha_byte(PSD dstpsd, PDPBLITPARMS gc);
-void fbportrait_left_convblit_copy_mask_mono_byte_msb(PSD psd, PDPBLITPARMS gc);
-void fbportrait_left_convblit_copy_mask_mono_byte_lsb(PSD psd, PDPBLITPARMS gc);
+DPROC_API extern	 void fbportrait_left_convblit_blend_mask_alpha_byte(PSD dstpsd, PDPBLITPARMS gc);
+DPROC_API extern	 void fbportrait_left_convblit_copy_mask_mono_byte_msb(PSD psd, PDPBLITPARMS gc);
+DPROC_API extern	 void fbportrait_left_convblit_copy_mask_mono_byte_lsb(PSD psd, PDPBLITPARMS gc);
 
-void fbportrait_right_drawpixel(PSD psd, DPCOORD x, DPCOORD y, DPPIXELVAL c);
-DPPIXELVAL fbportrait_right_readpixel(PSD psd, DPCOORD x, DPCOORD y);
-void fbportrait_right_drawhorzline(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL c);
-void fbportrait_right_drawvertline(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2, DPPIXELVAL c);
-void fbportrait_right_fillrect(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2, DPPIXELVAL c);
-void fbportrait_right_blit(PSD dstpsd, DPCOORD destx, DPCOORD desty, DPCOORD w, DPCOORD h,
+DPROC_API extern	 void fbportrait_right_drawpixel(PSD psd, DPCOORD x, DPCOORD y, DPPIXELVAL c);
+DPROC_API extern	 DPPIXELVAL fbportrait_right_readpixel(PSD psd, DPCOORD x, DPCOORD y);
+DPROC_API extern	 void fbportrait_right_drawhorzline(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL c);
+DPROC_API extern	 void fbportrait_right_drawvertline(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2, DPPIXELVAL c);
+DPROC_API extern	 void fbportrait_right_fillrect(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2, DPPIXELVAL c);
+DPROC_API extern	 void fbportrait_right_blit(PSD dstpsd, DPCOORD destx, DPCOORD desty, DPCOORD w, DPCOORD h,
 	PSD srcpsd, DPCOORD srcx, DPCOORD srcy, int op);
-void fbportrait_right_convblit_blend_mask_alpha_byte(PSD dstpsd, PDPBLITPARMS gc);
-void fbportrait_right_convblit_copy_mask_mono_byte_msb(PSD psd, PDPBLITPARMS gc);
-void fbportrait_right_convblit_copy_mask_mono_byte_lsb(PSD psd, PDPBLITPARMS gc);
+DPROC_API extern	 void fbportrait_right_convblit_blend_mask_alpha_byte(PSD dstpsd, PDPBLITPARMS gc);
+DPROC_API extern	 void fbportrait_right_convblit_copy_mask_mono_byte_msb(PSD psd, PDPBLITPARMS gc);
+DPROC_API extern	 void fbportrait_right_convblit_copy_mask_mono_byte_lsb(PSD psd, PDPBLITPARMS gc);
 
-void fbportrait_down_drawpixel(PSD psd, DPCOORD x, DPCOORD y, DPPIXELVAL c);
-DPPIXELVAL fbportrait_down_readpixel(PSD psd, DPCOORD x, DPCOORD y);
-void fbportrait_down_drawhorzline(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL c);
-void fbportrait_down_drawvertline(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2, DPPIXELVAL c);
-void fbportrait_down_fillrect(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2, DPPIXELVAL c);
-void fbportrait_down_blit(PSD dstpsd, DPCOORD destx, DPCOORD desty, DPCOORD w, DPCOORD h,
+DPROC_API extern	 void fbportrait_down_drawpixel(PSD psd, DPCOORD x, DPCOORD y, DPPIXELVAL c);
+DPROC_API extern	 DPPIXELVAL fbportrait_down_readpixel(PSD psd, DPCOORD x, DPCOORD y);
+DPROC_API extern	 void fbportrait_down_drawhorzline(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL c);
+DPROC_API extern	 void fbportrait_down_drawvertline(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2, DPPIXELVAL c);
+DPROC_API extern	 void fbportrait_down_fillrect(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2, DPPIXELVAL c);
+DPROC_API extern	 void fbportrait_down_blit(PSD dstpsd, DPCOORD destx, DPCOORD desty, DPCOORD w, DPCOORD h,
 	PSD srcpsd, DPCOORD srcx, DPCOORD srcy, int op);
-void fbportrait_down_convblit_blend_mask_alpha_byte(PSD dstpsd, PDPBLITPARMS gc);
-void fbportrait_down_convblit_copy_mask_mono_byte_msb(PSD psd, PDPBLITPARMS gc);
-void fbportrait_down_convblit_copy_mask_mono_byte_lsb(PSD psd, PDPBLITPARMS gc);
+DPROC_API extern	 void fbportrait_down_convblit_blend_mask_alpha_byte(PSD dstpsd, PDPBLITPARMS gc);
+DPROC_API extern	 void fbportrait_down_convblit_copy_mask_mono_byte_msb(PSD psd, PDPBLITPARMS gc);
+DPROC_API extern	 void fbportrait_down_convblit_copy_mask_mono_byte_lsb(PSD psd, PDPBLITPARMS gc);
 
 /* rasterops.c*/
-void GdRasterOp(PDPIMAGEHDR pixd, DPCOORD dx, DPCOORD dy, DPCOORD dw, DPCOORD dh, int op, PDPIMAGEHDR pixs, DPCOORD sx, DPCOORD sy);
+DPROC_API extern	 void GdRasterOp(PDPIMAGEHDR pixd, DPCOORD dx, DPCOORD dy, DPCOORD dw, DPCOORD dh, int op, PDPIMAGEHDR pixs, DPCOORD sx, DPCOORD sy);

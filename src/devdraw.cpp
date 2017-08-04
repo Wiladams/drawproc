@@ -22,7 +22,7 @@
 #include "convblit.h"
 
 extern int 	  gr_mode; 	      /* drawing mode */
-extern DPPALENTRY gr_palette[256];    /* current palette*/
+//extern DPPALENTRY gr_palette[256];    /* current palette*/
 extern int	  gr_firstuserpalentry;/* first user-changable palette entry*/
 extern int 	  gr_nextpalentry;    /* next available palette entry*/
 

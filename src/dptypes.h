@@ -10,6 +10,9 @@
 #include <stdint.h> 		/* for uint32_t, int32_t*/
 
 
+#include "dproc_types.h"
+
+
 /* configurable options*/
 #define USE_ALLOCA	1			/* alloca() is available */
 
@@ -177,10 +180,6 @@
 //#define DPROP_STRETCH			36	/* stretch src -> dst*/
 #define DPROP_USE_GC_MODE		255 /* use current GC mode for ROP.  Nano-X CopyArea only*/
 
-//#define DPROP_SRCCOPY		DPROP_COPY	/* obsolete*/
-//#define DPROP_SRCAND		DPROP_AND	/* obsolete*/
-//#define DPROP_SRCINVERT	DPROP_XOR	/* obsolete*/
-//#define DPROP_BLACKNESS   DPROP_CLEAR	/* obsolete*/
 
 /*
 * Pixel formats
@@ -245,17 +244,6 @@ typedef uint32_t DPPIXELVALHW;
 #define	DPPORTRAIT_RIGHT	0x02	/* rotate right*/
 #define DPPORTRAIT_DOWN		0x04	/* upside down*/
 
-/*
-* Type definitions
-*/
-typedef int				DPCOORD;	/* device coordinates*/
-//typedef int				DPBOOL;		/* boolean value*/
-typedef unsigned char	DPUCHAR;	/* unsigned char*/
-typedef uint32_t		DPCOLORVAL;	/* device-independent color value (0xAABBGGRR)*/
-typedef uint32_t		DPPIXELVAL;	/* pixel value parameter type, not for packing*/
-typedef unsigned short	DPIMAGEBITS;/* bitmap image unit size*/
-typedef uint32_t		DPTIMEOUT;	/* timeout value */
-typedef uint32_t		DPTEXTFLAGS;/* DPTF_ text flag*/
 
 #define DPCOORD_MAX	0x7fff		/* maximum coordinate value*/
 #define DPCOORD_MIN	(-DPCOORD_MAX)	/* minimum coordinate value*/
@@ -273,293 +261,8 @@ typedef uint32_t		DPTEXTFLAGS;/* DPTF_ text flag*/
 #define DPSIGN(x)		(((x) > 0) ? 1 : (((x) == 0) ? 0 : -1))
 #define DPCLAMP(x,a,b)	((x) > (b) ? (b) : ((x) < (a) ? (a) : (x)))
 
-// DPIMAGEBITS macros
-#define DPIMAGE_WORDS(x)	(((x)+15)/16)
-#define DPIMAGE_BYTES(x)	(DPIMAGE_WORDS(x)*sizeof(DPIMAGEBITS))
-									// size of image in words
-#define	DPIMAGE_SIZE(width, height)  	\
-	((height) * (((width) + DPIMAGE_BITSPERIMAGE - 1) / DPIMAGE_BITSPERIMAGE))
-#define	DPIMAGE_BITSPERIMAGE	(sizeof(DPIMAGEBITS) * 8)
-#define	DPIMAGE_BITVALUE(n)	((DPIMAGEBITS) (((DPIMAGEBITS) 1) << (n)))
-#define	DPIMAGE_FIRSTBIT	(DPIMAGE_BITVALUE(DPIMAGE_BITSPERIMAGE - 1))
-#define	DPIMAGE_NEXTBIT(m)	((DPIMAGEBITS) ((m) >> 1))
-#define	DPIMAGE_TESTBIT(m)	((m) & DPIMAGE_FIRSTBIT)	// use with shiftbit
-#define	DPIMAGE_SHIFTBIT(m)	((DPIMAGEBITS) ((m) << 1))  // for testbit
-
-// dbl linked list data structure
-// LIST must be first decl in struct
-typedef struct _mwlist {		
-	struct _mwlist *next;		// next item
-	struct _mwlist *prev;		// previous item
-} MWLIST, *PMWLIST;
-
-// dbl linked list head data structure
-typedef struct _mwlisthead {
-	struct _mwlist *head;		// first item
-	struct _mwlist *tail;		// last item
-} MWLISTHEAD, *PMWLISTHEAD;
-
-// Keyboard state modifiers
-typedef unsigned int	MWKEYMOD;
-
-// GetScreenInfo structure
-typedef struct {
-	DPCOORD	rows;		/* number of rows on screen */
-	DPCOORD cols;		/* number of columns on screen */
-	int 	xdpcm;		/* dots/centimeter in x direction */
-	int 	ydpcm;		/* dots/centimeter in y direction */
-	int	 	planes;		/* hw # planes*/
-	int	 	bpp;		/* hw bpp*/
-	int		data_format;/* DPIF_ image data format*/
-	int32_t	ncolors;	/* hw number of colors supported*/
-	int 	fonts;		/* number of built-in fonts */
-	int 	buttons;	/* buttons which are implemented */
-	MWKEYMOD modifiers;	/* modifiers which are implemented */
-	int	 	pixtype;	/* format of pixel value*/
-	int	 	portrait;	/* current portrait mode*/
-	bool	fbdriver;	/* true if running mwin fb screen driver*/
-	uint32_t rmask;		/* red mask bits in pixel*/
-	uint32_t gmask;		/* green mask bits in pixel*/
-	uint32_t bmask;		/* blue mask bits in pixel*/
-	uint32_t amask;		/* alpha mask bits in pixel*/
-	DPCOORD	xpos;		/* current x mouse position*/
-	DPCOORD	ypos;		/* current y mouse position*/
-
-						/* items below are get/set by the window manager and not used internally*/
-	int	vs_width;	/* virtual screen width/height*/
-	int	vs_height;
-	int	ws_width;	/* workspace width/height*/
-	int	ws_height;
-} DPSCREENINFO, *PDPSCREENINFO;
-
-// client side window framebuffer info
-// This is a 'sub-window'
-typedef struct {
-	unsigned char *	physpixels;	/* address of real framebuffer*/
-								/* note winpixels is only correct in non-portrait modes*/
-	unsigned char *	winpixels;	/* address of 0,0 this window in fb*/
-	int	pixtype;		/* DPPF_ pixel type*/
-	int	bpp;			/* bits per pixel*/
-	int	bytespp;		/* bytes per pixel*/
-	unsigned int pitch;	/* bytes per scan line for window (=fb pitch)*/
-	DPCOORD	x, y;		/* absolute window coordinates*/
-	int	portrait_mode;	/* current portrait mode*/
-	DPCOORD	xres;		/* real framebuffer resolution*/
-	DPCOORD	yres;
-	DPCOORD	xvirtres;	/* virtual framebuffer resolution*/
-	DPCOORD	yvirtres;
-} MWWINDOWFBINFO;
-
-/* builtin C-based proportional/fixed font structure*/
-typedef struct {
-	char *			name;		/* font name*/
-	int				maxwidth;	/* max width in pixels*/
-	unsigned int	height;		/* height in pixels*/
-	int				ascent;		/* ascent (baseline) height*/
-	int				firstchar;	/* first character in bitmap*/
-	int				size;		/* font size in characters*/
-	const DPIMAGEBITS *bits;	/* 16-bit right-padded bitmap data*/
-	const uint32_t 	*offset;	/* offsets into bitmap data*/
-	const unsigned char *width;	/* character widths or 0 if fixed*/
-	int				defaultchar;/* default char (not glyph index)*/
-	int32_t			bits_size;	/* # words of DPIMAGEBITS bits*/
-} DPCFONT, *PDPCFONT;
-
-/* draw procs associated with fonts.  Strings are [re]packed using defencoding*/
-typedef struct _mwscreendevice *PSD;
-typedef struct _mwfont *		PDPFONT;
-typedef struct _mwfontinfo *	PDPFONTINFO;
-
-typedef struct {
-	int		capabilities;		/* flags for font subdriver capabilities*/
-	DPTEXTFLAGS	encoding;	/* routines expect this encoding*/
-	bool(*Init)(PSD psd);
-	PDPFONT(*CreateFont)(const char *name, DPCOORD height, DPCOORD width, int attr);
-	bool(*GetFontInfo)(PDPFONT pfont, PDPFONTINFO pfontinfo);
-	void(*GetTextSize)(PDPFONT pfont, const void *text, int cc,
-		DPTEXTFLAGS flags, DPCOORD *pwidth, DPCOORD *pheight,
-		DPCOORD *pbase);
-	void(*GetTextBits)(PDPFONT pfont, int ch, const DPIMAGEBITS **retmap,
-		DPCOORD *pwidth, DPCOORD *pheight, DPCOORD *pbase);
-	void(*DestroyFont)(PDPFONT pfont);
-	void(*DrawText)(PDPFONT pfont, PSD psd, DPCOORD x, DPCOORD y,
-		const void *str, int count, DPTEXTFLAGS flags);
-	int(*SetFontSize)(PDPFONT pfont, DPCOORD height, DPCOORD width);
-	void(*SetFontRotation)(PDPFONT pfont, int tenthdegrees);
-	int(*SetFontAttr)(PDPFONT pfont, int setflags, int clrflags);
-	PDPFONT(*Duplicate) (PDPFONT psrcfont, DPCOORD height, DPCOORD width);
-} DPFONTPROCS, *PDPFONTPROCS;
-
-/* new multi-renderer font struct*/
-typedef struct _mwfont {		/* common hdr for all font structures*/
-	PDPFONTPROCS	fontprocs;	/* font-specific rendering routines*/
-	DPCOORD			fontsize;	/* font height in pixels*/
-	DPCOORD			fontwidth;	/* font width in pixels*/
-	int				fontrotation; /* font rotation*/
-	int				fontattr;	/* font attributes: kerning/antialias*/
-								/* font-specific rendering data here*/
-} DPFONT;
-
-/* builtin core font struct*/
-typedef struct {
-	/* common hdr*/
-	PDPFONTPROCS	fontprocs;
-	DPCOORD			fontsize;	/* font height in pixels*/
-	DPCOORD			fontwidth;	/* font width in pixels*/
-	int				fontrotation;
-	int				fontattr;
-	/* core font specific data*/
-	char *		name;			/* Microwindows font name*/
-	PDPCFONT	cfont;			/* builtin font data*/
-} DPCOREFONT, *PDPCOREFONT;
-
-// In-core color palette structure
-typedef struct {
-	DPUCHAR	r;
-	DPUCHAR	g;
-	DPUCHAR	b;
-	DPUCHAR _padding;
-} DPPALENTRY;
-
-// GdConversionBlit parameter structure
-typedef struct {
-	int			op;				/* MWROP operation requested*/
-	int			data_format;	/* DPIF_ image data format*/
-	DPCOORD		width, height;	/* width and height for src and dest*/
-	DPCOORD		dstx, dsty;		/* dest x, y*/
-	DPCOORD		srcx, srcy;		/* source x, y*/
-	unsigned int src_pitch;		/* source row length in bytes*/
-	DPCOLORVAL	fg_colorval;	/* fg color, DPCOLORVAL 0xAARRGGBB format*/
-	DPCOLORVAL	bg_colorval;
-	uint32_t	fg_pixelval;	/* fg color, hw pixel format*/
-	uint32_t	bg_pixelval;
-	bool		usebg;			/* set =1 to draw background*/
-	void *		data;			/* input image data GdConversionBlit*/
-
-								/* these items filled in by GdConversionBlit*/
-	void *		data_out;		/* output image from conversion blits subroutines*/
-	unsigned int dst_pitch;		/* dest row length in bytes*/
-
-								/* used by GdBlit and GdStretchBlit for GdCheckCursor and fallback blit*/
-	PSD			srcpsd;			/* source psd for psd->psd blits*/
-
-								/* used by frameblits only*/
-	DPCOORD		src_xvirtres;	/* srcpsd->x/y virtres, used in frameblit for src coord rotation*/
-	DPCOORD		src_yvirtres;
-
-	// used in stretch blits only
-	int			src_x_step;		/* normal steps in source image*/
-	int			src_y_step;
-	int			src_x_step_one;	/* 1-unit steps in source image*/
-	int			src_y_step_one;
-	int			err_x_step;		/* 1-unit error steps in source image*/
-	int			err_y_step;
-	int			err_y;			/* source coordinate error tracking*/
-	int			err_x;
-	int			x_denominator;	/* denominator fraction*/
-	int			y_denominator;
-
-	// used in palette conversions only
-	DPPALENTRY *palette;		// palette for image
-	uint32_t	transcolor;		// transparent color in image
-
-								//	PSD			alphachan;		/* alpha chan for DPROP_BLENDCHANNEL*/
-} DPBLITPARMS, *PDPBLITPARMS;
-
-/**
-* Structure returned by GetFontInfo.
-*
-* All sizes are in pixels.
-*
-* Some of the sizes are limits for "most characters".  With built-in bitmap
-* fonts, "most characters" means "all characters".  Otherwise, the
-* definition of "most characters" depends on the person who designed the
-* font.  Typically it is the alphanumeric characters, and it may or may not
-* include accented characters.
-*/
-typedef struct _mwfontinfo {
-	/**
-	* Maximum advance width of any character.
-	*/
-	int maxwidth;
-
-	/**
-	* Height of "most characters" in the font. This does not include any
-	* leading (blank space between lines of text).
-	* Always equal to (baseline+descent).
-	*/
-	int height;
-
-	/**
-	* The ascent (height above the baseline) of "most characters" in
-	* the font.
-	*
-	* Note: This member variable should be called "ascent", to be
-	* consistent with FreeType 2, and also to be internally consistent
-	* with the "descent" member.  It has not been renamed because that
-	* would break backwards compatibility.  FIXME
-	*/
-	int baseline;
-
-	/**
-	* The descent (height below the baseline) of "most characters" in
-	* the font.
-	*
-	* Should be a POSITIVE number.
-	*/
-	int descent;
-
-	/**
-	* Maximum height of any character above the baseline.
-	*/
-	int maxascent;
-
-	/**
-	* Maximum height of any character below the baseline.
-	*
-	* Should be a POSITIVE number.
-	*/
-	int maxdescent;
-
-	/**
-	* The distance between the baselines of two consecutive lines of text.
-	* This is usually height plus some font-specific "leading" value.
-	*/
-	int linespacing;
-
-	/**
-	* First character in the font.
-	*/
-	int firstchar;
-
-	/**
-	* Last character in the font.
-	*/
-	int lastchar;
-
-	/**
-	* True (nonzero) if font is fixed width.  In that case, maxwidth
-	* gives the width for every character in the font.
-	*/
-	bool fixed;
-
-	/**
-	* Table of character advance widths for characters 0-255.
-	* Note that fonts can contain characters with codes >255 - in that
-	* case this table contains the advance widths for some but not all
-	* characters.  Also note that if the font contains kerning
-	* information, the advance width of the string "AV" may differ from
-	* the sum of the advance widths for the characters 'A' and 'V'.
-	*/
-	DPUCHAR widths[256];
-} DPFONTINFO;
 
 
-/* GetFontList structure */
-typedef struct {
-	char *ttname;		/* TrueType name, eg "Times New Roman Bold" */
-	char *mwname;		/* microwin name, eg "timesb" */
-} DPFONTLIST, *PDPFONTLIST;
 
 /* logical font descriptor*/
 
@@ -573,7 +276,6 @@ typedef struct {
 #define DPLF_CLASS_MGL		6	/* MGL (EUCJP) fonts*/
 #define DPLF_CLASS_HZK		7	/* chinese HZK fonts*/
 
-#define DPLF_FACESIZE		64	/* max facename size*/
 
 /* font type selection - lfOutPrecision*/
 #define DPLF_TYPE_DEFAULT	0	/* any font*/
@@ -616,44 +318,7 @@ typedef struct {
 /* flags for the GdAddFont function */
 #define DPLF_FLAGS_ALIAS	1
 
-/* windows-compatible MWLOGFONT structure*/
-typedef struct {
-	int32_t	lfHeight;		/* desired height in pixels*/
-	int32_t	lfWidth;		/* desired width in pixels or 0*/
-	int32_t	lfEscapement;	/* rotation in tenths of degree*/
-	int32_t	lfOrientation;	/* not used*/
-	int32_t	lfWeight;		/* font weight*/
-	DPUCHAR	lfItalic;		/* =1 for italic */
-	DPUCHAR	lfUnderline;	/* =1 for underline */
-	DPUCHAR	lfStrikeOut;	/* not used*/
-	DPUCHAR	lfCharSet;		/* font character set*/
-	DPUCHAR	lfOutPrecision;	/* font type selection*/
-	DPUCHAR	lfClipPrecision;/* not used*/
-	DPUCHAR	lfQuality;		/* not used*/
-	DPUCHAR lfPitchAndFamily;/* not used*/
-							 /* end of windows-compatibility*/
 
-	DPUCHAR lfClass;		/* font class (renderer) */
-
-							/* Following only used by (the legacy) FONTMAPPER when enabled.
-							* They are only kept around to stay source and binary
-							* compatible to previous microwindows releases.
-							*/
-	DPUCHAR	lfPitch;		/* font pitch */
-	DPUCHAR	lfRoman;		/* =1 for Roman letters (upright) */
-	DPUCHAR	lfSerif;		/* =1 for Serifed font */
-	DPUCHAR	lfSansSerif;	/* =1 for Sans-serif font */
-	DPUCHAR	lfModern;		/* =1 for Modern font */
-	DPUCHAR	lfMonospace;	/* =1 for Monospaced font */
-	DPUCHAR	lfProportional;	/* =1 for Proportional font */
-	DPUCHAR	lfOblique;		/* =1 for Oblique (kind of Italic) */
-	DPUCHAR	lfSmallCaps;	/* =1 for small caps */
-							/* End of fontmapper-only variables */
-
-							/* render-dependent full path or facename here*/
-	char	lfFaceName[DPLF_FACESIZE];/* font name, may be aliased*/
-
-} DPLOGFONT, *PDPLOGFONT;
 
 /*
 * Macros to initialize the MWLOGFONT structure to the most common defaults
@@ -712,49 +377,7 @@ typedef struct {
 		(lf)->lfRoman = 1;			\
 	} while (0)
 
-/*
-* Rectangle and point structures.
-* These structures are "inherited" in wingdi.h for
-* the Win32 RECT and POINT structures, so they must match
-* Microsoft's definition.
-*/
 
-/* MWPOINT used in GdPoly, GdFillPoly*/
-typedef struct {
-	DPCOORD x;
-	DPCOORD y;
-} DPPOINT;
-
-/* MWRECT used in region routines*/
-typedef struct {
-	DPCOORD	left;
-	DPCOORD	top;
-	DPCOORD	right;
-	DPCOORD	bottom;
-} DPRECT;
-
-/* static clip rectangle: drawing allowed if point within rectangle*/
-typedef struct {
-	DPCOORD 	x;		/* x coordinate of top left corner */
-	DPCOORD 	y;		/* y coordinate of top left corner */
-	DPCOORD 	width;		/* width of rectangle */
-	DPCOORD 	height;		/* height of rectangle */
-} DPCLIPRECT;
-
-/* dynamically allocated multi-rectangle clipping region*/
-typedef struct {
-	int	size;		/* malloc'd # of rectangles*/
-	int	numRects;	/* # rectangles in use*/
-	int	type; 		/* region type*/
-	DPRECT *rects;		/* rectangle array*/
-	DPRECT	extents;	/* bounding box of region*/
-} DPCLIPREGION;
-
-typedef struct {
-	DPCOORD	width;
-	DPCOORD	height;
-	PSD	psd;
-} DPTILE;
 
 /* region types */
 #define DPREGION_ERROR		0
@@ -771,64 +394,9 @@ typedef struct {
 #define DPPOLY_EVENODD		1
 #define DPPOLY_WINDING		2
 
-typedef struct {
-	DPCOORD		width;
-	DPCOORD		height;
-	DPIMAGEBITS *	bitmap;
-} DPSTIPPLE;
 
-/* image structure - if changed, convbmp.c and client.c::GrDrawImageBits needs updating*/
-typedef struct {
-	/* shared header with SCREENDEVICE*/
-	int		flags;		/* PSF_IMAGEHDR*/
-	int		width;		/* image width in pixels*/
-	int		height;		/* image height in pixels*/
-	int		planes;		/* # image planes*/
-	int		bpp;		/* bits per pixel*/
-	int		data_format;/* DPIF_ image data format*/
-	unsigned int pitch;	/* bytes per line*/
-	DPUCHAR *imagebits;	/* image bits (dword padded)*/
-	int		palsize;	/* palette size*/
-	DPPALENTRY *palette;/* palette*/
-	uint32_t transcolor;/* transparent color or MWNOCOLOR if none*/
-						/* end of shared header*/
-} DPIMAGEHDR, *PDPIMAGEHDR;
 
-/* image information structure - returned by GdGetImageInfo*/
-typedef struct {
-	int		id;			/* image id*/
-	int 	width;		/* image width in pixels*/
-	int 	height;		/* image height in pixels*/
-	int		planes;		/* # image planes*/
-	int		bpp;		/* bits per pixel (1, 4 or 8)*/
-	int		data_format;/* MWIF image data format*/
-	unsigned int pitch;	/* bytes per line*/
-	uint32_t transcolor;/* transparent color or MWNOCOLOR if none*/
-	int		palsize;	/* palette size*/
-	DPPALENTRY 	palette[256];	/* palette*/
-} DPIMAGEINFO, *PDPIMAGEINFO;
 
-#define	DPMAX_CURSOR_SIZE	32		/* maximum cursor x and y size*/
-#define	DPMAX_CURSOR_BUFLEN	DPIMAGE_SIZE(DPMAX_CURSOR_SIZE,DPMAX_CURSOR_SIZE)
-
-/* In-core software cursor structure*/
-typedef struct {
-	int			width;			/* cursor width in pixels*/
-	int			height;			/* cursor height in pixels*/
-	DPCOORD		hotx;			/* relative x pos of hot spot*/
-	DPCOORD		hoty;			/* relative y pos of hot spot*/
-	DPCOLORVAL	fgcolor;		/* foreground color*/
-	DPCOLORVAL	bgcolor;		/* background color*/
-	DPIMAGEBITS	image[DPMAX_CURSOR_SIZE * 2];/* cursor image bits*/
-	DPIMAGEBITS	mask[DPMAX_CURSOR_SIZE * 2];/* cursor mask bits*/
-} DPCURSOR, *PDPCURSOR;
-
-/** touchscreen device transform coefficients for GdSetTransform*/
-typedef struct {
-	int	a, b, c;	/* xpos = (a*jitx + b*jity + c)/denom */
-	int	d, e, f;	/* ypos = (d*jitx + e*jity + f)/denom */
-	int	s;			/* denom*/
-} DPTRANSFORM;
 
 /* outline and filled arc and pie types*/
 #define DPARC		0x0001	/* arc*/
@@ -858,9 +426,6 @@ typedef struct {
 #define DPBUTTON_M	02
 #define DPBUTTON_R	01
 
-/* Keyboard values*/
-typedef unsigned short	MWKEY;
-typedef unsigned short	MWSCANCODE;
 
 #include "dp_keymouse.h"
 

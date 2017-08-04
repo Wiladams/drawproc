@@ -85,6 +85,7 @@
     <ClCompile Include="src\devopen.cpp" />
     <ClCompile Include="src\devrgn.cpp" />
     <ClCompile Include="src\devstipple.cpp" />
+    <ClCompile Include="src\dp_bufferio.cpp" />
     <ClCompile Include="src\dp_error.cpp" />
     <ClCompile Include="src\dp_win32.cpp" />
     <ClCompile Include="src\fb.cpp" />
@@ -132,6 +133,7 @@
     <ClInclude Include="src\dproc_types.h" />
     <ClInclude Include="src\dpsystem.h" />
     <ClInclude Include="src\dptypes.h" />
+    <ClInclude Include="src\dp_bufferio.h" />
     <ClInclude Include="src\dp_gddevice.h" />
     <ClInclude Include="src\dp_keymouse.h" />
     <ClInclude Include="src\dp_pixmanip.h" />

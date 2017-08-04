@@ -38,15 +38,4 @@
 #define GdStrDup(string)                strdup((string))
 
 
-/*
-Hint:  To change old source code to use the memory allocator defined
-in this file, do (or rather, read, understand, then do):
-
-find . \( -path './demos' -prune \) -o \( -name '*.[ch]' -a \! -name mwsystem.h -a -print \) | \
-xargs perl -i -pWe \
-'s/malloc(\s*\()/GdMalloc$1/g; s/calloc(\s*\()/GdCalloc$1/g; s/strdup(\s*\()/GdStrDup$1/g; s/free(\s*\()/GdFree$1/g;'
-
-(this script is also in src/include/memfix.sh)
-You have to fix calls to realloc() by hand, since the parameters are different.
-*/
 #endif

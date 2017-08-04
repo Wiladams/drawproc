@@ -31,5 +31,5 @@ void	gen16_gettextsize(PDPFONT pfont, const void *text, int cc,
 	DPCOORD *pbase);
 
 /* local data*/
-extern DPCOREFONT gen_fonts[NUMBER_FONTS];
-extern DPFONTPROCS mwfontprocs;	/* builtin fontprocs - for special DBCS handling*/
+DPROC_API extern	  DPCOREFONT gen_fonts[];
+DPROC_API extern	  DPFONTPROCS mwfontprocs;	/* builtin fontprocs - for special DBCS handling*/

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "dproc_config.h"
+#include <stdint.h>
+
 
 /*
 	uint8_t * font

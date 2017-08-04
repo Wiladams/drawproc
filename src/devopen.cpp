@@ -31,24 +31,7 @@
 */
 #define FIRSTUSERPALENTRY	24  /* first writable pal entry over 16 color*/
 
-DPPIXELVAL gr_foreground;	/* current foreground color */
-DPPIXELVAL gr_background;	/* current background color */
-bool 	gr_usebg;    	    /* TRUE if background drawn in pixmaps */
-int 	gr_mode = DPROP_COPY; 	    /* drawing mode */
-/*static*/ DPPALENTRY	gr_palette[256];    /* current palette*/
-/*static*/ int	gr_firstuserpalentry;/* first user-changable palette entry*/
-/*static*/ int 	gr_nextpalentry;    /* next available palette entry*/
-DPCOLORVAL gr_foreground_rgb;	/* current fg color in 0xAARRGGBB format for mono convblits*/
-DPCOLORVAL gr_background_rgb;	/* current background color */
 
-uint32_t gr_dashmask;     /* An actual bitmask of the dash values */
-uint32_t gr_dashcount;    /* The number of bits defined in the dashmask */
-
-int        gr_fillmode;
-DPSTIPPLE  gr_stipple;
-DPTILE     gr_tile;
-
-DPPOINT    gr_ts_offset;
 
 /**
 * Open low level graphics driver.

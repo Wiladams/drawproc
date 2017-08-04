@@ -156,6 +156,9 @@
     <ClCompile Include="src\global_state.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\dp_bufferio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\agg_embedded_raster_fonts.h">
@@ -243,6 +246,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\dproc_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dp_bufferio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,6 +4,8 @@
 #include "dproc_clock.h"
 #include "dpdevice.h"
 #include "dp_win32.h"
+#include "fb.h"
+#include "genmem.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -253,7 +255,8 @@ void * SetWindowSize(const int width, const int height)
 	CreateWindowHandle(width, height);
 
 	// Create offscreen bitmap
-	gPixelData = GetPixelBuffer(width, height);	// open the window
+	// now done in WM_CREATE
+	//gPixelData = GetPixelBuffer(width, height);	// open the window
 
 	// Display the window on the screen
 	ShowWindow(ghWnd, SW_SHOW);
@@ -315,10 +318,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	HDC hdc;
 	CREATESTRUCT *crStruct = (CREATESTRUCT *)lParam;
+	PSUBDRIVER subdriver = nullptr;
 
 	switch (message)
 	{
 		case WM_CREATE:
+			// Create offscreen bitmap
+			// now done in WM_CREATE
+			gPixelData = GetPixelBuffer(crStruct->cx, crStruct->cy);	// open the window
+
 			// Build up the screendevice
 			scrdev.xvirtres = crStruct->cx;
 			scrdev.yvirtres = crStruct->cy;
@@ -342,19 +350,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			/* Calculate size and pitch*/
 			GdCalcMemGCAlloc(&scrdev, scrdev.xres, scrdev.yres, scrdev.planes, scrdev.bpp,
 				&scrdev.size, &scrdev.pitch);
-			if ((scrdev.addr = (uint8_t *)malloc(scrdev.size)) == NULL)
-				return NULL;
+
+			//if ((scrdev.addr = (uint8_t *)malloc(scrdev.size)) == NULL)
+			//	break;
+			scrdev.addr = (uint8_t *)gPixelData;
+
 			scrdev.ncolors = scrdev.bpp >= 24 ? (1 << 24) : (1 << scrdev.bpp);
 			scrdev.flags = PSF_SCREEN | PSF_ADDRMALLOC;
 			scrdev.portrait = DPPORTRAIT_NONE;
 			
-			/* select an fb subdriver matching our planes and bpp for backing store*/
-			//subdriver = select_fb_subdriver(psd);
-			//if (!subdriver)
-			//	return NULL;
+			// select an fb subdriver matching our planes and bpp for backing store
+			subdriver = select_fb_subdriver(&scrdev);
+			if (!subdriver)
+				break;
 
-			/* set subdriver into screen driver*/
-			//set_subdriver(psd, subdriver);
+			// set subdriver into screen driver
+			set_subdriver(&scrdev, subdriver);
 		break;
 
 		case WM_KEYDOWN:
