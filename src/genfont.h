@@ -15,18 +15,18 @@
 #define NUMBER_FONTS	4	/* number of compiled-in fonts*/
 
 /* entry points*/
-void	gen_setfontproc(DPCOREFONT *pf);
-bool	gen_getfontinfo(PDPFONT pfont, PDPFONTINFO pfontinfo);
-void	gen_gettextsize(PDPFONT pfont, const void *text, int cc,
+DPROC_API extern void	gen_setfontproc(DPCOREFONT *pf);
+DPROC_API extern bool	gen_getfontinfo(PDPFONT pfont, PDPFONTINFO pfontinfo);
+DPROC_API extern void	gen_gettextsize(PDPFONT pfont, const void *text, int cc,
 	DPTEXTFLAGS flags, DPCOORD *pwidth, DPCOORD *pheight,
 	DPCOORD *pbase);
-void	gen_gettextbits(PDPFONT pfont, int ch, const DPIMAGEBITS **retmap,
+DPROC_API extern void	gen_gettextbits(PDPFONT pfont, int ch, const DPIMAGEBITS **retmap,
 	DPCOORD *pwidth, DPCOORD *pheight, DPCOORD *pbase);
-void	gen_unloadfont(PDPFONT pfont);
+DPROC_API extern void	gen_unloadfont(PDPFONT pfont);
 
-void 	gen_drawtext(PDPFONT pfont, PSD psd, DPCOORD x, DPCOORD y,
+DPROC_API extern void 	gen_drawtext(PDPFONT pfont, PSD psd, DPCOORD x, DPCOORD y,
 	const void *text, int cc, DPTEXTFLAGS flags);
-void	gen16_gettextsize(PDPFONT pfont, const void *text, int cc,
+DPROC_API extern void	gen16_gettextsize(PDPFONT pfont, const void *text, int cc,
 	DPTEXTFLAGS flags, DPCOORD *pwidth, DPCOORD *pheight,
 	DPCOORD *pbase);
 

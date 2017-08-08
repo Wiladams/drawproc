@@ -4,6 +4,7 @@
 #include "drawproc.h"
 #include "dpdevice.h"
 #include "fblin32.h"
+#include "genfont.h"
 
 
 void draw()
@@ -12,8 +13,10 @@ void draw()
 	scrdev.DrawVertLine(&scrdev, 300, 10, 200, RGB2PIXEL8888(64, 127, 255));
 	scrdev.FillRect(&scrdev, 10, 20, 200, 200, RGB2PIXEL8888(125, 255, 255));
 
-	//GdFillRect(&scrdev, 10, 20, 200, 200);
-	//GdRect(&scrdev, 10, 20, 200, 200);
+
+	gen_fonts[0].fontprocs->DrawText((PDPFONT)gen_fonts[0].cfont,
+			&scrdev, 20, 20,
+			"Hello, World!", 1, 0);
 }
 
 

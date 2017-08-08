@@ -10,9 +10,12 @@
 
 #ifdef _MSC_VER
 #include <intrin.h>
+#define strncasecmp _strnicmp
+#define strcasecmp _stricmp
 #endif
 
 #include <stdint.h>
+
 
 
 // the following defines are unset in Arch.rules based on ARCH= setting
@@ -67,3 +70,8 @@
 #define DEBUG_BLIT		0		/* =1 to flash brown before painting areas with convblit*/
 
 
+// Choosing which fonts are supported
+//#define HAVE_BIG5_SUPPORT true
+//#define HAVE_GB2312_SUPPORT true
+//#define HAVE_JISX0213_SUPPORT true
+//#define HAVE_KSC5601_SUPPORT true

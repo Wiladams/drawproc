@@ -93,7 +93,7 @@ GdCreateFont(PSD psd, const char *name, DPCOORD height, DPCOORD width, const PDP
 		 * Note that it may not be NUL terminated in the source string,
 		 * so we're careful to NUL terminate it here.
 		 */
-		strncpy(fontmapper_fontname, plogfont->lfFaceName, DPLF_FACESIZE);
+		strncpy_s(fontmapper_fontname, plogfont->lfFaceName, DPLF_FACESIZE);
 		fontmapper_fontname[DPLF_FACESIZE] = '\0';
 		fontname = fontmapper_fontname;
 		if (!fontname[0])	/* if name not specified, use first builtin*/
@@ -447,7 +447,7 @@ gen_drawtext(PDPFONT pfont, PSD psd, DPCOORD x, DPCOORD y,
 	const void *text, int cc, DPTEXTFLAGS flags)
 {
 	const unsigned char *str = (unsigned char *)text;
-	const unsigned short *istr = (unsigned char *)text;
+	const unsigned short *istr = (unsigned short *)text;
 	DPCOORD		width;			/* width of text area */
 	DPCOORD 	height;			/* height of text area */
 	DPCOORD		base;			/* baseline of text*/
@@ -639,12 +639,12 @@ GdConvertEncoding(const void *istr, DPTEXTFLAGS iflags, int cc, void *ostr,
 
 	icc = cc;
 	cc = 0;
-	istr8 = istr;
-	istr16 = istr;
-	istr32 = istr;
-	ostr8 = ostr;
-	ostr16 = ostr;
-	ostr32 = ostr;
+	istr8 = (unsigned char *)istr;
+	istr16 = (unsigned short *)istr;
+	istr32 = (uint32_t *)istr;
+	ostr8 = (unsigned char *)ostr;
+	ostr16 = (unsigned short *)ostr;
+	ostr32 = (uint32_t *)ostr;
 
 	/* Convert between formats.  Note that there's no error
 	 * checking here yet.
