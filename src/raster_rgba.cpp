@@ -140,7 +140,7 @@ bool clipLine(const DPCLIPRECT &bounds, int &x0, int &y0, int &x1, int &y1)
 
 // Draw a span of pixels
 // This is basically a SRCCOPY
-void raster_rgba_span(pb_rgba *pb, const uint32_t x, const uint32_t y, const size_t len, const uint32_t *data)
+void raster_rgba_span(pb_rgba *pb, const DPCOORD x, const DPCOORD y, const size_t len, const DPPIXELVAL *data)
 {
 	// get the pointer to the beginning of the row
 	// in the destination
@@ -155,7 +155,7 @@ void raster_rgba_span(pb_rgba *pb, const uint32_t x, const uint32_t y, const siz
 	}
 }
 
-void raster_rgba_hline_fade(pb_rgba *pb, int x1, uint32_t color1, int x2, uint32_t color2, int y)
+void raster_rgba_hline_fade(pb_rgba *pb, DPCOORD x1, DPPIXELVAL color1, DPCOORD x2, DPPIXELVAL color2, DPCOORD y)
 {
 	int xdiff = x2 - x1;
 	if (xdiff == 0)
@@ -188,7 +188,7 @@ void raster_rgba_hline_fade(pb_rgba *pb, int x1, uint32_t color1, int x2, uint32
 	}
 }
 
-void raster_rgba_vline_fade(pb_rgba *pb, int y1, uint32_t color1, int y2, uint32_t color2, int x)
+void raster_rgba_vline_fade(pb_rgba *pb, DPCOORD y1, DPPIXELVAL color1, DPCOORD y2, DPPIXELVAL color2, DPCOORD x)
 {
 	int ydiff = y2 - y1;
 	if (ydiff == 0)
@@ -221,7 +221,7 @@ void raster_rgba_vline_fade(pb_rgba *pb, int y1, uint32_t color1, int y2, uint32
 	}
 }
 
-int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, uint32_t value)
+int raster_rgba_hline(pb_rgba *pb, DPCOORD x, DPCOORD y, size_t length, DPPIXELVAL value)
 {
 	size_t terminus = x + length;
 	terminus = terminus - x;
@@ -238,7 +238,7 @@ int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int 
 
 
 
-int raster_rgba_hline_blend(pb_rgba *pb, DPCOORD x, DPCOORD y, unsigned int length, uint32_t value)
+int raster_rgba_hline_blend(pb_rgba *pb, DPCOORD x, DPCOORD y, size_t length, DPPIXELVAL value)
 {
 	size_t terminus = x + length;
 	terminus = terminus - x;
@@ -256,7 +256,7 @@ int raster_rgba_hline_blend(pb_rgba *pb, DPCOORD x, DPCOORD y, unsigned int leng
 	return 0;
 }
 
-int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, uint32_t value)
+int raster_rgba_vline(pb_rgba *pb, DPCOORD x, DPCOORD y, size_t length, DPPIXELVAL value)
 {
 	unsigned int * data = &((unsigned int *)pb->data)[y*(int)pb->frame.width + x];
 	size_t count = 1;
@@ -272,7 +272,7 @@ int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int 
 
 
 // Bresenham simple line drawing
-void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, uint32_t color)
+void raster_rgba_line(pb_rgba *pb, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2, DPPIXELVAL color)
 {
 	int dx, dy;
 	int i;
@@ -328,7 +328,7 @@ void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned in
 	then, it's ok to have to separate versions.
 
 */
-void raster_rgba_line_cover(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, uint32_t color)
+void raster_rgba_line_cover(pb_rgba *pb, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2, DPPIXELVAL color)
 {
 	int dx, dy;
 	int i;
@@ -378,7 +378,7 @@ void raster_rgba_line_cover(pb_rgba *pb, unsigned int x1, unsigned int y1, unsig
 	}
 }
 
-void raster_rgba_blit(pb_rgba *pb, const int x, const int y, const pb_rgba *src)
+void raster_rgba_blit(pb_rgba *pb, const DPCOORD x, const DPCOORD y, const pb_rgba *src)
 {
 	uint32_t *dstPtr = (uint32_t *)pb->data;
 	uint32_t *srcPtr = (uint32_t *)src->data;
@@ -398,7 +398,7 @@ void raster_rgba_blit(pb_rgba *pb, const int x, const int y, const pb_rgba *src)
 	}
 }
 
-void raster_rgba_blend_alphamap(pb_rgba *pb, const int x, const int y, const unsigned char *bitmap, const int w, const int h, const uint32_t color)
+void raster_rgba_blend_alphamap(pb_rgba *pb, const DPCOORD x, const DPCOORD y, const unsigned char *bitmap, const size_t w, const size_t h, const DPPIXELVAL color)
 {
 	int xpos = x;
 	int ypos = y;
@@ -433,9 +433,9 @@ void raster_rgba_blend_alphamap(pb_rgba *pb, const int x, const int y, const uns
 	Bresenham ellipse drawing algorithm
 	Only for the frame, not for filling
 */
-typedef void(* EllipseHandler)(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const unsigned int x, const unsigned int y, const uint32_t color);
+typedef void(* EllipseHandler)(pb_rgba *pb, const DPCOORD cx, const DPCOORD cy, const DPCOORD x, const DPCOORD y, const DPPIXELVAL color);
 
-inline void Plot4EllipsePoints(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const unsigned int x, const unsigned int y, const uint32_t color)
+inline void Plot4EllipsePoints(pb_rgba *pb, const DPCOORD cx, const DPCOORD cy, const DPCOORD x, const DPCOORD y, const DPPIXELVAL color)
 {
 	DPCOORD lowx = cx - x;
 	DPCOORD maxx = cx + x;
@@ -455,7 +455,7 @@ inline void Plot4EllipsePoints(pb_rgba *pb, const uint32_t cx, const uint32_t cy
 		pb_rgba_cover_pixel(pb, cx + x, cy - y, color);
 }
 
-inline void fill2EllipseLines(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const unsigned int x, const unsigned int y, const uint32_t color)
+inline void fill2EllipseLines(pb_rgba *pb, const DPCOORD cx, const DPCOORD cy, const DPCOORD x, const DPCOORD y, const DPPIXELVAL color)
 {
 	int x1 = cx - x;
 	int y1 = cy+y;
@@ -475,7 +475,7 @@ inline void fill2EllipseLines(pb_rgba *pb, const uint32_t cx, const uint32_t cy,
 	//raster_rgba_hline_blend(pb, cx - x, cy - y, 2 * x, color);
 }
 
-void raster_rgba_ellipse(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color, EllipseHandler handler)
+void raster_rgba_ellipse(pb_rgba *pb, const DPCOORD cx, const DPCOORD cy, const size_t xradius, size_t yradius, const DPPIXELVAL color, EllipseHandler handler)
 {
 	int x, y;
 	int xchange, ychange;
@@ -535,12 +535,12 @@ void raster_rgba_ellipse(pb_rgba *pb, const uint32_t cx, const uint32_t cy, cons
 	}
 }
 
-void raster_rgba_ellipse_stroke(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color)
+void raster_rgba_ellipse_stroke(pb_rgba *pb, const DPCOORD cx, const DPCOORD cy, const size_t xradius, size_t yradius, const DPPIXELVAL color)
 {
 	raster_rgba_ellipse(pb, cx, cy, xradius, yradius, color, Plot4EllipsePoints);
 }
 
-void raster_rgba_ellipse_fill(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color)
+void raster_rgba_ellipse_fill(pb_rgba *pb, const DPCOORD cx, const DPCOORD cy, const size_t xradius, size_t yradius, const DPPIXELVAL color)
 {
 	raster_rgba_ellipse(pb, cx, cy, xradius, yradius, color, fill2EllipseLines);
 }
