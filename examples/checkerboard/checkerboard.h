@@ -27,11 +27,11 @@ public:
 			for (size_t r = 0; r < rows; r++) {
 				fill(color1);
 				rect(c*tilewidth, r*tileheight, tilewidth / 2, tileheight / 2);
-				rect((c*tilewidth) + tilewidth / 2, (r*tileheight) + tileheight / 2, tilewidth / 2, tileheight / 2);
+				//rect((c*tilewidth) + tilewidth / 2, (r*tileheight) + tileheight / 2, tilewidth / 2, tileheight / 2);
 
 				fill(color2);
 				rect((c*tilewidth) + tilewidth / 2, r*tileheight, tilewidth / 2, tileheight / 2);
-				rect(c*tilewidth, (r*tileheight) + tileheight / 2, tilewidth / 2, tileheight / 2);
+				//rect(c*tilewidth, (r*tileheight) + tileheight / 2, tilewidth / 2, tileheight / 2);
 			}
 		}
 	}

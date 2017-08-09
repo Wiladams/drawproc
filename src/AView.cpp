@@ -1,15 +1,6 @@
 #include "AView.h"
 
-bool containsPoint(pb_rect &aRect, const int x, const int y)
-{
-	if ((x < aRect.x) || (y < aRect.y))
-		return false;
 
-	if ((x >= aRect.x + aRect.width) || (y >= aRect.y + aRect.height))
-		return false;
-
-	return true;
-}
 
 void AView::AddChild(AView *child)
 {

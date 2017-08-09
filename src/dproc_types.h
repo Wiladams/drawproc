@@ -121,7 +121,7 @@ typedef struct {
 } DPRECT;
 
 /* static clip rectangle: drawing allowed if point within rectangle*/
-typedef struct {
+typedef struct  {
 	DPCOORD 	x;		/* x coordinate of top left corner */
 	DPCOORD 	y;		/* y coordinate of top left corner */
 	DPCOORD 	width;		/* width of rectangle */
@@ -687,30 +687,7 @@ typedef struct {
 } Pt3;
 
 
-// pixel buffer rectangle
-class pb_rect
-{
-public:
-	int x, y;
-	int width, height;
 
-	pb_rect() :
-		x(0), y(0),
-		width(0), height(0)
-	{}
-
-	pb_rect(const int x, const int y,
-		const int gWidth, const int gHeight) :
-		x(x), y(y),
-		width(gWidth), height(gHeight)
-	{}
-
-	bool containsPoint(const float x, const float y);
-	bool containsRect(const pb_rect &other);
-	pb_rect intersection(const pb_rect &b);
-	bool intersects(const pb_rect &b);
-	void clear();
-};
 
 /*
 A pixel buffer is an array of pixels.
@@ -728,7 +705,7 @@ typedef struct _pb_rgba {
 	unsigned int	pixelpitch;		// how many pixels per row, if alias
 	int				bitStride;		// how many bits per row
 	int				owndata;		// does this struct own the data pointer
-	pb_rect			frame;			// if alias, what portion of parent
+	DPCLIPRECT		frame;			// if alias, what portion of parent
 } pb_rgba;
 
 struct PImage
@@ -797,3 +774,6 @@ typedef struct _mat4 {
 	real m41, m42, m43, m44;
 } mat4;
 
+
+DPROC_API extern bool containsPoint(DPCLIPRECT &aRect, const int x, const int y);
+DPROC_API extern DPRECT intersection(const DPCLIPRECT &a, const DPCLIPRECT &b);

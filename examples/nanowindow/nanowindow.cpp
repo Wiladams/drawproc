@@ -14,9 +14,9 @@ void draw()
 	scrdev.FillRect(&scrdev, 10, 20, 200, 200, RGB2PIXEL8888(125, 255, 255));
 
 
-	gen_fonts[0].fontprocs->DrawText((PDPFONT)gen_fonts[0].cfont,
-			&scrdev, 20, 20,
-			"Hello, World!", 1, 0);
+	//gen_fonts[0].fontprocs->DrawText((PDPFONT)gen_fonts[0].cfont,
+	//		&scrdev, 20, 20,
+	//		L"Hello, World!", 1, 0);
 }
 
 

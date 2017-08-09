@@ -46,7 +46,7 @@ static const int LN_TOP = 8;    // 1000
 // Compute the bit code for a point (x, y) using the clip rectangle
 // bounded diagonally by (xmin, ymin), and (xmax, ymax)
 
-OutCode ComputeOutCode(const pb_rect &rct, const int x, const int y)
+OutCode ComputeOutCode(const DPCLIPRECT &rct, const int x, const int y)
 {
 	OutCode code;
 	double xmin = rct.x;
@@ -71,7 +71,7 @@ OutCode ComputeOutCode(const pb_rect &rct, const int x, const int y)
 // Cohen–Sutherland clipping algorithm clips a line from
 // P0 = (x0, y0) to P1 = (x1, y1) against a rectangle with 
 // diagonal from (xmin, ymin) to (xmax, ymax).
-bool clipLine(const pb_rect &bounds, int &x0, int &y0, int &x1, int &y1)
+bool clipLine(const DPCLIPRECT &bounds, int &x0, int &y0, int &x1, int &y1)
 {
 	// compute outcodes for P0, P1, and whatever point lies outside the clip rectangle
 	OutCode outcode0 = ComputeOutCode(bounds, x0, y0);
@@ -238,7 +238,7 @@ int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int 
 
 
 
-int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, uint32_t value)
+int raster_rgba_hline_blend(pb_rgba *pb, DPCOORD x, DPCOORD y, unsigned int length, uint32_t value)
 {
 	size_t terminus = x + length;
 	terminus = terminus - x;
@@ -437,21 +437,21 @@ typedef void(* EllipseHandler)(pb_rgba *pb, const uint32_t cx, const uint32_t cy
 
 inline void Plot4EllipsePoints(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const unsigned int x, const unsigned int y, const uint32_t color)
 {
-	unsigned int lowx = cx - x;
-	unsigned int maxx = cx + x;
-	unsigned int lowy = cy - y;
-	unsigned int maxy = cy + y;
+	DPCOORD lowx = cx - x;
+	DPCOORD maxx = cx + x;
+	DPCOORD lowy = cy - y;
+	DPCOORD maxy = cy + y;
 
-	if (pb->frame.containsPoint(maxx, maxy))
+	if (containsPoint(pb->frame,maxx, maxy))
 		pb_rgba_cover_pixel(pb, cx + x, cy + y, color);
 	
-	if (pb->frame.containsPoint(lowx, maxy))
+	if (containsPoint(pb->frame, lowx, maxy))
 		pb_rgba_cover_pixel(pb, cx - x, cy + y, color);
 	
-	if (pb->frame.containsPoint(lowx, lowy))
+	if (containsPoint(pb->frame, lowx, lowy))
 		pb_rgba_cover_pixel(pb, cx - x, cy - y, color);
 	
-	if (pb->frame.containsPoint(maxx, lowy))
+	if (containsPoint(pb->frame, maxx, lowy))
 		pb_rgba_cover_pixel(pb, cx + x, cy - y, color);
 }
 

@@ -16,7 +16,7 @@ Key coordinates
 
 */
 struct keyloc {
-	pb_rect loc;
+	DPCLIPRECT loc;
 	int vkey;
 
 	bool contains(const coord x, const coord y)
@@ -51,7 +51,7 @@ static bool gShowKeyOutlines = false;
 
 PImage *kbImage;
 pb_rgba fb;
-pb_rect keyRect = { 0, 0, 34, 34 };
+DPCLIPRECT keyRect = { 0, 0, 34, 34 };
 
 
 struct keyloc locations[] = {

@@ -7,7 +7,7 @@
 pb_rgba *gpb;
 size_t width = 0;
 size_t height = 0;
- pb_rect pixelFrame;
+DPCLIPRECT pixelFrame;
  unsigned int frameCount = 0;
 
  RECTMODE grectMode = CORNER;

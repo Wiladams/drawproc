@@ -12,7 +12,7 @@ class SortRoutineGraphic : public AView
 	bool fShowLines = false;
 	bool fAnimate = false;
 	sorter *fSorter;
-	pb_rect fOrigin;
+	DPCLIPRECT fOrigin;
 
 public:
 	SortRoutineGraphic(sorter * routine, const int x, const int y, const int gWidth, const int gHeight)

@@ -10,7 +10,7 @@ DPROC_API extern	 size_t height;
 
 
 DPROC_API extern	 pb_rgba *gpb;
-DPROC_API extern	 pb_rect pixelFrame;
+DPROC_API extern	 DPCLIPRECT pixelFrame;
 
 
 DPROC_API extern	 COLOR bgColor;

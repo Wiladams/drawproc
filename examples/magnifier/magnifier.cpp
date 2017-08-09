@@ -15,7 +15,7 @@ int overlayHeight = magWidth * magFactor;
 
 PImage *srcImage;
 pb_rgba overlayBuffer;
-pb_rect magRect = { 0,0,magWidth,magHeight };
+DPCLIPRECT magRect = { 0,0,magWidth,magHeight };
 BlockRenderer blocky(magWidth, magHeight, magFactor, magFactor);
 
 void mouseMoved()

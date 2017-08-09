@@ -86,6 +86,7 @@
     <ClCompile Include="src\devopen.cpp" />
     <ClCompile Include="src\devrgn.cpp" />
     <ClCompile Include="src\devstipple.cpp" />
+    <ClCompile Include="src\dproc_types.cpp" />
     <ClCompile Include="src\dp_bufferio.cpp" />
     <ClCompile Include="src\dp_error.cpp" />
     <ClCompile Include="src\dp_win32.cpp" />

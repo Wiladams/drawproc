@@ -6,7 +6,7 @@
 class DPROC_EXPORT AView {
 protected:
 	// Attributes of the view
-	pb_rect fFrame;
+	DPCLIPRECT fFrame;
 	COLOR fBackgroundColor;
 
 	// current state of view
@@ -19,8 +19,12 @@ protected:
 
 public:
 	AView(const int x, const int y, const int pWidth, const int pHeight) 
-		: fFrame(x, y, pWidth, pHeight)
-	{}
+	{
+		fFrame.x = x;
+		fFrame.y = y;
+		fFrame.width = pWidth;
+		fFrame.height = pHeight;
+	}
 
 	// Hierarchy management
 	void AddChild(AView *child);

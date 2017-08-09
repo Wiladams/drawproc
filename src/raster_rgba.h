@@ -26,7 +26,7 @@ limitations under the License.
 extern "C" {
 #endif
 
-DPROC_API bool clipLine(const pb_rect &bounds, int &x0, int &y0, int &x1, int &y1);
+DPROC_API bool clipLine(const DPCLIPRECT &bounds, int &x0, int &y0, int &x1, int &y1);
 
 DPROC_API void raster_rgba_span(pb_rgba *pb, const uint32_t x, const uint32_t y, const size_t len, const uint32_t *data);
 
@@ -39,7 +39,7 @@ DPROC_API void raster_rgba_hline_fade(pb_rgba *pb, int x1, int color1, int x2, i
 DPROC_API void raster_rgba_vline_fade(pb_rgba *pb, int y1, int color1, int y2, int color2, int x);
 
 // SRCOVER
-DPROC_API int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, const uint32_t color);
+DPROC_API int raster_rgba_hline_blend(pb_rgba *pb, const DPCOORD x, const DPCOORD y, const size_t length, const uint32_t color);
 DPROC_API void raster_rgba_line_cover(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, uint32_t color);
 
 
@@ -51,7 +51,7 @@ DPROC_API void raster_rgba_triangle_fill(pb_rgba *pb,
 	int color);
 
 
-DPROC_API void raster_rgba_convex_polygon_fill(pb_rgba *pb, coord *verts, const int nverts, const pb_rect &clipRect, int color);
+DPROC_API void raster_rgba_convex_polygon_fill(pb_rgba *pb, coord *verts, const int nverts, const DPCLIPRECT &clipRect, int color);
 
 DPROC_API void raster_rgba_ellipse_fill(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color);
 DPROC_API void raster_rgba_ellipse_stroke(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color);
@@ -80,10 +80,11 @@ inline void raster_rgba_rect_fill(pb_rgba *pb, const int x, const int y, const i
 	}
 }
 
-inline void raster_rgba_rect_fill_blend(pb_rgba *pb, const int x, const int y, const int width, const int height, const uint32_t value)
+inline void raster_rgba_rect_fill_blend(pb_rgba *pb, const DPCOORD left, const DPCOORD top, const DPCOORD right, const DPCOORD bottom, const uint32_t value)
 {
-	for (int idx = 0; idx < height; idx++){
-		raster_rgba_hline_blend(pb, x, y + idx, width, value);
+	size_t width = right - left+1;
+	for (int y = top; y <= bottom; y++){
+		raster_rgba_hline_blend(pb, left, y, width, value);
 	}
 }
 

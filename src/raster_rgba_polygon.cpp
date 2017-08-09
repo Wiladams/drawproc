@@ -62,7 +62,7 @@ struct APolyDda {
 };
 
 
-void raster_rgba_convex_polygon_fill(pb_rgba *pb, coord *verts, const int nverts, const pb_rect &clipRect, int color)
+void raster_rgba_convex_polygon_fill(pb_rgba *pb, coord *verts, const int nverts, const DPCLIPRECT &clipRect, int color)
 {
 	// find topmost vertex of the polygon
 	int vmin = findTopmostVertex(verts, nverts);

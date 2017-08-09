@@ -767,7 +767,7 @@ void lineloop(const size_t nPts, const int *pts)
 
 void point(const int x, const int y)
 {
-	if (!pixelFrame.containsPoint(x, y))
+	if (!containsPoint(pixelFrame,x, y))
 		return;
 
 	if (gstrokeWeight <= 1) {
@@ -821,23 +821,23 @@ void rect(const int a, const int b, const int c, const int d)
 	}
 
 	// find the intersection of the rectangle and the pixelframe
-	pb_rect crect = pixelFrame.intersection({ x1, y1, rwidth, rheight });
+	DPRECT crect = intersection(pixelFrame, { x1, y1, rwidth, rheight });
 
-	if ((crect.width == 0) || (crect.height == 0))
-		return;
+	//if ((crect.width == 0) || (crect.height == 0))
+	//	return;
 
 	if (fillColor.value != 0) {
-		raster_rgba_rect_fill_blend(gpb, crect.x, crect.y, crect.width, crect.height, fillColor.value);
+		raster_rgba_rect_fill_blend(gpb, crect.left, crect.top, crect.right, crect.bottom, fillColor.value);
 	}
 
 	// if the strokeColor != 0 then 
 	// frame the rectangle in the strokeColor
 	if (strokeColor.value != 0) {
 		int pts[] = {
-			crect.x, crect.y,
-			crect.x, crect.y + crect.height - 1,
-			crect.x + crect.width - 1, crect.y + crect.height - 1,
-			crect.x + crect.width - 1, crect.y
+			crect.left, crect.top,
+			crect.left, crect.bottom,
+			crect.right, crect.bottom,
+			crect.right, crect.top
 		};
 
 		lineloop(4, pts);
