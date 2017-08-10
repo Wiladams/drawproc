@@ -127,6 +127,10 @@
 #define ARGB2PIXELABGR(a,r,g,b)	\
 	(((a) << 24) | ((b) << 16) | ((g) << 8) | (r))
 
+/* create 32 bit 8/8/8/8 format pixel (0xAABBGGRR) from ARGB quad*/
+#define RGBA2PIXELABGR(r,g,b,a)	\
+	(((a) << 24) | ((b) << 16) | ((g) << 8) | (r))
+
 /* create 24 bit 8/8/8 format pixel (0x00RRGGBB) from RGB triplet*/
 #define RGB2PIXEL888(r,g,b)	\
 	(((r) << 16) | ((g) << 8) | (b))

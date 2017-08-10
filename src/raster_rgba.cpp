@@ -226,7 +226,7 @@ int raster_rgba_hline(pb_rgba *pb, DPCOORD x, DPCOORD y, size_t length, DPPIXELV
 	size_t terminus = x + length;
 	terminus = terminus - x;
 
-	unsigned int * data = &((unsigned int *)pb->data)[y*pb->pixelpitch+x];
+	DPPIXELVAL * data = &((unsigned int *)pb->data)[y*pb->pixelpitch+x];
 	for (size_t idx = 0; idx < terminus; idx++)
 	{
 		*data = value;
@@ -243,7 +243,7 @@ int raster_rgba_hline_blend(pb_rgba *pb, DPCOORD x, DPCOORD y, size_t length, DP
 	size_t terminus = x + length;
 	terminus = terminus - x;
 
-	unsigned int * data = &((unsigned int *)pb->data)[y*pb->pixelpitch + x];
+	DPPIXELVAL * data = &((unsigned int *)pb->data)[y*pb->pixelpitch + x];
 	for (size_t idx = 0; idx < terminus; idx++)
 	{
 		int bg = *data;
@@ -258,7 +258,7 @@ int raster_rgba_hline_blend(pb_rgba *pb, DPCOORD x, DPCOORD y, size_t length, DP
 
 int raster_rgba_vline(pb_rgba *pb, DPCOORD x, DPCOORD y, size_t length, DPPIXELVAL value)
 {
-	unsigned int * data = &((unsigned int *)pb->data)[y*(int)pb->frame.width + x];
+	DPPIXELVAL * data = &((unsigned int *)pb->data)[y*(int)pb->frame.width + x];
 	size_t count = 1;
 	while (count <= length) {
 		*data = value;

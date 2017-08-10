@@ -704,8 +704,8 @@ void ellipse(const float a, const float b, const float c, const float d)
 		return;
 	}
 
-	uint32_t cx = x1+ rwidth/2;
-	uint32_t cy = y1 + rheight/2;
+	DPCOORD cx = x1+ rwidth/2;
+	DPCOORD cy = y1 + rheight/2;
 
 	raster_rgba_ellipse_fill(gpb, cx, cy, xradius, yradius, fillColor.value);
 	raster_rgba_ellipse_stroke(gpb, cx, cy, xradius, yradius, strokeColor.value);
@@ -771,7 +771,8 @@ void point(const int x, const int y)
 		return;
 
 	if (gstrokeWeight <= 1) {
-		pb_rgba_cover_pixel(gpb, x, y, strokeColor.value);
+		//pb_rgba_cover_pixel(gpb, x, y, strokeColor.value);
+		scrdev.DrawPixel(&scrdev, x, y, strokeColor.value);
 	}
 	else {
 		// draw an ellipse centered at the specified point

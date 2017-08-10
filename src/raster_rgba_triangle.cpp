@@ -123,10 +123,10 @@ void sortTriangle(point2d *sorted, const int x1, const int y1, const int x2, con
 }
 
 void raster_rgba_triangle_fill(pb_rgba *pb, 
-	const unsigned int x1, const unsigned int  y1, 
-	const unsigned int  x2, const unsigned int  y2, 
-	const unsigned int  x3, const unsigned int  y3, 
-	int color)
+	const DPCOORD x1, const DPCOORD  y1,
+	const DPCOORD  x2, const DPCOORD  y2,
+	const DPCOORD  x3, const DPCOORD  y3,
+	DPPIXELVAL color)
 {
 	int a, b, y, last;
 

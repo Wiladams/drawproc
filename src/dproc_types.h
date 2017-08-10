@@ -4,6 +4,11 @@
 
 #include <stdint.h>
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4201)  // nonstandard extension used : nameless struct/union
+#endif
+
 
 typedef float	float32;
 typedef double	float64;
@@ -370,8 +375,8 @@ typedef struct {
 	int	 	planes;		/* hw # planes*/
 	int	 	bpp;		/* hw bpp*/
 	int		data_format;/* DPIF_ image data format*/
-	int32_t	ncolors;	/* hw number of colors supported*/
-	int 	fonts;		/* number of built-in fonts */
+	size_t	ncolors;	/* hw number of colors supported*/
+	size_t 	fonts;		/* number of built-in fonts */
 	int 	buttons;	/* buttons which are implemented */
 	MWKEYMOD modifiers;	/* modifiers which are implemented */
 	int	 	pixtype;	/* format of pixel value*/
@@ -400,14 +405,14 @@ typedef struct {
 	int	pixtype;		/* DPPF_ pixel type*/
 	int	bpp;			/* bits per pixel*/
 	int	bytespp;		/* bytes per pixel*/
-	unsigned int pitch;	/* bytes per scan line for window (=fb pitch)*/
+	size_t pitch;	/* bytes per scan line for window (=fb pitch)*/
 	DPCOORD	x, y;		/* absolute window coordinates*/
 	int	portrait_mode;	/* current portrait mode*/
 	DPCOORD	xres;		/* real framebuffer resolution*/
 	DPCOORD	yres;
 	DPCOORD	xvirtres;	/* virtual framebuffer resolution*/
 	DPCOORD	yvirtres;
-} MWWINDOWFBINFO;
+} DPWINDOWFBINFO;
 
 
 
@@ -658,16 +663,6 @@ struct COLOR
 	};
 };
 
-// pixel buffer color
-typedef struct {
-	union {
-		struct {
-			uint8_t r, g, b, a;
-		};
-		uint8_t v_[4];
-		uint32_t value;
-	};
-} pix_rgba;
 
 
 struct Vector2d
@@ -773,6 +768,10 @@ typedef struct _mat4 {
 	real m31, m32, m33, m34;
 	real m41, m42, m43, m44;
 } mat4;
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 
 DPROC_API extern bool containsPoint(DPCLIPRECT &aRect, const int x, const int y);

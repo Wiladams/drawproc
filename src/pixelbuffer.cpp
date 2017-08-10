@@ -82,7 +82,7 @@ a single card.  It would also work in cases where you have rendered
 fonts into a single image, and you need to get sub-images for individual
 glyphs.
 */
-int pb_rgba_get_frame(pb_rgba *pb, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, pb_rgba *pf)
+int pb_rgba_get_frame(pb_rgba *pb, const DPCOORD x, const DPCOORD y, const size_t width, const size_t height, pb_rgba *pf)
 {
 	// assume what's being asked for is already constrained
 	pf->data = pb->data+((y*pb->pixelpitch+x)*sizeof(int));
@@ -98,7 +98,7 @@ int pb_rgba_get_frame(pb_rgba *pb, const unsigned int x, const unsigned int y, c
 	return 1;
 }
 
-void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y, const uint32_t value)
+void pb_rgba_cover_pixel(pb_rgba *pb, const DPCOORD x, const DPCOORD y, const DPPIXELVAL value)
 {
 
 	// Quick reject if the foreground pixel has both 0 opacity
@@ -119,7 +119,7 @@ void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y
 		// All other cases where doing a cover of something
 		// other than full opacity
 		uint8_t alpha = GET_A(value);
-		int32_t dstPixel = pb_rgba_get_pixel(pb, x, y);
+		DPPIXELVAL dstPixel = pb_rgba_get_pixel(pb, x, y);
 
 
 		int dstColor = RGBA(
@@ -129,13 +129,7 @@ void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y
 			lerp255(GET_A(dstPixel), GET_A(value), alpha)
 		);
 		pb_rgba_set_pixel(pb, x, y, dstColor);
-		/*
-		pix_rgba * B = (pix_rgba *)&pb->data[(y*(pb)->pixelpitch) + x];
-		B->r = lerp255(B->r, GET_R(value), alpha);
-		B->g = lerp255(B->g, GET_R(value), alpha);
-		B->b = lerp255(B->b, GET_R(value), alpha);
-		B->a = lerp255(B->a, GET_R(value), alpha);
-		*/
+
 	}
 }
 

@@ -16,14 +16,13 @@ limitations under the License.
 
 #pragma once
 
-#ifndef graphicc_h
-#define graphicc_h
+
 
 #include "dproc_config.h"
 #include "dproc_constants.h"
 #include "dptypes.h"
 #include "dpdevice.h"
-
+#include "dp_pixmanip.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -82,16 +81,13 @@ inline double CLAMP(double a, double rlo, double rhi){ return a < rlo ? rlo : (a
 inline int sgn(real val) { return ((0 < val) - (val < 0)); }
 
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4201)  // nonstandard extension used : nameless struct/union
-#endif
+
 
 
 #ifdef BGR_DOMINANT
 inline uint32_t RGBA(const int r, const int g, const int b, const int a) 
 {
-	return ((uint32_t)(a << 24 | r << 16 | g << 8 | b));
+	return RGBA2PIXELABGR(r, g, b, a);
 }
 
 inline uint8_t GET_B(const uint32_t value) {return ((uint32_t)value & 0xff);}
@@ -110,20 +106,6 @@ inline uint8_t GET_A(const uint32_t value) {return (((uint32_t)value & 0xff00000
 
 
 
-
-
-
-
-
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
-#endif
-
-
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -131,20 +113,20 @@ extern "C" {
 DPROC_API int pb_rgba_init(pb_rgba *pb, const unsigned int width, const unsigned int height);
 DPROC_API int pb_rgba_free(pb_rgba *pb);
 
-DPROC_API int pb_rgba_get_frame(pb_rgba *src, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, pb_rgba *pf);
+DPROC_API int pb_rgba_get_frame(pb_rgba *src, const DPCOORD x, const DPCOORD y, const size_t width, const size_t height, pb_rgba *pf);
 
-DPROC_API void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y, const uint32_t value);
+DPROC_API void pb_rgba_cover_pixel(pb_rgba *pb, const DPCOORD x, const DPCOORD y, const DPPIXELVAL value);
 
 #ifdef __cplusplus
 }
 #endif
 
-inline uint32_t pb_rgba_get_pixel(pb_rgba *pb, const int x, const int y)
+inline DPPIXELVAL pb_rgba_get_pixel(pb_rgba *pb, const DPCOORD x, const DPCOORD y)
 {
 	return ((uint32_t *)(pb)->data)[(y*(pb)->pixelpitch) + x];
 }
 
-inline void pb_rgba_set_pixel(pb_rgba *pb, const int x, const int y, const int32_t value) 
+inline void pb_rgba_set_pixel(pb_rgba *pb, const DPCOORD x, const DPCOORD y, const DPPIXELVAL value)
 {
 	((uint32_t *)(pb)->data)[(y*(pb)->pixelpitch) + x] = value;
 }

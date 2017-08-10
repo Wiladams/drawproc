@@ -53,8 +53,9 @@ DPROC_API void raster_rgba_triangle_fill(pb_rgba *pb,
 
 DPROC_API void raster_rgba_convex_polygon_fill(pb_rgba *pb, coord *verts, const int nverts, const DPCLIPRECT &clipRect, DPPIXELVAL color);
 
-DPROC_API void raster_rgba_ellipse_fill(pb_rgba *pb, const DPCOORD cx, const uint32_t cy, const size_t xradius, size_t yradius, const DPPIXELVAL color);
-DPROC_API void raster_rgba_ellipse_stroke(pb_rgba *pb, const DPCOORD cx, const uint32_t cy, const size_t xradius, size_t yradius, const DPPIXELVAL color);
+DPROC_API void raster_rgba_ellipse_fill(pb_rgba *pb, const DPCOORD cx, const DPCOORD cy, const size_t xradius, size_t yradius, const DPPIXELVAL color);
+DPROC_API void raster_rgba_ellipse_stroke(pb_rgba *pb, const DPCOORD cx, const DPCOORD cy, const size_t xradius, size_t yradius, const DPPIXELVAL color);
+
 
 DPROC_API void raster_rgba_blit(pb_rgba *pb, const DPCOORD x, const DPCOORD y, const pb_rgba *src);
 
@@ -73,9 +74,11 @@ DPROC_API void raster_rgba_blit(pb_rgba *pb, const DPCOORD x, const DPCOORD y, c
 */
 DPROC_API void raster_rgba_blend_alphamap(pb_rgba *pb, const DPCOORD x, const DPCOORD y, const unsigned char *bitmap, const size_t w, const size_t h, const DPPIXELVAL color);
 
+
+
 inline void raster_rgba_rect_fill(pb_rgba *pb, const DPCOORD x, const DPCOORD y, const size_t width, const size_t height, const DPPIXELVAL value)
 {
-	for (int idx = 0; idx < height; idx++){
+	for (size_t idx = 0; idx < height; idx++){
 		raster_rgba_hline(pb, x, y + idx, width, value);
 	}
 }
