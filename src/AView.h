@@ -7,7 +7,7 @@ class DPROC_EXPORT AView {
 protected:
 	// Attributes of the view
 	DPCLIPRECT fFrame;
-	COLOR fBackgroundColor;
+	DPPIXELVAL fBackgroundColor;
 
 	// current state of view
 	bool fActive;

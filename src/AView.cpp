@@ -27,7 +27,7 @@ int AView::FindChildrenAtPoint(const int x, const int y, std::vector<AView *> &c
 
 void AView::drawBackground()
 {
-	background(pBlack);
+	background((DPPIXELVAL)pBlack);
 }
 
 void AView::drawChildren()

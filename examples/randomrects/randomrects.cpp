@@ -46,12 +46,12 @@ void draw()
 
 		if (!outlineOnly)
 		{
-			fill(r, g, b, 255);
+			fillValues(r, g, b, 255);
 			stroke(pBlack);
 		}
 		else
 		{
-			stroke(r, g, b, 255);
+			strokeValues(r, g, b, 255);
 		}
 
 		rect(x1, y1, lwidth, lheight);

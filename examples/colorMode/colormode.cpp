@@ -30,7 +30,7 @@ void drawRGB()
 	colorMode(COLOR_MODE_RGB, (float)width);
 	for (size_t i = 0; i < width; i++) {
 		for (size_t j = 0; j < height; j++) {
-			stroke((float)i, (float)j, 0);
+			strokeValues((float)i, (float)j, 0);
 			point(i, j);
 		}
 	}
@@ -42,7 +42,7 @@ void drawHSB()
 	colorMode(COLOR_MODE_HSB, (float)width);
 	for (size_t i = 0; i < width; i++) {
 		for (size_t j = 0; j < height; j++) {
-			stroke((float)i, (float)j, (float)width);
+			strokeValues((float)i, (float)j, (float)width);
 			point(i, j);
 		}
 	}
@@ -52,12 +52,12 @@ void drawTeal()
 {
 	colorMode(COLOR_MODE_HSB, 360, 100, 100);
 
-	background(180, 50, 50);
+	backgroundValues(180, 50, 50);
 }
 
 void draw()
 {
-	background(0);
+	backgroundValues(0);
 
 	switch (drawMode) {
 		case 1:

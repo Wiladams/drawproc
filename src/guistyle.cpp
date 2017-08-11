@@ -4,7 +4,7 @@
 
 
 
-void GUIStyle::SetBaseColor(const COLOR acolor)	 
+void GUIStyle::SetBaseColor(const DPPIXELVAL acolor)
 {
 	this->baseColor = acolor;
 	this->highlightColor = brighter(this->baseColor);

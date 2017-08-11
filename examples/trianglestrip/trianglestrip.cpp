@@ -17,7 +17,7 @@ void mousePressed()
 
 void setup() {
 	size(640, 360);
-	background(204);
+	backgroundValues(204);
 	x = width / 2;
 	y = height / 2;
 }
@@ -58,7 +58,7 @@ void drawStrip()
 }
 
 void draw() {
-	background(204);
+	backgroundValues(204);
 
 	if (currentMode == 1) {
 		drawStrip();

@@ -55,7 +55,7 @@ struct Module {
 	// Custom method for drawing the object
 	void display() 
 	{
-		fill(255);
+		fillValues(255);
 		ellipse(xOffset + x, yOffset + y, 6, 6);
 	}
 };
@@ -120,21 +120,21 @@ void drawArray()
 	int y1 = 0;
 	int y2 = height / 3;
 	for (int i = 0; i < width; i++) {
-		stroke(coswave[i] * 255);
+		strokeValues(coswave[i] * 255);
 		line(i, y1, i, y2);
 	}
 
 	y1 = y2;
 	y2 = y1 + y1;
 	for (int i = 0; i < width; i++) {
-		stroke(coswave[i] * 255 / 4);
+		strokeValues (coswave[i] * 255 / 4);
 		line(i, y1, i, y2);
 	}
 
 	y1 = y2;
 	y2 = height;
 	for (int i = 0; i < width; i++) {
-		stroke(255 - coswave[i] * 255);
+		strokeValues(255 - coswave[i] * 255);
 		line(i, y1, i, y2);
 	}
 
@@ -147,7 +147,7 @@ void drawArray2D()
 
 	for (int y = 0; y < height; y += spacer) {
 		for (int x = 0; x < width; x += spacer) {
-			stroke(distances[x][y]);
+			strokeValues(distances[x][y]);
 			point(x + spacer / 2, y + spacer / 2);
 		}
 	}
@@ -156,7 +156,7 @@ void drawArray2D()
 // Array Objects
 void drawModules() 
 {
-	background(0);
+	backgroundValues(0);
 	for (int idx = 0; idx < count; idx++) 
 	{
 		mods[idx].update();

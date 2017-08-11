@@ -24,7 +24,7 @@ void draw()
 		int g = random(255);
 		int b = random(255);
 
-		stroke(r, g, b, 255);
+		strokeValues(r, g, b, 255);
 		strokeWeight(1.0f);
 		line(x1, y1, x2, y2);
 

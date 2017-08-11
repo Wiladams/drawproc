@@ -648,7 +648,7 @@ typedef struct _mousedevice {
 
 
 
-
+/*
 struct COLOR
 {
 	COLOR() :value(0) {}
@@ -662,7 +662,7 @@ struct COLOR
 		uint32_t value;
 	};
 };
-
+*/
 
 
 struct Vector2d

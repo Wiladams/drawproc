@@ -6,11 +6,11 @@ class checkerboard : public AView
 {
 	size_t cols;
 	size_t rows;
-	COLOR color1;
-	COLOR color2;
+	DPPIXELVAL color1;
+	DPPIXELVAL color2;
 
 public:
-	checkerboard(const int x, const int y, const size_t width, const size_t height, const size_t cols, const size_t rows, const COLOR c1, const COLOR c2)
+	checkerboard(const int x, const int y, const size_t width, const size_t height, const size_t cols, const size_t rows, const DPPIXELVAL c1, const DPPIXELVAL c2)
 		: AView(x,y,width,height),
 		cols(cols), rows(rows),
 		color1(c1), color2(c2)

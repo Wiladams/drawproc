@@ -48,12 +48,12 @@ void draw()
 
 		if (!outlineOnly)
 		{
-			fill(r, g, b, 255);
+			fillValues(r, g, b, 255);
 			noStroke();
 		}
 		else {
 			noFill();
-			stroke(r, g, b, 255);
+			strokeValues(r, g, b, 255);
 		}
 
 		triangle(x1, y1, x2, y2, x3, y3);

@@ -17,7 +17,7 @@ float x, x2;
 
 void setup(){
 	size(600, 200);
-	background(127);
+	backgroundValues(127);
 	
 	// generate processing font from system font
 	//myFont = createFont("verdana", 12);
@@ -26,20 +26,20 @@ void setup(){
 }
 
 void draw(){
-	background(127);
+	backgroundValues(127);
 	noStroke();
-	fill(255);
+	fillValues(255);
 	ellipse(width / 8, 75, radius * 2, radius * 2);
 	// rotates rectangle around circle
 	px = width / 8 + cos(radians(angle))*(radius);
 	py = 75 + sin(radians(angle))*(radius);
 	rectMode(CENTER);
-	fill(0);
+	fillValues(0);
 	//draw rectangle
 	rect(px, py, 5, 5);
-	stroke(100);
+	strokeValues(100);
 	line(width / 8, 75, px, py);
-	stroke(200);
+	strokeValues(200);
 
 	// keep reinitializing to 0, to avoid
 	// flashing during redrawing
@@ -69,7 +69,7 @@ void draw(){
 
 	// draw dynamic line connecting circular
 	// path with wave
-	stroke(50);
+	strokeValues(50);
 	line(px, py, width / 8 + radius + x, py);
 
 	// output some calculations

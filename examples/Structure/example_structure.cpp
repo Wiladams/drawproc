@@ -16,13 +16,13 @@ void drawTarget(float xloc, float yloc, int size, int num) {
 	float grayvalues = 255 / num;
 	float steps = size / num;
 	for (int i = 0; i < num; i++) {
-		fill(i*grayvalues);
+		fillValues(i*grayvalues);
 		ellipse(xloc, yloc, size - i*steps, size - i*steps);
 	}
 }
 
 void drawTargets() {
-	background(51);
+	backgroundValues(51);
 	noStroke();
 	drawTarget(width*0.25, height*0.4, 200, 4);
 	drawTarget(width*0.5, height*0.5, 300, 10);
@@ -32,7 +32,7 @@ void drawTargets() {
 // Recursion
 void drawCircle(int x, int radius, int level) {
 	float tt = 126 * level / 4.0;
-	fill(tt);
+	fillValues(tt);
 	ellipse(x, height / 2, radius * 2, radius * 2);
 	if (level > 1) {
 		level = level - 1;
@@ -50,12 +50,12 @@ void drawRecursion() {
 
 // Width and Height
 void drawWidthHeight() {
-	background(127);
+	backgroundValues(127);
 	noStroke();
 	for (int i = 0; i < height; i += 20) {
-		fill(129, 206, 15);
+		fillValues(129, 206, 15);
 		rect(0, i, width, 10);
-		fill(255);
+		fillValues(255);
 		rect(i, 0, 10, height);
 	}
 }

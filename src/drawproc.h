@@ -78,21 +78,21 @@ DPROC_API void size(const size_t width, const size_t height);
 
 // Setting colors
 DPROC_API void colorMode(const COLORMODE mode, const float max1 = -1, const float max2 = -1, const float max3 = -1, const float maxA = -1);
-DPROC_API COLOR color(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
+DPROC_API DPPIXELVAL color(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
 
-DPROC_API void background(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
-DPROC_API void background(const COLOR value);
+DPROC_API void backgroundValues(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
+DPROC_API void background(const DPPIXELVAL value);
 DPROC_API void backgroundImage(pb_rgba *bg);
 //void clear();
 
 //void colorMode();
 DPROC_API void noFill();
-DPROC_API void fill(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
-DPROC_API void fill(const COLOR value);
+DPROC_API void fillValues(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
+DPROC_API void fill(const DPPIXELVAL value);
 
 DPROC_API void noStroke();
-DPROC_API void stroke(const COLOR value);
-DPROC_API void stroke(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
+DPROC_API void stroke(const DPPIXELVAL value);
+DPROC_API void strokeValues(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
 
 // attributes
 DPROC_API void ellipseMode(const RECTMODE mode);
@@ -163,18 +163,18 @@ DPROC_API void shearZ();
 DPROC_API void translate(const coord x, const coord y, const coord z = 0);
 
 
-#define pRed		COLOR(255, 0, 0, 255)
-#define pGreen		COLOR(0, 255, 0, 255)
-#define pBlue		COLOR(0, 0, 255, 255)
+#define pRed		RGBA(255, 0, 0, 255)
+#define pGreen		RGBA(0, 255, 0, 255)
+#define pBlue		RGBA(0, 0, 255, 255)
 
-#define pBlack		COLOR(0, 0, 0, 255)
-#define pWhite		COLOR(255, 255, 255, 255)
-#define pYellow		COLOR(255, 255, 0, 255)
-#define pTurquoise	COLOR(0, 255, 255, 255)
-#define pDarkGray	COLOR(93, 93, 93, 255)
-#define pGray		COLOR(127,127,127,255)
-#define pLightGray	COLOR(163, 163, 163, 255)
+#define pBlack		RGBA(0, 0, 0, 255)
+#define pWhite		RGBA(255, 255, 255, 255)
+#define pYellow		RGBA(255, 255, 0, 255)
+#define pTurquoise	RGBA(0, 255, 255, 255)
+#define pDarkGray	RGBA(93, 93, 93, 255)
+#define pGray		RGBA(127,127,127,255)
+#define pLightGray	RGBA(163, 163, 163, 255)
 
-#define aliceblue	COLOR(240, 248, 255, 255)
-#define cornsilk	COLOR(255, 248, 220, 255)
+#define aliceblue	RGBA(240, 248, 255, 255)
+#define cornsilk	RGBA(255, 248, 220, 255)
 

@@ -4,10 +4,10 @@
 int appWidth = 640;
 int appHeight = 480;
 
-COLOR color1(60, 10, 60, 255);
-COLOR color2(190, 190, 190, 255);
+DPPIXELVAL color1 = RGBA(60, 10, 60, 255);
+DPPIXELVAL color2 = RGBA(190, 190, 190, 255);
 
-checkerboard cboard(0,0,appWidth,appHeight, 16, 16, color1, color2);
+checkerboard cboard(0,0,appWidth,appHeight, 8, 8, color1, color2);
 
 
 void draw()
@@ -20,7 +20,7 @@ void draw()
 		float alpha = MAP(iter, 1, 9, 0, 255);
 
 		noStroke();
-		fill(0, 255, 255, (int)alpha);
+		fillValues(0, 255, 255, (int)alpha);
 		int offset = iter * 40;
 		rect(offset, offset, 100, 100);
 	}

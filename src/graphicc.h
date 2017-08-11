@@ -55,7 +55,8 @@ inline real RADIANS(const real degrees) { return (real)(G_DTOR * degrees); }
 // A fraction is created to relate value (a) to the range (rlo - rhi).  This fraction
 // is then applied to the second range (slo - shi).
 // This will work for values of a both inside and outside the range itself
-inline double MAP(double a, double rlo, double rhi, double slo, double shi) { return slo + (a - rlo) * (shi - slo) / (rhi - rlo); }
+//inline double MAP(double a, double rlo, double rhi, double slo, double shi) { return slo + (a - rlo) * (shi - slo) / (rhi - rlo); }
+#define MAP(a, rlo, rhi, slo, shi) (slo + (a - rlo) * (shi - slo) / (rhi - rlo))
 #define map MAP
 
 // Return a value between the rlo and rhi
@@ -85,9 +86,10 @@ inline int sgn(real val) { return ((0 < val) - (val < 0)); }
 
 
 #ifdef BGR_DOMINANT
-inline uint32_t RGBA(const int r, const int g, const int b, const int a) 
+inline DPPIXELVAL RGBA(const int r, const int g, const int b, const int a) 
 {
-	return RGBA2PIXELABGR(r, g, b, a);
+	//return ARGB2PIXELABGR(a, r, g, b);
+	return ARGB2PIXEL8888(a, r, g, b);
 }
 
 inline uint8_t GET_B(const uint32_t value) {return ((uint32_t)value & 0xff);}
