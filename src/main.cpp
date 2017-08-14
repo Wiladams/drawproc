@@ -478,6 +478,7 @@ void eventLoop(HWND hWnd)
 int main(int argc, char **argv)
 {
 	char *moduleName = nullptr;
+
 	if (argc < 2) {
 		moduleName = "nanowindow.dll";
 		//return 1;

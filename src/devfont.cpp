@@ -448,8 +448,8 @@ gen_drawtext(PDPFONT pfont, PSD psd, DPCOORD x, DPCOORD y,
 {
 	const unsigned char *str = (unsigned char *)text;
 	const unsigned short *istr = (unsigned short *)text;
-	DPCOORD		width;			/* width of text area */
-	DPCOORD 	height;			/* height of text area */
+	DPCOORD		twidth;			/* width of text area */
+	DPCOORD 	theight;			/* height of text area */
 	DPCOORD		base;			/* baseline of text*/
 	DPCOORD		startx, starty;
 	const DPIMAGEBITS *bitmap;		/* bitmap for characters */
@@ -474,22 +474,22 @@ gen_drawtext(PDPFONT pfont, PSD psd, DPCOORD x, DPCOORD y,
 	convblit = GdFindConvBlit(psd, DPIF_MONOWORDMSB, DPROP_COPY);
 
 	if (flags & DPTF_DBCSMASK)
-		dbcs_gettextsize(pfont, istr, cc, flags, &width, &height, &base);
-	else pfont->fontprocs->GetTextSize(pfont, str, cc, flags, &width, &height, &base);
+		dbcs_gettextsize(pfont, istr, cc, flags, &twidth, &theight, &base);
+	else pfont->fontprocs->GetTextSize(pfont, str, cc, flags, &twidth, &theight, &base);
 	
 	if (flags & DPTF_BASELINE)
 		y -= base;
 	else if (flags & DPTF_BOTTOM)
-		y -= (height - 1);
+		y -= (theight - 1);
 	startx = x;
 	starty = y + base;
 
 	/* pre-clip entire text area for speed*/
-	switch (clip = GdClipArea(psd, x, y, x + width - 1, y + height - 1)) {
+	switch (clip = GdClipArea(psd, x, y, x + twidth - 1, y + theight - 1)) {
 	case CLIP_VISIBLE:
 		/* fast clear background once for all characters if drawing point by point*/
 		if (!convblit && gr_usebg) {
-			psd->FillRect(psd, x, y, x + width - 1, y + height - 1, gr_background);
+			psd->FillRect(psd, x, y, x + twidth - 1, y + theight - 1, gr_background);
 			gr_usebg = false;
 		}
 		break;
@@ -510,23 +510,23 @@ gen_drawtext(PDPFONT pfont, PSD psd, DPCOORD x, DPCOORD y,
 	 	 * we draw them using the normal pfont->fontprocs->GetTextBits.
 	 	 */
 		if (flags & DPTF_DBCSMASK)
-			dbcs_gettextbits(pfont, *istr++, flags, &bitmap, &width, &height, &base);
+			dbcs_gettextbits(pfont, *istr++, flags, &bitmap, &twidth, &theight, &base);
 		else {
 			int ch;
 
 			if (pfont->fontprocs->encoding == DPTF_UC16)
 				ch = *istr++;
 			else ch = *str++;
-			pfont->fontprocs->GetTextBits(pfont, ch, &bitmap, &width, &height, &base);
+			pfont->fontprocs->GetTextBits(pfont, ch, &bitmap, &twidth, &theight, &base);
 		}
 
 		/* use fast blit for text draw, fallback draw point-by-point*/
 		if (convblit) {
 			parms.dstx = x;
 			parms.dsty = y;
-			parms.height = height;
-			parms.width = width;
-			parms.src_pitch = ((width + 15) >> 4) << 1;	/* pad to WORD boundary*/
+			parms.height = theight;
+			parms.width = twidth;
+			parms.src_pitch = ((twidth + 15) >> 4) << 1;	/* pad to WORD boundary*/
 			parms.data = (char *)bitmap;
 			/* skip clipping checks if fully visible*/
 			if (clip == CLIP_VISIBLE)
@@ -534,8 +534,8 @@ gen_drawtext(PDPFONT pfont, PSD psd, DPCOORD x, DPCOORD y,
 			else
 				GdConversionBlit(psd, &parms);
 		} else
-			GdBitmapByPoint(psd, x, y, width, height, bitmap, clip);
-		x += width;
+			GdBitmapByPoint(psd, x, y, twidth, theight, bitmap, clip);
+		x += twidth;
 	}
 
 	if (pfont->fontattr & DPTF_UNDERLINE)

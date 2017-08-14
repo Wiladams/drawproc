@@ -138,7 +138,7 @@ DPROC_API extern	 void	GdGetButtonInfo(int *buttons);
 DPROC_API extern	 void	GdRestrictMouse(DPCOORD newminx, DPCOORD newminy, DPCOORD newmaxx, DPCOORD newmaxy);
 DPROC_API extern	 void	GdSetAccelMouse(int newthresh, int newscale);
 DPROC_API extern	 void	GdMoveMouse(DPCOORD newx, DPCOORD newy);
-DPROC_API extern	 int		GdReadMouse(DPCOORD *px, DPCOORD *py, int *pb);
+DPROC_API extern	 int	GdReadMouse(DPCOORD *px, DPCOORD *py, int *pb);
 DPROC_API extern	 void	GdMoveCursor(DPCOORD x, DPCOORD y);
 DPROC_API extern	 bool	GdGetCursorPos(DPCOORD *px, DPCOORD *py);
 DPROC_API extern	 void	GdSetCursor(PDPCURSOR pcursor);
@@ -146,7 +146,7 @@ DPROC_API extern	 int 	GdShowCursor(PSD psd);
 DPROC_API extern	 int 	GdHideCursor(PSD psd);
 DPROC_API extern	 void	GdCheckCursor(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2);
 DPROC_API extern	 void 	GdFixCursor(PSD psd);
-DPROC_API extern	 void    GdSetTransform(DPTRANSFORM *);
+DPROC_API extern	 void   GdSetTransform(DPTRANSFORM *);
 
 //extern MOUSEDEVICE mousedev;
 
