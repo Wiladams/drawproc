@@ -15,8 +15,8 @@ DPRECT intersection(const DPCLIPRECT &a, const DPCLIPRECT &b)
 {
 	int left = a.x > b.y ? a.x : b.x;
 	int top = a.y > b.y ? a.y : b.y;
-	int right = ((a.x + a.width) < (b.x + b.width)) ? (a.x + a.width) : (b.x + b.width);
-	int bottom = ((a.y + a.height) < (b.y + b.height)) ? (a.y + a.height) : (b.y + b.height);
+	int right = ((a.x + a.width) < (b.x + b.width)) ? (a.x + a.width-1) : (b.x + b.width-1);
+	int bottom = ((a.y + a.height) < (b.y + b.height)) ? (a.y + a.height-1) : (b.y + b.height-1);
 
 	return{ left, top, right, bottom };
 }

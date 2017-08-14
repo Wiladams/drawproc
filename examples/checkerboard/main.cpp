@@ -1,13 +1,13 @@
 #include "drawproc.h"
 #include "checkerboard.h"
 
-int appWidth = 640;
-int appHeight = 480;
+int appWidth = 641;
+int appHeight = 481;
 
-DPPIXELVAL color1 = RGBA(60, 10, 60, 255);
-DPPIXELVAL color2 = RGBA(190, 190, 190, 255);
+DPPIXELVAL color1 = pRed;
+DPPIXELVAL color2 = pGreen;
 
-checkerboard cboard(0,0,appWidth,appHeight, 8, 8, color1, color2);
+checkerboard cboard(0,0,appWidth,appHeight, 4, 4, color1, color2);
 
 
 void draw()
@@ -29,5 +29,6 @@ void draw()
 void setup()
 {
 	createCanvas(640, 480);
+	background(pRed);
 	noLoop();
 }

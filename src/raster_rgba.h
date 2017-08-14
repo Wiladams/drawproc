@@ -85,9 +85,9 @@ inline void raster_rgba_rect_fill(pb_rgba *pb, const DPCOORD x, const DPCOORD y,
 
 inline void raster_rgba_rect_fill_blend(pb_rgba *pb, const DPCOORD left, const DPCOORD top, const DPCOORD right, const DPCOORD bottom, const DPPIXELVAL value)
 {
-	size_t width = right - left+1;
+	size_t len = right - left+1;
 	for (int y = top; y <= bottom; y++){
-		raster_rgba_hline_blend(pb, left, y, width, value);
+		raster_rgba_hline_blend(pb, left, y, len, value);
 	}
 }
 

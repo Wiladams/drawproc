@@ -53,6 +53,10 @@
     <Bscmake>
       <AdditionalOptions>/DBUILD_AS_DLL %(AdditionalOptions)</AdditionalOptions>
     </Bscmake>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

@@ -477,11 +477,16 @@ void eventLoop(HWND hWnd)
 
 int main(int argc, char **argv)
 {
+	char *moduleName = nullptr;
 	if (argc < 2) {
-		return 1;
+		moduleName = "nanowindow.dll";
+		//return 1;
+	}
+	else {
+		moduleName = argv[1];
 	}
 
-	if (!InitializeInstance(argv[1]))
+	if (!InitializeInstance(moduleName))
 	{
 		printf("Must specify setup() or draw()\n");
 		return 1;

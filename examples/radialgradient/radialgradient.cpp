@@ -21,7 +21,7 @@ void drawGradient(float x, float y)
 	//colorMode(COLOR_MODE_HSB, 360, 100, 100);
 
 	for (int r = radius; r > 0; --r) {
-		fill(h, 90, 90);
+		fillValues(h, 90, 90);
 		ellipse(x, y, r, r);
 		h = int(h + 1) % 360;
 	}

@@ -21,17 +21,21 @@ public:
 	{
 		size_t tilewidth = fFrame.width / cols;
 		size_t tileheight = (fFrame.height / rows);
+		size_t boxwidth = tilewidth / 2;
+		size_t boxheight = tileheight / 2;
+
 		noStroke();
 
+		rectMode(CORNER);
 		for (size_t c = 0; c < cols; c++) {
 			for (size_t r = 0; r < rows; r++) {
 				fill(color1);
-				rect(c*tilewidth, r*tileheight, tilewidth / 2, tileheight / 2);
-				//rect((c*tilewidth) + tilewidth / 2, (r*tileheight) + tileheight / 2, tilewidth / 2, tileheight / 2);
+				rect(c*tilewidth, r*tileheight, boxwidth, boxheight);
+				rect((c*tilewidth) + boxwidth, (r*tileheight) + boxheight, boxwidth, boxheight);
 
 				fill(color2);
-				rect((c*tilewidth) + tilewidth / 2, r*tileheight, tilewidth / 2, tileheight / 2);
-				//rect(c*tilewidth, (r*tileheight) + tileheight / 2, tilewidth / 2, tileheight / 2);
+				rect((c*tilewidth) + boxwidth, r*tileheight, boxwidth, boxheight);
+				rect(c*tilewidth, (r*tileheight) + boxheight, boxwidth, boxheight);
 			}
 		}
 	}

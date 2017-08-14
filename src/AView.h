@@ -3,8 +3,9 @@
 #include "drawproc.h"
 #include <vector>
 
-class DPROC_EXPORT AView {
-protected:
+//class DPROC_EXPORT AView {
+class DPROC_API AView {
+	protected:
 	// Attributes of the view
 	DPCLIPRECT fFrame;
 	DPPIXELVAL fBackgroundColor;
@@ -20,10 +21,7 @@ protected:
 public:
 	AView(const int x, const int y, const int pWidth, const int pHeight) 
 	{
-		fFrame.x = x;
-		fFrame.y = y;
-		fFrame.width = pWidth;
-		fFrame.height = pHeight;
+		fFrame = { x, y, pWidth, pHeight };
 	}
 
 	// Hierarchy management

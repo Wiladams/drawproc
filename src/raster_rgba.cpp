@@ -238,13 +238,10 @@ int raster_rgba_hline(pb_rgba *pb, DPCOORD x, DPCOORD y, size_t length, DPPIXELV
 
 
 
-int raster_rgba_hline_blend(pb_rgba *pb, DPCOORD x, DPCOORD y, size_t length, DPPIXELVAL value)
+int raster_rgba_hline_blend(pb_rgba *pb, DPCOORD x, DPCOORD y, size_t len, DPPIXELVAL value)
 {
-	size_t terminus = x + length;
-	terminus = terminus - x;
-
 	DPPIXELVAL * data = &((unsigned int *)pb->data)[y*pb->pixelpitch + x];
-	for (size_t idx = 0; idx < terminus; idx++)
+	for (size_t idx = 0; idx < len; idx++)
 	{
 		int bg = *data;
 		int fg = value;
