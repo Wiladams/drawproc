@@ -21,19 +21,8 @@
 #include "dpdevice.h"
 #include "convblit.h"
 
-extern int 	  gr_mode; 	      /* drawing mode */
-//extern DPPALENTRY gr_palette[256];    /* current palette*/
-extern int	  gr_firstuserpalentry;/* first user-changable palette entry*/
-extern int 	  gr_nextpalentry;    /* next available palette entry*/
-
-								  /* These support drawing dashed lines */
-extern uint32_t gr_dashmask;     /* An actual bitmask of the dash values */
-extern uint32_t gr_dashcount;    /* The number of bits defined in the dashmask */
-
-extern int        gr_fillmode;
 
 /*static*/ void drawpoint(PSD psd, DPCOORD x, DPCOORD y);
-
 /*static*/ void drawrow(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y);
 static void drawcol(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2);
 

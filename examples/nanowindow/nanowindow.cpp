@@ -8,6 +8,8 @@
 
 size_t gWidth = 640;
 size_t gHeight = 480;
+DPCLIPREGION * cregion = nullptr;
+PDPFONT cfont = nullptr;
 
 void testHLineBlend()
 {
@@ -36,11 +38,20 @@ void testRect()
 
 }
 
+void testPoints()
+{
+	for (DPCOORD idx = 10; idx < 110; idx++) {
+		GdPoint(&scrdev, idx, idx);
+
+	}
+}
 
 void draw()
 {
+
 	//testHLineBlend();
 	//testRect();
+	testPoints();
 
 	//scrdev.DrawHorzLine(&scrdev, 10, 200, 10, RGB2PIXEL8888(125, 255, 127));
 	//scrdev.DrawVertLine(&scrdev, 300, 10, 200, RGB2PIXEL8888(64, 127, 255));
@@ -50,11 +61,12 @@ void draw()
 	DPCOORD theight = 0;
 	DPCOORD pbase;
 
-	GdGetTextSize((PDPFONT)(gen_fonts[0].cfont), "Hello, World", 0, &twidth, &theight, &pbase,0);
+	//GdGetTextSize((PDPFONT)(gen_fonts[0].cfont), "Hello, World", 0, &twidth, &theight, &pbase,0);
 
 	//gen_fonts[0].fontprocs->DrawText((PDPFONT)(gen_fonts[0].cfont),
 	//		&scrdev, 20, 20,
 	//		L"Hello, World!", 1, 0);
+	GdText(&scrdev, cfont, 10, 10, "Hello, World!", 1, 0);
 }
 
 
@@ -65,5 +77,12 @@ void setup()
 	
 	GdOpenMouse();
 	GdSetMode(DPFILL_SOLID);
+
+	cfont = GdCreateFont(&scrdev, nullptr, 0, 0, nullptr);
+
+	// An initial clip region needs to be set or nothing
+	// will get drawn
+	//cregion = GdAllocRectRegion(0, 0, width - 1, height - 1);
+	//GdSetClipRegion(&scrdev, cregion);
 //	noLoop();
 }

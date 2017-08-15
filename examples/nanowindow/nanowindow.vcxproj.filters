@@ -21,5 +21,8 @@
     <ClCompile Include="nanowindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="scr_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

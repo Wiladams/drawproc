@@ -109,27 +109,27 @@ DPROC_API extern	 void	GdPrintClipRects(PDPBLITPARMS gc);
 DPROC_API extern	 bool GdPtInRegion(DPCLIPREGION *rgn, DPCOORD x, DPCOORD y);
 DPROC_API extern	 int  GdRectInRegion(DPCLIPREGION *rgn, const DPRECT *rect);
 DPROC_API extern	 bool GdEqualRegion(DPCLIPREGION *r1, DPCLIPREGION *r2);
-bool GdEmptyRegion(DPCLIPREGION *rgn);
-DPCLIPREGION *GdAllocRegion(void);
-DPCLIPREGION *GdAllocRectRegion(DPCOORD left, DPCOORD top, DPCOORD right, DPCOORD bottom);
-DPCLIPREGION *GdAllocRectRegionIndirect(DPRECT *prc);
-void GdSetRectRegion(DPCLIPREGION *rgn, DPCOORD left, DPCOORD top, DPCOORD right, DPCOORD bottom);
-void GdSetRectRegionIndirect(DPCLIPREGION *rgn, DPRECT *prc);
-void GdDestroyRegion(DPCLIPREGION *rgn);
-void GdOffsetRegion(DPCLIPREGION *rgn, DPCOORD x, DPCOORD y);
-int  GdGetRegionBox(DPCLIPREGION *rgn, DPRECT *prc);
-void GdUnionRectWithRegion(const DPRECT *rect, DPCLIPREGION *rgn);
-void GdSubtractRectFromRegion(const DPRECT *rect, DPCLIPREGION *rgn);
-void GdCopyRegion(DPCLIPREGION *d, DPCLIPREGION *s);
-void GdIntersectRegion(DPCLIPREGION *d, DPCLIPREGION *s1, DPCLIPREGION *s2);
-void GdUnionRegion(DPCLIPREGION *d, DPCLIPREGION *s1, DPCLIPREGION *s2);
-void GdSubtractRegion(DPCLIPREGION *d, DPCLIPREGION *s1, DPCLIPREGION *s2);
-void GdXorRegion(DPCLIPREGION *d, DPCLIPREGION *s1, DPCLIPREGION *s2);
-DPCLIPREGION *GdAllocBitmapRegion(DPIMAGEBITS *bitmap, DPCOORD width, DPCOORD height);
+DPROC_API extern bool GdEmptyRegion(DPCLIPREGION *rgn);
+DPROC_API extern DPCLIPREGION *GdAllocRegion(void);
+DPROC_API extern DPCLIPREGION *GdAllocRectRegion(DPCOORD left, DPCOORD top, DPCOORD right, DPCOORD bottom);
+DPROC_API extern DPCLIPREGION *GdAllocRectRegionIndirect(DPRECT *prc);
+DPROC_API extern void GdSetRectRegion(DPCLIPREGION *rgn, DPCOORD left, DPCOORD top, DPCOORD right, DPCOORD bottom);
+DPROC_API extern void GdSetRectRegionIndirect(DPCLIPREGION *rgn, DPRECT *prc);
+DPROC_API extern void GdDestroyRegion(DPCLIPREGION *rgn);
+DPROC_API extern void GdOffsetRegion(DPCLIPREGION *rgn, DPCOORD x, DPCOORD y);
+DPROC_API extern int  GdGetRegionBox(DPCLIPREGION *rgn, DPRECT *prc);
+DPROC_API extern void GdUnionRectWithRegion(const DPRECT *rect, DPCLIPREGION *rgn);
+DPROC_API extern void GdSubtractRectFromRegion(const DPRECT *rect, DPCLIPREGION *rgn);
+DPROC_API extern void GdCopyRegion(DPCLIPREGION *d, DPCLIPREGION *s);
+DPROC_API extern void GdIntersectRegion(DPCLIPREGION *d, DPCLIPREGION *s1, DPCLIPREGION *s2);
+DPROC_API extern void GdUnionRegion(DPCLIPREGION *d, DPCLIPREGION *s1, DPCLIPREGION *s2);
+DPROC_API extern void GdSubtractRegion(DPCLIPREGION *d, DPCLIPREGION *s1, DPCLIPREGION *s2);
+DPROC_API extern void GdXorRegion(DPCLIPREGION *d, DPCLIPREGION *s1, DPCLIPREGION *s2);
+DPROC_API extern DPCLIPREGION *GdAllocBitmapRegion(DPIMAGEBITS *bitmap, DPCOORD width, DPCOORD height);
 
 /* devrgn2.c*/
-DPCLIPREGION *GdAllocPolygonRegion(DPPOINT *points, int count, int mode);
-DPCLIPREGION *GdAllocPolyPolygonRegion(DPPOINT *points, int *count, int nbpolygons, int mode);
+DPROC_API extern DPCLIPREGION *GdAllocPolygonRegion(DPPOINT *points, int count, int mode);
+DPROC_API extern DPCLIPREGION *GdAllocPolyPolygonRegion(DPPOINT *points, int *count, int nbpolygons, int mode);
 
 /* devmouse.c*/
 DPROC_API extern	 int	GdOpenMouse(void);
@@ -157,8 +157,8 @@ DPROC_API extern	 void 	GdGetModifierInfo(MWKEYMOD *modifiers, MWKEYMOD *curmodi
 DPROC_API extern	 int  	GdReadKeyboard(MWKEY *buf, MWKEYMOD *modifiers, MWSCANCODE *scancode);
 
 #ifdef MW_FEATURE_TWO_KEYBOARDS
-int  	GdOpenKeyboard2(void);
-extern KBDDEVICE kbddev2;
+DPROC_API extern int  	GdOpenKeyboard2(void);
+DPROC_API extern KBDDEVICE kbddev2;
 #endif
 
 /* devimage.c */

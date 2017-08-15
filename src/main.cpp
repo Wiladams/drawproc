@@ -6,6 +6,7 @@
 #include "dp_win32.h"
 #include "fb.h"
 #include "genmem.h"
+#include "genfont.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -30,6 +31,22 @@ char szTitle[] = "Window";					// The title bar text
 HWND ghWnd;
 
 SCREENDEVICE scrdev;
+/*
+SCREENDEVICE scrdev = {
+	0, 0, 0, 0, 0, 0, 0, NULL, 0, NULL, 0, 0, 0, 0, 0, 0,
+	gen_fonts,
+	win32_open,
+	win32_close,
+	NULL,				// SetPalette
+	win32_getscreeninfo,
+	gen_allocatememgc,
+	gen_mapmemgc,
+	gen_freememgc,
+	NULL,				// SetPortrait
+	win32_update,
+	NULL				// PreSelect
+};
+*/
 
 // offscreen bitmap
 HBITMAP gbmHandle;
@@ -249,17 +266,14 @@ void CreateWindowHandle(int lwidth, int lheight)
 		NULL);
 }
 
-
-void * SetWindowSize(const int width, const int height)
+void dpOpenScreen()
 {
 	PSUBDRIVER subdriver = nullptr;
-
-	CreateWindowHandle(width, height);
 
 	// Create offscreen bitmap
 	gPixelData = GetPixelBuffer(width, height);	// open the window
 
-																// Build up the screendevice
+												// Build up the screendevice
 	scrdev.xvirtres = width;
 	scrdev.yvirtres = height;
 
@@ -294,10 +308,35 @@ void * SetWindowSize(const int width, const int height)
 	// select an fb subdriver matching our planes and bpp for backing store
 	subdriver = select_fb_subdriver(&scrdev);
 	if (!subdriver)
-		return nullptr;
+		return ;
 
 	// set subdriver into screen driver
 	set_subdriver(&scrdev, subdriver);
+
+	// from devopen
+	GdSetMode(DPROP_COPY);
+	GdSetFillMode(DPFILL_SOLID);  /* Set the fill mode to solid */
+
+	GdSetForegroundColor(&scrdev, DPRGB(255, 255, 255));	/* WHITE*/
+	GdSetBackgroundColor(&scrdev, DPRGB(0, 0, 0));		/* BLACK*/
+	GdSetUseBackground(true);
+
+	/* select first builtin font (usually MWFONT_SYSTEM_VAR)*/
+	//GdSetFont(GdCreateFont(&scrdev, nullptr, 0, 0, nullptr));
+
+	GdSetDash(0, 0);  /* No dashing to start */
+	GdSetStippleBitmap(0, 0, 0);  /* No stipple to start */
+
+	GdSetClipRegion(&scrdev, GdAllocRectRegion(0, 0, width, height));
+}
+
+void * SetWindowSize(const int width, const int height)
+{
+
+	CreateWindowHandle(width, height);
+
+	dpOpenScreen();
+
 
 	// Display the window on the screen
 	ShowWindow(ghWnd, SW_SHOW);
