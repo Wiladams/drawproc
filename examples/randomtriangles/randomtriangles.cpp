@@ -30,8 +30,10 @@ void draw()
 		uint8_t g = random(255);
 		uint8_t b = random(255);
 
-		int x1 = random(maxsize, width - 1 - (maxsize*2));
-		int y1 = random(maxsize, height - 1 - (maxsize*2));
+		//int x1 = random(maxsize, width - 1 - (maxsize*2));
+		//int y1 = random(maxsize, height - 1 -(maxsize * 2));
+		DPCOORD x1 = random(maxsize, width - 1 - (maxsize * 1));
+		DPCOORD y1 = random(maxsize, height - 1 - (maxsize * 1));
 
 
 		int minx = x1 - maxsize;

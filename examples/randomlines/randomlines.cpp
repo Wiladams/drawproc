@@ -31,9 +31,5 @@ void draw()
 		strokeWeight(8.0);
 		point(x1, y1);
 		point(x2, y2);
-		//DPPIXELVAL pval = RGBA(r, g, b, 255);
-		//scrdev.DrawPixel(&scrdev, x1, y1, pval);
-		//scrdev.DrawPixel(&scrdev, x2, y2, pval);
-		//GdLine(&scrdev, x1, y1, x2, y2, true);
 	}
 }

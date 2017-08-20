@@ -21,12 +21,9 @@ DPCLIPRECT pixelFrame;
  float gColorMax3 = 255;
  float gColorMaxA = 255;
 
- DPPIXELVAL bgColor = RGBA(93, 93, 93, 255);		// pDarkGray;
  pb_rgba *bgImage = nullptr;
- DPPIXELVAL strokeColor = RGBA(0, 0, 0, 255);
- float gstrokeWeight = 1;
- DPPIXELVAL fillColor = RGBA(255, 255, 255, 255);
-
+  float gstrokeWeight = 1;
+ 
 // Text Settings
  font_t gfont;
  int gTextSize;

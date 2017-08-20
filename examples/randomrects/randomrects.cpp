@@ -24,7 +24,7 @@ void setup()
 
 void draw()
 {
-	background(pWhite);
+	background(pLightGray);
 
 	if (outlineOnly) {
 		noFill();
@@ -52,6 +52,7 @@ void draw()
 		else
 		{
 			strokeValues(r, g, b, 255);
+			//GdRect(&scrdev, x1, y1, lwidth, lheight);
 		}
 
 		rect(x1, y1, lwidth, lheight);

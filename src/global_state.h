@@ -25,10 +25,10 @@ DPROC_API extern	 float gColorMax2;
 DPROC_API extern	 float gColorMax3;
 DPROC_API extern	 float gColorMaxA;
 
-//DPROC_API extern	DPPIXELVAL bgColor;
-DPROC_API extern	DPPIXELVAL strokeColor;
 DPROC_API extern	 float gstrokeWeight;
-DPROC_API extern	 DPPIXELVAL fillColor;
+//DPROC_API extern	DPPIXELVAL strokeColor;
+//DPROC_API extern	DPPIXELVAL bgColor;
+//DPROC_API extern	 DPPIXELVAL fillColor;
 DPROC_API extern	 pb_rgba *bgImage;
 
 	// Keyboard

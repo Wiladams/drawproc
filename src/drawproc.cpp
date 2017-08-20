@@ -598,22 +598,26 @@ void backgroundImage(pb_rgba *bg)
 
 void noFill()
 {
-	fillColor = 0;
+	//fillColor = 0;
+	GdSetBackgroundPixelVal(&scrdev, 0);
 }
 
 void noStroke()
 {
-	strokeColor = 0;
+	//strokeColor = 0;
+	GdSetForegroundPixelVal(&scrdev, 0);
 }
 
 void strokeValues(const float v1, const float v2, const float v3, const float alpha)
 {
-	strokeColor = color(v1, v2, v3, alpha);
+	GdSetForegroundPixelVal(&scrdev, color(v1, v2, v3, alpha));
+	//strokeColor = color(v1, v2, v3, alpha);
 }
 
 void stroke(const DPPIXELVAL value)
 {
-	strokeColor = value;
+	GdSetForegroundPixelVal(&scrdev, value);
+	//strokeColor = value;
 }
 
 void noSmooth() {}
@@ -628,12 +632,12 @@ void strokeWeight(const float weight)
 
 void fillValues(const float v1, const float v2, const float v3, const float alpha)
 {
-	fillColor = color(v1, v2, v3, alpha);
+	GdSetBackgroundPixelVal(&scrdev, color(v1, v2, v3, alpha));
 }
 
 void fill(const DPPIXELVAL value)
 {
-	fillColor = value;
+	GdSetBackgroundPixelVal(&scrdev, value);
 }
 
 // 2D primitives
@@ -651,7 +655,7 @@ void bezier(const int x1, const int y1, const int x2, const int y2, const int x3
 	Pt3 *curve = (Pt3 *)malloc(segments*sizeof(Pt3));
 
 	bez3_curve(controls, nControls, segments, curve);
-	polyline(gpb, curve, segments, strokeColor);
+	polyline(gpb, curve, segments, gr_foreground);
 }
 
 void ellipseMode(const RECTMODE mode)
@@ -705,12 +709,14 @@ void ellipse(const float a, const float b, const float c, const float d)
 	DPCOORD cx = x1+ rwidth/2;
 	DPCOORD cy = y1 + rheight/2;
 
-	raster_rgba_ellipse_fill(gpb, cx, cy, xradius, yradius, fillColor);
-	raster_rgba_ellipse_stroke(gpb, cx, cy, xradius, yradius, strokeColor);
+	raster_rgba_ellipse_fill(gpb, cx, cy, xradius, yradius, gr_background);
+	raster_rgba_ellipse_stroke(gpb, cx, cy, xradius, yradius, gr_foreground);
 }
 
 void line(const int x1, const int y1, const int x2, const int y2)
 {
+	GdLine(&scrdev, x1, y1, x2, y2, true);
+/*
 	int xx1 = x1;
 	int yy1 = y1;
 	int xx2 = x2;
@@ -722,7 +728,8 @@ void line(const int x1, const int y1, const int x2, const int y2)
 		return;
 	}
 
-	raster_rgba_line_cover(gpb, xx1, yy1, xx2, yy2, strokeColor);
+	raster_rgba_line_cover(gpb, xx1, yy1, xx2, yy2, gr_foreground);
+*/
 }
 
 void lineloop(const Vector2dVector &pts)
@@ -765,17 +772,17 @@ void lineloop(const size_t nPts, const int *pts)
 
 void point(const int x, const int y)
 {
-	if (!containsPoint(pixelFrame,x, y))
+	if (!GdClipPoint(&scrdev, x, y))
 		return;
 
 	if (gstrokeWeight <= 1) {
+		GdPoint(&scrdev, x, y);
 		//pb_rgba_cover_pixel(gpb, x, y, strokeColor);
-		scrdev.DrawPixel(&scrdev, x, y, strokeColor);
 	}
 	else {
 		// draw an ellipse centered at the specified point
 		// with a width of the strokeWeight
-		raster_rgba_ellipse_fill(gpb, x, y, gstrokeWeight / 2, gstrokeWeight / 2, strokeColor);
+		raster_rgba_ellipse_fill(gpb, x, y, gstrokeWeight / 2, gstrokeWeight / 2, gr_foreground);
 	}
 }
 
@@ -825,46 +832,45 @@ void rect(const int a, const int b, const int c, const int d)
 	//if ((crect.width == 0) || (crect.height == 0))
 	//	return;
 
-	if (fillColor != 0) {
-		raster_rgba_rect_fill_blend(gpb, crect.left, crect.top, crect.right, crect.bottom, fillColor);
+	if (gr_background != 0) {
+		raster_rgba_rect_fill_blend(gpb, crect.left, crect.top, crect.right, crect.bottom, gr_background);
 	}
 
 	// if the strokeColor != 0 then 
-	// frame the rectangle in the strokeColor
-	if (strokeColor != 0) {
-		int pts[] = {
-			crect.left, crect.top,
-			crect.left, crect.bottom,
-			crect.right, crect.bottom,
-			crect.right, crect.top
-		};
-
-		lineloop(4, pts);
+	// frame the rectangle in the gr_foreground
+	if (gr_foreground != 0) {
+		GdRect(&scrdev, crect.left, crect.top, crect.right-crect.left, crect.bottom-crect.top);
 	}
 }
 
-
-
 void triangle(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3)
 {
-	if (fillColor != 0) {
-		raster_rgba_triangle_fill(gpb, x1, y1, x2, y2, x3, y3, fillColor);
+	DPPOINT pts[] = {
+		x1, y1,
+		x2, y2,
+		x3, y3,
+		x1, y1
+	};
+	DPPIXELVAL oldfg;
+
+	if (gr_background != 0) {
+		//raster_rgba_triangle_fill(gpb, x1, y1, x2, y2, x3, y3, gr_background);
+		oldfg = GdSetForegroundPixelVal(&scrdev, gr_background);
+
+		GdFillPoly(&scrdev, 3, pts);
+
+		GdSetForegroundPixelVal(&scrdev, oldfg);
 	}
 
-	if (strokeColor != 0) {
-		int pts[] = {
-			x1, y1,
-			x2, y2,
-			x3, y3
-		};
-		lineloop(3, pts);
+	if (gr_foreground != 0) {
+		GdPoly(&scrdev, 4,pts);
 	}
 }
 
 void quad(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3, const int x4, const int y4)
 {
 	// preserve current stroke color
-	DPPIXELVAL savedStroke = strokeColor;
+	DPPIXELVAL savedStroke = gr_foreground;
 
 	noStroke();
 	// triangle 1
@@ -876,7 +882,7 @@ void quad(const int x1, const int y1, const int x2, const int y2, const int x3, 
 	// outline
 	stroke(savedStroke);
 
-	if (strokeColor != 0) {
+	if (gr_foreground != 0) {
 		int pts[] = {
 			x1, y1,
 			x2, y2,
@@ -1061,7 +1067,7 @@ bool triangulate_process(const Vector2dVector &contour)
 
 void polygon(const Vector2dVector &pts)
 {
-	DPPIXELVAL oldStroke = strokeColor;
+	DPPIXELVAL oldStroke = gr_foreground;
 
 	//  Invoke the triangulator to render the polygon as triangles
 	noStroke();
@@ -1085,7 +1091,7 @@ void polygon(int nverts, int *verts)
 	noStroke();
 	bool processed = triangulate_process(a);
 		
-	stroke(strokeColor);
+	stroke(gr_foreground);
 	if (processed) {
 		// draw the outline
 		lineloop(a);
@@ -1126,7 +1132,7 @@ void bezierVertex(const int x1, const int y1, const int x2, const int y2, const 
 void endShape(const int kindOfFinish)
 {
 	int n = gShape.size();
-	DPPIXELVAL oldStroke = strokeColor;
+	DPPIXELVAL oldStroke = gr_foreground;
 
 	switch (gShapeKind) {
 		case GR_POINTS:
@@ -1252,7 +1258,7 @@ void text(const char *str, const int x, const int y)
 		ty = y - gfont.height;
 		break;
 	}
-	scan_str(gpb, &gfont, tx, ty, str, fillColor);
+	scan_str(gpb, &gfont, tx, ty, str, gr_background);
 }
 
 void textAlign(const int alignX, const int alignY)

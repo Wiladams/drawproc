@@ -80,6 +80,7 @@
     <ClCompile Include="src\convblit_8888.cpp" />
     <ClCompile Include="src\convblit_mask.cpp" />
     <ClCompile Include="src\conv_blit_frameb.cpp" />
+    <ClCompile Include="src\devarc.cpp" />
     <ClCompile Include="src\devblit.cpp" />
     <ClCompile Include="src\devclip2.cpp" />
     <ClCompile Include="src\devdraw.cpp" />
@@ -88,6 +89,7 @@
     <ClCompile Include="src\devlist.cpp" />
     <ClCompile Include="src\devmouse.cpp" />
     <ClCompile Include="src\devopen.cpp" />
+    <ClCompile Include="src\devpoly.cpp" />
     <ClCompile Include="src\devrgn.cpp" />
     <ClCompile Include="src\devstipple.cpp" />
     <ClCompile Include="src\dproc_types.cpp" />
