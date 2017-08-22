@@ -368,8 +368,8 @@ win32_open(PSD psd)
 	psd->data_format = set_data_format(psd);
 
 	// Calculate size and pitch
-	GdCalcMemGCAlloc(&scrdev, scrdev.xres, scrdev.yres, scrdev.planes, scrdev.bpp,
-		&scrdev.size, &scrdev.pitch);
+	GdCalcMemGCAlloc(psd, psd->xres, psd->yres, psd->planes, psd->bpp,
+		&psd->size, &psd->pitch);
 
 	//if ((scrdev.addr = (uint8_t *)malloc(scrdev.size)) == NULL)
 	//	break;
@@ -386,7 +386,6 @@ win32_open(PSD psd)
 	// set subdriver into screen driver
 	set_subdriver(psd, subdriver);
 
-	RegisterWindowClass(width, height);
 	winRootWindow = CreateWindowHandle(width, height);
 
 	// Create offscreen bitmap
@@ -410,6 +409,7 @@ win32_open(PSD psd)
 		UpdateWindow(winRootWindow);
 	}
 
+	return psd;
 }
 
 

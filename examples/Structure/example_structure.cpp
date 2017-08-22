@@ -3,7 +3,7 @@
 int currentMode = 1;
 int maxMode = 3;
 
-void mousePressed()
+void mouseReleased()
 {
 	currentMode++;
 	if (currentMode > maxMode) {
@@ -16,7 +16,9 @@ void drawTarget(float xloc, float yloc, int size, int num) {
 	float grayvalues = 255 / num;
 	float steps = size / num;
 	for (int i = 0; i < num; i++) {
-		fillValues(i*grayvalues);
+		fill(RGBA(i*grayvalues, i*grayvalues, i*grayvalues,255));
+		// BUGBUG - ellipse uses stroke value to fill
+		stroke(RGBA(i*grayvalues, i*grayvalues, i*grayvalues, 255));
 		ellipse(xloc, yloc, size - i*steps, size - i*steps);
 	}
 }
@@ -32,7 +34,8 @@ void drawTargets() {
 // Recursion
 void drawCircle(int x, int radius, int level) {
 	float tt = 126 * level / 4.0;
-	fillValues(tt);
+	fill(RGBA(tt,tt,tt,255));
+	stroke(RGBA(tt, tt, tt, 255));
 	ellipse(x, height / 2, radius * 2, radius * 2);
 	if (level > 1) {
 		level = level - 1;

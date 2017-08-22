@@ -21,9 +21,11 @@ extern "C" {
 HMODULE getClientModule();
 
 
-// These can be called by client code
-void * SetWindowSize(const size_t width, const size_t height);
+bool GsInitialize(const size_t lwidth, const size_t lheight);
 
+//void * SetWindowSize(const size_t width, const size_t height);
+
+// These can be called by client code
 LRESULT quit();
 DPROC_API double seconds();
 void resettime();

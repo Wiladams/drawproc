@@ -22,6 +22,15 @@ void keyReleased()
 	}
 }
 
+// Use mouse to control display
+void mouseReleased()
+{
+	nSides++;
+	if (nSides > maxSides) {
+		nSides = 1;
+	}
+}
+
 void drawMouseTrackLines()
 {
 	int gap = 4;

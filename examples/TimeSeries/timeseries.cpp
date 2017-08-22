@@ -151,7 +151,7 @@ void drawTitle()
 	setFont(verdana18_bold);
 
 	// draw title of current plot
-	fill(0);
+	fill(pBlack);
 	textSize(20);
 	textAlign(TX_LEFT, TX_BOTTOM);
 	const char * title = getColumnName(currentColumn);
@@ -172,7 +172,7 @@ void drawDataPoints(const int col)
 
 void drawAxisLabels()
 {
-	fill(0);
+	fill(pBlack);
 	textSize(13);
 	//textLeading(15);
 
@@ -192,7 +192,7 @@ void drawYearLabels()
 
 	setFont(gse7x11);
 
-	stroke(224, 224, 224, 255);
+	strokeValues(224, 224, 224, 255);
 	strokeWeight(1);
 
 	fill(pBlack);
@@ -213,11 +213,11 @@ void drawVolumeLabels()
 {
 	char numbuff[256];
 
-	fill(0);
+	fill(pBlack);
 	textSize(10);
 	textAlign(TX_RIGHT, TX_CENTER);
 
-	stroke((uint8_t)128);
+	stroke(RGBA(128, 128, 128,255));
 	strokeWeight(1);
 
 	for (float v = dataMin; v <= dataMax; v += volumeIntervalMinor) {		
@@ -247,12 +247,12 @@ void drawVolumeLabels()
 
 void draw()
 {
-	background(224,224,224,255);
+	//background(RGBA(224,224,224,255));
 	//background(pLightGray);
-	//background(aliceblue);
+	background(aliceblue);
 
 	// plot area as white box
-	fill(255);
+	fill(pWhite);
 	rectMode(CORNERS);
 	noStroke();
 	rect(plotX1, plotY1, plotX2, plotY2);
@@ -260,7 +260,7 @@ void draw()
 	drawTitle();
 
 	// plot the actual columnar data
-	stroke(0x56, 0x79, 0xc1, 255);
+	stroke(RGBA(0x56, 0x79, 0xc1, 255));
 	strokeWeight(5);
 	drawDataPoints(currentColumn);
 
