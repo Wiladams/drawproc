@@ -151,6 +151,7 @@ bool GsInitialize(const size_t lwidth, const size_t lheight)
 	return true;
 }
 
+/*
 void * SetWindowSize(const size_t lwidth, const size_t lheight)
 {
 	width = lwidth;
@@ -160,7 +161,7 @@ void * SetWindowSize(const size_t lwidth, const size_t lheight)
 
 	return scrdev.addr;
 }
-
+*/
 
 void setDrawInLoop(bool doDraw)
 {

@@ -291,7 +291,7 @@ void createCanvas(const size_t lwidth, const size_t lheight)
 
 	initFont();
 
-	SetWindowSize(lwidth, lheight);
+	GsInitialize(lwidth, lheight);
 
 	// Create the global pixel buffer
 	// Save the pointer into the pb_rgba pixel buffer

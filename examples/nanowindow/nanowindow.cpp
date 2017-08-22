@@ -11,9 +11,40 @@ size_t gHeight = 480;
 DPCLIPREGION * cregion = nullptr;
 PDPFONT cfont = nullptr;
 
+void testPoints();
+void testHLineBlend();
+void testLines();
+void testRect();
+void testEllipse();
+void testPolygon();
+void testText();
+
+
+typedef void(*testcase)();
+
+testcase cases[] = {
+	testPoints,
+	testHLineBlend,
+	testLines,
+	testRect,
+	testEllipse,
+	testPolygon,
+	testText
+};
+size_t nCases = sizeof(cases)/ sizeof(testcase);
+size_t currentCase = 0;
+
+
+void mouseReleased()
+{
+	currentCase = currentCase + 1;
+	if (currentCase >= nCases)
+		currentCase = 0;
+}
+
 void testHLineBlend()
 {
-	for (DPCOORD y = 0; y < height; y++) {
+	for (DPCOORD y = 0; y < height/2; y++) {
 		raster_rgba_hline_blend(gpb, 0, y, width, pRed);
 
 	}
@@ -42,18 +73,38 @@ void testRect()
 
 }
 
+void testPolygon()
+{
+	DPPOINT pts[] = {
+		10,10,
+		100,23,
+		120,43,
+		100,63,
+		10,200
+	};
+
+	GdFillPoly(&scrdev,5, pts);
+}
+
 void testPoints()
 {
-	for (DPCOORD idx = 10; idx < 110; idx++) {
-		point(idx, idx);
+	background(pBlack);
+	stroke(pWhite);
+	for (size_t cnt = 1; cnt <= 1000; cnt++)
+	{
+		DPCOORD x = random(width - 1);
+		DPCOORD y = random(height - 1);
+		point(x, y);
 	}
+
 }
 
 void testLines()
 {
-	//scrdev.DrawHorzLine(&scrdev, 10, 200, 10, RGB2PIXEL8888(125, 255, 127));
-	//scrdev.DrawVertLine(&scrdev, 300, 10, 200, RGB2PIXEL8888(64, 127, 255));
-	//scrdev.FillRect(&scrdev, 10, 20, 200, 200, RGB2PIXEL8888(125, 255, 255));
+	background(pBlack);
+	scrdev.DrawHorzLine(&scrdev, 10, 200, 10, RGB2PIXEL8888(125, 255, 127));
+	scrdev.DrawVertLine(&scrdev, 300, 10, 200, RGB2PIXEL8888(64, 127, 255));
+	scrdev.FillRect(&scrdev, 10, 20, 200, 200, RGB2PIXEL8888(125, 255, 255));
 }
 
 void testText()
@@ -62,12 +113,22 @@ void testText()
 	DPCOORD theight = 0;
 	DPCOORD pbase;
 
+	cfont = GdCreateFont(&scrdev, DPFONT_SYSTEM_VAR, 0, 0, NULL);
+
 	//GdGetTextSize((PDPFONT)(gen_fonts[0].cfont), "Hello, World", 0, &twidth, &theight, &pbase,0);
 
 	//gen_fonts[0].fontprocs->DrawText((PDPFONT)(gen_fonts[0].cfont),
 	//		&scrdev, 20, 20,
 	//		L"Hello, World!", 1, 0);
-	GdText(&scrdev, cfont, 10, 10, "Hello, World!", 1, 0);
+	backgroundValues(0, 0, 0, 0);
+	stroke(pRed);
+	fill(pRed);
+
+	GdSetFontRotation(cfont, 15*10);
+	GdSetFontSize(cfont, 64, 32);
+	GdText(&scrdev, cfont, 100, 100, "Hello, World!", -1, 0);
+
+	GdDestroyFont(cfont);
 }
 
 void testEllipse()
@@ -82,13 +143,11 @@ void testEllipse()
 	for (size_t cnt = 1; cnt <= 1000; cnt++) {
 		DPCOORD cx = (DPCOORD)random(10, width-10);
 		DPCOORD cy = (DPCOORD)random(10, height-10);
-		//DPCOORD cx = 100;
-		//DPCOORD cy = 200;
 		int r = random(255);
 		int g = random(255);
 		int b = random(255);
 		int a = random(64, 200);
-		//int a = 255;
+
 
 		noStroke();
 		stroke(RGBA(r, g, b, a));
@@ -112,24 +171,12 @@ void testEllipse()
 
 void draw()
 {
-	background(pBlack);
-	//testHLineBlend();
-	//testPoints();
-	testEllipse();
-	//testRect();
-
-
+	background(RGBA(204,204,204,255));
+	cases[currentCase]();
 }
 
 
 void setup()
 {
 	createCanvas(640, 480);
-	background(pRed);
-	
-	GdOpenMouse();
-	GdSetMode(DPFILL_SOLID);
-
-	//cfont = GdCreateFont(&scrdev, DPFONT_SYSTEM_VAR, 0, 0, NULL);
-
 }

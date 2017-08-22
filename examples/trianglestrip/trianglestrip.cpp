@@ -1,7 +1,7 @@
 #include "drawproc.h"
 
-int x;
-int y;
+int cx;
+int cy;
 float outsideRadius = 150;
 float insideRadius = 100;
 int drawModes = 2;
@@ -16,16 +16,15 @@ void mousePressed()
 }
 
 void setup() {
-	size(640, 360);
-	backgroundValues(204);
-	x = width / 2;
-	y = height / 2;
+	createCanvas(640, 360);
+
+	cx = width / 2;
+	cy = height / 2;
 }
 
 void drawFan()
 {
-	int cx = width / 2;
-	int cy = height / 2;
+	stroke(pWhite);
 
 	beginShape(GR_TRIANGLE_FAN);
 	vertex(cx, cy);
@@ -43,14 +42,16 @@ void drawStrip()
 	float angle = 0;
 	float angleStep = 180.0 / numPoints;
 
+	stroke(pBlack);
+	fill(pWhite);
 	beginShape(GR_TRIANGLE_STRIP);
 	for (int i = 0; i <= numPoints; i++) {
-		float px = x + cos(radians(angle)) * outsideRadius;
-		float py = y + sin(radians(angle)) * outsideRadius;
+		float px = cx + cos(radians(angle)) * outsideRadius;
+		float py = cy + sin(radians(angle)) * outsideRadius;
 		angle += angleStep;
 		vertex(px, py);
-		px = x + cos(radians(angle)) * insideRadius;
-		py = y + sin(radians(angle)) * insideRadius;
+		px = cx + cos(radians(angle)) * insideRadius;
+		py = cy + sin(radians(angle)) * insideRadius;
 		vertex(px, py);
 		angle += angleStep;
 	}
@@ -58,7 +59,7 @@ void drawStrip()
 }
 
 void draw() {
-	backgroundValues(204);
+	background(RGBA(204,204,204,255));
 
 	if (currentMode == 1) {
 		drawStrip();
