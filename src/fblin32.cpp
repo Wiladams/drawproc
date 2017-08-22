@@ -16,6 +16,17 @@
 #include "fblin32.h"
 #include "genmem.h"
 
+
+// Some helpful macros
+#define lerp255(bg, fg, a) ((uint8_t)div255((fg*a+bg*(255-a))))
+
+#define blend_color(bg, fg) RGBA(				\
+	lerp255(GET_R(bg), GET_R(fg), GET_A(fg)), \
+	lerp255(GET_G(bg), GET_G(fg), GET_A(fg)), \
+	lerp255(GET_B(bg), GET_B(fg), GET_A(fg)), 255)
+
+
+
 /* Set pixel at x, y, to pixelval c*/
 void
 linear32_drawpixel(PSD psd, DPCOORD x, DPCOORD y, DPPIXELVAL c)
@@ -52,8 +63,8 @@ linear32_readpixel(PSD psd, DPCOORD x, DPCOORD y)
 void
 linear32_drawhorzline(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL c)
 {
-	register unsigned char *addr = psd->addr + y * psd->pitch + (x1 << 2);
-	int width = x2 - x1 + 1;
+	register uint8_t *addr = psd->addr + y * psd->pitch + (x1 << 2);
+	int lwidth = x2 - x1 + 1;
 #if DEBUG
 	assert(x1 >= 0 && x1 < psd->xres);
 	assert(x2 >= 0 && x2 < psd->xres);
@@ -61,21 +72,41 @@ linear32_drawhorzline(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL c)
 	assert(y >= 0 && y < psd->yres);
 #endif
 	DRAWON;
-	if (gr_mode == DPROP_COPY)
+	switch (gr_mode) 
 	{
-		int w = width;
-		while (--w >= 0)
+		case DPROP_COPY:
 		{
-			*((ADDR32)addr) = c;
-			addr += 4;
+			int w = lwidth;
+			while (--w >= 0)
+			{
+				*((ADDR32)addr) = c;
+				addr += 4;
+			}
 		}
+		break;
+
+		case DPROP_SRC_OVER:
+		{
+			DPPIXELVAL fg = c;
+
+			int w = lwidth;
+			while (--w >= 0)
+			{
+				DPPIXELVAL bg = *addr;
+				*((ADDR32)addr) = blend_color(bg, fg);
+				addr += 4;
+			}
+		}
+		break;
+
+		default:
+			APPLYOP(gr_mode, lwidth, (uint32_t), c, *(ADDR32), addr, 0, 4);
+
 	}
-	else
-		APPLYOP(gr_mode, width, (uint32_t), c, *(ADDR32), addr, 0, 4);
 	DRAWOFF;
 
 	if (psd->Update)
-		psd->Update(psd, x1, y, width, 1);
+		psd->Update(psd, x1, y, lwidth, 1);
 }
 
 /* Draw a vertical line from x,y1 to x,y2 including final point*/

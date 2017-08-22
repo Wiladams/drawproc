@@ -53,7 +53,8 @@ DPROC_API extern	 int gTextAlignX;
 DPROC_API extern	 int gTextAlignY;
 
 
-
+// From nanowindow
+DPROC_API extern DPPIXELVAL gr_strokepixel;	// pixel value used for strokes
 DPROC_API extern DPPIXELVAL gr_foreground;	/* current foreground color */
 DPROC_API extern DPPIXELVAL gr_background;	/* current background color */
 DPROC_API extern bool 		gr_usebg;    	    /* TRUE if background drawn in pixmaps */

@@ -22,23 +22,29 @@ void setup()
 	background(pWhite);
 }
 
+void drawEllipse()
+{
+
+}
+
 void draw()
 {
 	background(pLightGray);
 
 	if (outlineOnly) {
 		noFill();
-	} else
+	}
+	else
 	{
 		fill(pWhite);
 	}
 
 	for (int i = 1; i <= 1000; i++)
 	{
-		int x1 = random(width - 1-64);
-		int y1 = random(height - 1-64);
+		int x1 = random(width - 1 - 64);
+		int y1 = random(height - 1 - 64);
 		int lwidth = random(4, 64);
-		int lheight = random(4,64);
+		int lheight = random(4, 64);
 
 		int r = random(255);
 		int g = random(255);

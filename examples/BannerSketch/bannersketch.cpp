@@ -93,9 +93,9 @@ void draw() {
 		float radi = e[j][2];
 		float diam = radi / 2;
 		if (sq(e[j][0] - mouseX) + sq(e[j][1] - mouseY) < sq(e[j][2] / 2))
-			fill(64, 187, 128, 100); // green if mouseover
+			fillValues(64, 187, 128, 100); // green if mouseover
 		else
-			fill(64, 128, 187, 100); // regular
+			fillValues(64, 128, 187, 100); // regular
 
 		if ((lockedCircle == j && dragging)) {
 			// Move the particle's coordinates to the mouse's position, minus its original offset
@@ -130,15 +130,15 @@ void draw() {
 		// If current circle is selected...
 		if ((lockedCircle == j && dragging)) {
 			// Set fill color of center dot to white..
-			fill(255, 255, 255, 255);
+			fillValues(255, 255, 255, 255);
 			// ..and set stroke color of line to green.
-			stroke(128, 255, 0, 100);
+			strokeValues(128, 255, 0, 100);
 		}
 		else {
 			// otherwise set center dot color to black.. 
-			fill(0, 0, 0, 255);
+			fillValues(0, 0, 0, 255);
 			// and set line color to turquoise.
-			stroke(64, 128, 128, 255);
+			strokeValues(64, 128, 128, 255);
 		}
 
 		// Loop through all circles

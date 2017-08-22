@@ -183,6 +183,9 @@
     <ClCompile Include="src\devarc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\scr_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\agg_embedded_raster_fonts.h">

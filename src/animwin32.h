@@ -22,8 +22,7 @@ HMODULE getClientModule();
 
 
 // These can be called by client code
-void * GetPixelBuffer(const int width, const int height);
-void * SetWindowSize(const int width, const int height);
+void * SetWindowSize(const size_t width, const size_t height);
 
 LRESULT quit();
 DPROC_API double seconds();

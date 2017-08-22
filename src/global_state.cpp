@@ -4,7 +4,7 @@
 #include "graphicc.h"
 
 // Globals for the environment
-pb_rgba *gpb;
+//pb_rgba *gpb;
 size_t width = 0;
 size_t height = 0;
 DPCLIPRECT pixelFrame;
@@ -20,6 +20,8 @@ DPCLIPRECT pixelFrame;
  float gColorMax2 = 255;
  float gColorMax3 = 255;
  float gColorMaxA = 255;
+
+	pb_rgba *gpb;
 
  pb_rgba *bgImage = nullptr;
   float gstrokeWeight = 1;

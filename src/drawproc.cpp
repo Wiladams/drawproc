@@ -276,6 +276,8 @@ void initInput()
 	setMouseHandler(mouseHandler);
 }
 
+
+
 // size of window
 void createCanvas(const size_t lwidth, const size_t lheight)
 {
@@ -284,26 +286,26 @@ void createCanvas(const size_t lwidth, const size_t lheight)
 
 	pixelFrame.x = 0;
 	pixelFrame.y = 0;
-	pixelFrame.width = (float)width;
-	pixelFrame.height = (float)height;
+	pixelFrame.width = lwidth;
+	pixelFrame.height = lheight;
 
 	initFont();
 
-	void *data = SetWindowSize(lwidth, lheight);
+	SetWindowSize(lwidth, lheight);
 
 	// Create the global pixel buffer
 	// Save the pointer into the pb_rgba pixel buffer
 	gpb = new pb_rgba();
-	gpb->data = (uint8_t *)data;
+	gpb->data = (uint8_t *)scrdev.addr;
 	gpb->owndata = false;
 	gpb->pixelpitch = width;
-	gpb->frame.height = height;
-	gpb->frame.width = width;
 	gpb->frame.x = 0;
 	gpb->frame.y = 0;
+	gpb->frame.height = lheight;
+	gpb->frame.width = lwidth;
 
 	// paint the background at least once before beginning
-	raster_rgba_rect_fill(gpb, 0, 0, width, height, RGBA(0,0,0,255));
+	//raster_rgba_rect_fill(gpb, 0, 0, width, height, RGBA(0,0,0,255));
 
 	initInput();
 }
@@ -598,26 +600,22 @@ void backgroundImage(pb_rgba *bg)
 
 void noFill()
 {
-	//fillColor = 0;
 	GdSetBackgroundPixelVal(&scrdev, 0);
 }
 
 void noStroke()
 {
-	//strokeColor = 0;
 	GdSetForegroundPixelVal(&scrdev, 0);
 }
 
 void strokeValues(const float v1, const float v2, const float v3, const float alpha)
 {
 	GdSetForegroundPixelVal(&scrdev, color(v1, v2, v3, alpha));
-	//strokeColor = color(v1, v2, v3, alpha);
 }
 
 void stroke(const DPPIXELVAL value)
 {
 	GdSetForegroundPixelVal(&scrdev, value);
-	//strokeColor = value;
 }
 
 void noSmooth() {}
@@ -709,8 +707,12 @@ void ellipse(const float a, const float b, const float c, const float d)
 	DPCOORD cx = x1+ rwidth/2;
 	DPCOORD cy = y1 + rheight/2;
 
-	raster_rgba_ellipse_fill(gpb, cx, cy, xradius, yradius, gr_background);
-	raster_rgba_ellipse_stroke(gpb, cx, cy, xradius, yradius, gr_foreground);
+	GdEllipse(&scrdev,cx, cy, xradius, yradius, true);
+	//GdEllipse(&scrdev, cx, cy, xradius, yradius, false);
+
+	
+	//raster_rgba_ellipse_fill(gpb, cx, cy, xradius, yradius, gr_background);
+	//raster_rgba_ellipse_stroke(gpb, cx, cy, xradius, yradius, gr_foreground);
 }
 
 void line(const int x1, const int y1, const int x2, const int y2)

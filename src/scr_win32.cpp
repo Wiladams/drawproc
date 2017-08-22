@@ -13,13 +13,18 @@
 #include <wingdi.h>
 #include <assert.h>
 
+#include "animwin32.h"
+
 #include "dpdevice.h"
 #include "dp_win32.h"
 #include "fb.h"
 #include "genmem.h"
 #include "genfont.h"
 
-#define APP_NAME L"Microwindows"
+#define APP_NAME "Microwindows"
+char szTitle[] = "drawproc";					// The title bar text
+#define CLASS_NAME "animwin"			// the main window class name
+
 
 /* SCREEN_WIDTH, SCREEN_HEIGHT and DPPIXEL_FORMAT define window size*/
 #ifndef SCREEN_WIDTH
@@ -44,27 +49,50 @@ static void win32_close(PSD psd);
 static void win32_getscreeninfo(PSD psd, PDPSCREENINFO psi);
 static void win32_update(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height);
 
+
+
 SCREENDEVICE scrdev = {
-	0, 0, 0, 0, 0, 0, 0, NULL, 0, NULL, 0, 0, 0, 0, 0, 0,
-	gen_fonts,
-	win32_open,
-	win32_close,
-	NULL,				/* SetPalette*/
-	win32_getscreeninfo,
-	gen_allocatememgc,
-	gen_mapmemgc,
-	gen_freememgc,
-	NULL,				/* SetPortrait */
-	win32_update,
-	NULL				/* PreSelect*/
+0, 0, 0, 0, 0, 0, 0, NULL, 0, NULL, 0, 0, 0, 0, 0, 0,
+gen_fonts,
+win32_open,
+win32_close,
+NULL,				// SetPalette
+win32_getscreeninfo,
+gen_allocatememgc,
+gen_mapmemgc,
+gen_freememgc,
+NULL,				// SetPortrait
+win32_update,
+NULL				// PreSelect
 };
+
+
 
 HWND winRootWindow = NULL;
 static HDC dcBuffer = NULL;
 static HBITMAP dcBitmap = NULL;
+void * gPixelData;
 static HBITMAP dcOldBitmap;
 static HANDLE dummyEvent = NULL;
 
+
+// Keyboard event handlers
+static KeyboardHandler gkbdHandler = nullptr;
+
+// Mouse event handlers
+static MouseHandler gmouseHandler = nullptr;
+
+void setKeyboardHandler(KeyboardHandler handler)
+{
+	gkbdHandler = handler;
+}
+
+void setMouseHandler(MouseHandler handler)
+{
+	gmouseHandler = handler;
+}
+
+/*
 LRESULT
 myWindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
@@ -116,24 +144,297 @@ myWindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	default:
 		return DefWindowProc(hWnd, Msg, wParam, lParam);
 	}
+
 	return 0;
 }
+*/
+// bit field operations
+// retrieve a range of bits as a single value
+uint32_t bitops32_extract_range(const uint32_t value, const int offset, const int length)
+{
+	uint32_t res = value >> offset;
+	res = res & ~(1 << length);
+	return res;
+}
 
-/* called from keyboard/mouse/screen */
+LRESULT CALLBACK myWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	LRESULT ret = 0;
+	PAINTSTRUCT ps;
+	HDC hdc;
+	CREATESTRUCT *crStruct = (CREATESTRUCT *)lParam;
+
+	switch (message)
+	{
+	case WM_CREATE:
+		ret = DefWindowProc(hWnd, message, wParam, lParam);
+		break;
+
+	case WM_SYSKEYDOWN:
+	case WM_SYSKEYUP:
+	case WM_KEYDOWN:
+	case WM_KEYUP: {
+		uint32_t scanCode = bitops32_extract_range((uint32_t)lParam, 16, 8);
+		uint32_t context = bitops32_extract_range((uint32_t)lParam, 29, 1);
+		uint32_t previousState = bitops32_extract_range((uint32_t)lParam, 30, 1);
+		uint32_t transitionState = bitops32_extract_range((uint32_t)lParam, 31, 1);
+
+		//printf("scan code: %d context: %d  previous: %d  transition: %d\n", scanCode, context, previousState, transitionState);
+
+		if (gkbdHandler != nullptr)
+		{
+			return gkbdHandler(hWnd, message, wParam, lParam);
+		}
+	}
+				   break;
+
+	case WM_CHAR:
+	case WM_DEADCHAR:
+	case WM_SYSCHAR:
+	case WM_SYSDEADCHAR:
+		if (gkbdHandler != nullptr)
+		{
+			return gkbdHandler(hWnd, message, wParam, lParam);
+		}
+		break;
+
+	case WM_LBUTTONDBLCLK:
+	case WM_MBUTTONDBLCLK:
+	case WM_RBUTTONDBLCLK:
+		if (gmouseHandler != nullptr) {
+			return gmouseHandler(hWnd, message, wParam, lParam);
+		}
+		break;
+
+	case WM_MOUSEWHEEL:
+		if (gmouseHandler != nullptr) {
+			return gmouseHandler(hWnd, message, wParam, lParam);
+		}
+		break;
+
+	case WM_MOUSEMOVE:
+	case WM_LBUTTONDOWN:
+	case WM_MBUTTONDOWN:
+	case WM_RBUTTONDOWN:
+	case WM_LBUTTONUP:
+	case WM_MBUTTONUP:
+	case WM_RBUTTONUP:
+		if (gmouseHandler != nullptr) {
+			return gmouseHandler(hWnd, message, wParam, lParam);
+		}
+		break;
+
+	case WM_PAINT:
+		hdc = BeginPaint(hWnd, &ps);
+
+		// bitblt bmhandle to client area
+		// we should actually look at the paint struct
+		// and only blit the part that needs to be drawn
+		if ((NULL != dcBuffer) && (nullptr != gPixelData)) {
+			ret = ::BitBlt(hdc,
+				ps.rcPaint.left, ps.rcPaint.top,
+				ps.rcPaint.right - ps.rcPaint.left, ps.rcPaint.bottom - ps.rcPaint.top,
+				dcBuffer,
+				ps.rcPaint.left, ps.rcPaint.top,
+				SRCCOPY);
+		}
+
+		EndPaint(hWnd, &ps);
+		break;
+
+	case WM_DESTROY:
+		ret = quit();
+		break;
+
+
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+
+	return ret;
+}
+
+ATOM RegisterWindowClass(size_t lwidth, size_t lheight)
+{
+	HMODULE hInst = ::GetModuleHandleA(NULL);
+
+	WNDCLASSEXA wcex;
+	wcex.cbSize = sizeof(wcex);
+	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	wcex.lpfnWndProc = myWindowProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInst;
+	wcex.hIcon = LoadIcon(NULL, IDI_APPLICATION);;				//LoadIcon(hInst, MAKEINTRESOURCE(IDI_APPLICATION));
+	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wcex.hbrBackground = NULL;	// (HBRUSH)GetStockObject(WHITE_BRUSH);		//(HBRUSH)(COLOR_WINDOW + 1);
+	wcex.lpszMenuName = NULL;
+	wcex.lpszClassName = CLASS_NAME;
+	wcex.hIconSm = NULL;			//LoadIcon(hInst, MAKEINTRESOURCE(IDI_APPLICATION));
+
+	return ::RegisterClassExA(&wcex);
+}
+
+HWND CreateWindowHandle(size_t lwidth, size_t lheight)
+{
+	ATOM winclassatom = RegisterWindowClass(lwidth, lheight);
+
+	int x = CW_USEDEFAULT;
+	int y = CW_USEDEFAULT;
+	HWND hWndParent = NULL;
+	HMENU hMenu = NULL;
+
+	if (!winclassatom) {
+		return NULL;
+	}
+
+	RECT clientRECT = { 0, 0, lwidth, lheight };
+	BOOL err = AdjustWindowRect(&clientRECT, WS_CAPTION, 0);
+
+	// The following sequence of messages will come in through the callback
+	// function before this function returns:
+	// WM_GETMINMAXINFO
+	// WM_NCCREATE
+	// WM_NCCALCSIZE
+	// WM_CREATE
+	HMODULE hInst = ::GetModuleHandleA(NULL);
+	winRootWindow = ::CreateWindowExA(
+		0,
+		CLASS_NAME,
+		szTitle,
+		WS_OVERLAPPEDWINDOW,
+		x, y, clientRECT.right - clientRECT.left, clientRECT.bottom - clientRECT.top,
+		hWndParent,
+		hMenu,
+		hInst,
+		NULL);
+}
+
+HDC CreateOffscreenDC(HWND hWnd, const size_t width, const size_t height, void **data)
+{
+	BITMAPINFO info;
+	memset(&info, 0, sizeof(BITMAPINFO));
+
+	info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	info.bmiHeader.biWidth = width;
+	info.bmiHeader.biHeight = -(int)height;	// top-down DIB Section
+	info.bmiHeader.biPlanes = 1;
+	info.bmiHeader.biBitCount = 32;
+	info.bmiHeader.biCompression = BI_RGB;
+
+
+	dcBitmap = ::CreateDIBSection(
+		NULL,
+		&info,
+		DIB_RGB_COLORS,
+		data,
+		NULL,
+		0);
+
+	// Create offscreen memory DC for DIB Section rendering
+	dcBuffer = ::CreateCompatibleDC(NULL);
+	::SelectObject(dcBuffer, dcBitmap);
+
+	return dcBuffer;
+}
+
+
 static PSD
 win32_open(PSD psd)
 {
 	HINSTANCE hInstance = GetModuleHandle(NULL);
-	HDC rootDC = CreateDC(L"DISPLAY", NULL, NULL, NULL);
+	PSUBDRIVER subdriver = nullptr;
+	size_t depth = 32;
+
+
+	// Build up the screendevice
+	psd->xvirtres = width;
+	psd->yvirtres = height;
+
+	psd->xres = psd->xvirtres;
+	psd->yres = psd->yvirtres;
+	psd->planes = 1;
+	psd->pixtype = DPPIXEL_FORMAT;
+#if (DPPIXEL_FORMAT == DPPF_TRUECOLOR8888) || (DPPIXEL_FORMAT == DPPF_TRUECOLORABGR)
+	psd->bpp = 32;
+#elif (DPPIXEL_FORMAT == DPPF_TRUECOLOR888)
+	psd->bpp = 24;
+#elif (DPPIXEL_FORMAT == DPPF_TRUECOLOR565) || (DPPIXEL_FORMAT == DPPF_TRUECOLOR555)
+	psd->bpp = 16;
+#else
+#error "No support bpp < 16"
+#endif 
+	// set standard data format from bpp and pixtype
+	psd->data_format = set_data_format(psd);
+
+	// Calculate size and pitch
+	GdCalcMemGCAlloc(&scrdev, scrdev.xres, scrdev.yres, scrdev.planes, scrdev.bpp,
+		&scrdev.size, &scrdev.pitch);
+
+	//if ((scrdev.addr = (uint8_t *)malloc(scrdev.size)) == NULL)
+	//	break;
+
+	psd->ncolors = psd->bpp >= 24 ? (1 << 24) : (1 << psd->bpp);
+	psd->flags = PSF_SCREEN | PSF_ADDRMALLOC;
+	psd->portrait = DPPORTRAIT_NONE;
+
+	// select an fb subdriver matching our planes and bpp for backing store
+	subdriver = select_fb_subdriver(psd);
+	if (!subdriver)
+		return NULL;
+
+	// set subdriver into screen driver
+	set_subdriver(psd, subdriver);
+
+	RegisterWindowClass(width, height);
+	winRootWindow = CreateWindowHandle(width, height);
+
+	// Create offscreen bitmap
+	dcBuffer = CreateOffscreenDC(winRootWindow, width, height, &gPixelData);
+
+	psd->addr = (uint8_t *)gPixelData;
+
+	if (winRootWindow) {
+		HDC dc = GetDC(winRootWindow);
+		RECT drect;
+
+		GetClientRect(winRootWindow, &drect);
+
+		//dcBitmap = CreateCompatibleBitmap(dc, drect.right - drect.left, drect.bottom - drect.top);
+		//dcBuffer = CreateCompatibleDC(dc);
+		//dcOldBitmap = (HBITMAP)SelectObject(dcBuffer, dcBitmap);
+		ReleaseDC(winRootWindow, dc);
+		//dummyEvent = CreateEvent(NULL, TRUE, FALSE, "");
+		
+		ShowWindow(winRootWindow, SW_SHOW);
+		UpdateWindow(winRootWindow);
+	}
+
+}
+
+
+
+/*
+	Start by getting the bitsperpixel for the display
+	use that to setup our drawing buffer.
+*/
+/*
+static PSD
+win32_open(PSD psd)
+{
+	HINSTANCE hInstance = GetModuleHandle(NULL);
+	HDC rootDC = CreateDC("DISPLAY", NULL, NULL, NULL);
 	int depth = GetDeviceCaps(rootDC, BITSPIXEL);
-	RECT rect;
+	RECT drect;
 	PSUBDRIVER subdriver;
 	WNDCLASS wc;
 
 	DeleteDC(rootDC);
-	GetWindowRect(GetDesktopWindow(), &rect);
-	psd->xvirtres = rect.right - rect.left;
-	psd->yvirtres = rect.bottom - rect.top;
+
+	// Get a rectangle for the size of the desktop
+	::GetWindowRect(GetDesktopWindow(), &drect);
+	psd->xvirtres = drect.right - drect.left;
+	psd->yvirtres = drect.bottom - drect.top;
 	if (psd->xvirtres > SCREEN_WIDTH)
 		psd->xvirtres = SCREEN_WIDTH;
 	if (psd->yvirtres > SCREEN_HEIGHT)
@@ -151,10 +452,10 @@ win32_open(PSD psd)
 #else
 #error "No support bpp < 16"
 #endif 
-	/* set standard data format from bpp and pixtype*/
+	// set standard data format from bpp and pixtype
 	psd->data_format = set_data_format(psd);
 
-	/* Calculate size and pitch*/
+	// Calculate size and pitch
 	GdCalcMemGCAlloc(psd, psd->xres, psd->yres, psd->planes, psd->bpp,
 		&psd->size, &psd->pitch);
 	if ((psd->addr = (uint8_t *)malloc(psd->size)) == NULL)
@@ -164,42 +465,33 @@ win32_open(PSD psd)
 	psd->portrait = DPPORTRAIT_NONE;
 	DPRINTF("win32 emulated bpp %d\n", psd->bpp);
 
-	/* select an fb subdriver matching our planes and bpp for backing store*/
+	// select an fb subdriver matching our planes and bpp for backing store
 	subdriver = select_fb_subdriver(psd);
 	if (!subdriver)
 		return NULL;
 
-	/* set subdriver into screen driver*/
+	// set subdriver into screen driver
 	set_subdriver(psd, subdriver);
 
-	wc.style = CS_HREDRAW | CS_VREDRAW; // | CS_OWNDC;
-	wc.lpfnWndProc = (WNDPROC)myWindowProc;
-	wc.cbClsExtra = 0;
-	wc.cbWndExtra = 0;
-	wc.hInstance = hInstance;
-	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-	wc.lpszMenuName = NULL;
-	wc.lpszClassName = APP_NAME;
-	RegisterClass(&wc);
-
-	winRootWindow = CreateWindow(APP_NAME, L"", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU, 0, 0,
-		SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, hInstance, NULL);
+	RegisterWindowClass(width, height);
+	winRootWindow = CreateWindowHandle(width, height);
+	
 	if (winRootWindow) {
 		HDC dc = GetDC(winRootWindow);
 
-		GetClientRect(winRootWindow, &rect);
-		dcBitmap = CreateCompatibleBitmap(dc, rect.right - rect.left, rect.bottom - rect.top);
+		GetClientRect(winRootWindow, &drect);
+		dcBitmap = CreateCompatibleBitmap(dc, drect.right - drect.left, drect.bottom - drect.top);
 		dcBuffer = CreateCompatibleDC(dc);
 		dcOldBitmap = (HBITMAP)SelectObject(dcBuffer, dcBitmap);
 		ReleaseDC(winRootWindow, dc);
-		dummyEvent = CreateEvent(NULL, TRUE, FALSE, L"");
+		dummyEvent = CreateEvent(NULL, TRUE, FALSE, "");
 		ShowWindow(winRootWindow, SW_SHOW);
 		UpdateWindow(winRootWindow);
 	}
+
 	return &scrdev;
 }
+*/
 
 static void
 win32_close(PSD psd)
