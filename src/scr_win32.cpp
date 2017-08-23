@@ -16,7 +16,6 @@
 #include "animwin32.h"
 
 #include "dpdevice.h"
-#include "dp_win32.h"
 #include "fb.h"
 #include "genmem.h"
 #include "genfont.h"

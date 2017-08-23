@@ -605,6 +605,7 @@ void noFill()
 
 void noStroke()
 {
+	GdSetStrokePixelVal(&scrdev, 0);
 	GdSetForegroundPixelVal(&scrdev, 0);
 }
 
@@ -615,7 +616,8 @@ void strokeValues(const float v1, const float v2, const float v3, const float al
 
 void stroke(const DPPIXELVAL value)
 {
-	GdSetForegroundPixelVal(&scrdev, value);
+	GdSetStrokePixelVal(&scrdev, value);
+	//GdSetForegroundPixelVal(&scrdev, value);
 }
 
 void noSmooth() {}

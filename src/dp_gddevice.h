@@ -16,6 +16,7 @@ DPROC_API extern	 int	GdSetPortraitMode(PSD psd, int portraitmode);
 
 DPROC_API extern	 int		GdSetMode(int mode);
 DPROC_API extern	 bool		GdSetUseBackground(bool flag);
+DPROC_API extern	 DPPIXELVAL GdSetStrokePixelVal(PSD psd, DPPIXELVAL val);
 DPROC_API extern	 DPPIXELVAL GdSetForegroundPixelVal(PSD psd, DPPIXELVAL fg);
 DPROC_API extern	 DPPIXELVAL GdSetBackgroundPixelVal(PSD psd, DPPIXELVAL bg);
 DPROC_API extern	 DPPIXELVAL GdSetForegroundColor(PSD psd, DPCOLORVAL fg);
@@ -163,21 +164,21 @@ DPROC_API extern KBDDEVICE kbddev2;
 
 /* devimage.c */
 #if MW_FEATURE_IMAGES
-PSD		GdLoadImageFromFile(char *path, int flags);
-PSD		GdLoadImageFromBuffer(void *buffer, int size, int flags);
-void	GdDrawImageFromFile(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width,
+DPROC_API extern PSD		GdLoadImageFromFile(char *path, int flags);
+DPROC_API extern PSD		GdLoadImageFromBuffer(void *buffer, int size, int flags);
+DPROC_API extern void	GdDrawImageFromFile(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width,
 	DPCOORD height, char *path, int flags);
-void	GdDrawImageFromBuffer(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width,
+DPROC_API extern void	GdDrawImageFromBuffer(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width,
 	DPCOORD height, void *buffer, int size, int flags);
-void	GdDrawImagePartToFit(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height,
+DPROC_API extern void	GdDrawImagePartToFit(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height,
 	DPCOORD sx, DPCOORD sy, DPCOORD swidth, DPCOORD sheight, PSD pmd);
-bool	GdGetImageInfo(PSD pmd, PDPIMAGEINFO pii);
-void	GdStretchImage(PDPIMAGEHDR src, DPCLIPRECT *srcrect, PDPIMAGEHDR dst, DPCLIPRECT *dstrect);
+DPROC_API extern bool	GdGetImageInfo(PSD pmd, PDPIMAGEINFO pii);
+DPROC_API extern void	GdStretchImage(PDPIMAGEHDR src, DPCLIPRECT *srcrect, PDPIMAGEHDR dst, DPCLIPRECT *dstrect);
 
 
 
 // image conversion
-PSD		GdConvertImageRGBA(PSD pmd);		/* convert palettized image to RGBA*/
+DPROC_API extern PSD		GdConvertImageRGBA(PSD pmd);		/* convert palettized image to RGBA*/
 
 											/* individual decoders*/
 #ifdef HAVE_BMP_SUPPORT

@@ -8,20 +8,24 @@
 */
 #include "dproc_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* entry points*/
 
 /* genmem.c*/
-//PSD		GdCreatePixmap(PSD rootpsd, DPCOORD width, DPCOORD height, int format, void *pixels,
-//	int palsize);
-//void	GdFreePixmap(PSD pmd);
+DPROC_API extern PSD		GdCreatePixmap(PSD rootpsd, DPCOORD width, DPCOORD height, int format, void *pixels,
+	int palsize);
+DPROC_API extern void	GdFreePixmap(PSD pmd);
 
-DPROC_API extern	 PSD 	gen_allocatememgc(PSD psd);
-DPROC_API extern	 bool	gen_mapmemgc(PSD mempsd, DPCOORD w, DPCOORD h, int planes, int bpp, int data_format,
+DPROC_API extern PSD 	gen_allocatememgc(PSD psd);
+DPROC_API extern bool	gen_mapmemgc(PSD mempsd, DPCOORD w, DPCOORD h, int planes, int bpp, int data_format,
 	unsigned int pitch, int size, void *addr);
-DPROC_API extern	 void	gen_freememgc(PSD mempsd);
+DPROC_API extern void	gen_freememgc(PSD mempsd);
 
-//int		GdCalcMemGCAlloc(PSD psd, int width, int height, int planes, int bpp,
-//	unsigned int *size, unsigned int *ppitch);
+DPROC_API extern int	GdCalcMemGCAlloc(PSD psd, int width, int height, int planes, int bpp,
+							size_t *size, unsigned int *ppitch);
 
 DPROC_API extern	 void	gen_fillrect(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2, DPPIXELVAL c);
 
@@ -30,3 +34,7 @@ DPROC_API extern	 void	set_portrait_subdriver(PSD psd);
 
 DPROC_API extern	 void	set_subdriver(PSD psd, PSUBDRIVER subdriver);
 DPROC_API extern	 void	get_subdriver(PSD psd, PSUBDRIVER subdriver);
+
+#ifdef __cplusplus
+}
+#endif

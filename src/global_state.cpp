@@ -45,7 +45,7 @@ DPCLIPRECT pixelFrame;
  int mouseDelta = 0;
 
 
-
+ DPPIXELVAL gr_stroke;		// current stroke color
  DPPIXELVAL gr_foreground;	/* current foreground color */
  DPPIXELVAL gr_background;	/* current background color */
  bool 	gr_usebg;    	    /* TRUE if background drawn in pixmaps */

@@ -71,6 +71,17 @@ GdSetUseBackground(bool flag)
 	return oldusebg;
 }
 
+DPPIXELVAL
+GdSetStrokePixelVal(PSD psd, DPPIXELVAL val)
+{
+	DPPIXELVAL oldval = gr_stroke;
+
+	gr_stroke = val;
+
+	return oldval;
+}
+
+
 /*
 * Set the foreground color for drawing from passed pixel value.
 *
@@ -167,7 +178,7 @@ void
 GdPoint(PSD psd, DPCOORD x, DPCOORD y)
 {
 	if (GdClipPoint(psd, x, y)) {
-		psd->DrawPixel(psd, x, y, gr_foreground);
+		psd->DrawPixel(psd, x, y, gr_stroke);
 		GdFixCursor(psd);
 	}
 }

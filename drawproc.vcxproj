@@ -96,7 +96,6 @@
     <ClCompile Include="src\dproc_types.cpp" />
     <ClCompile Include="src\dp_bufferio.cpp" />
     <ClCompile Include="src\dp_error.cpp" />
-    <ClCompile Include="src\dp_win32.cpp" />
     <ClCompile Include="src\fb.cpp" />
     <ClCompile Include="src\fblin1.cpp" />
     <ClCompile Include="src\fblin16.cpp" />
@@ -152,7 +151,6 @@
     <ClInclude Include="src\dp_gddevice.h" />
     <ClInclude Include="src\dp_keymouse.h" />
     <ClInclude Include="src\dp_pixmanip.h" />
-    <ClInclude Include="src\dp_win32.h" />
     <ClInclude Include="src\fb.h" />
     <ClInclude Include="src\fblin32.h" />
     <ClInclude Include="src\genfont.h" />

@@ -94,6 +94,7 @@ void testPoints()
 	{
 		DPCOORD x = random(width - 1);
 		DPCOORD y = random(height - 1);
+		stroke(RGBA(random(255), random(255), random(255), 255));
 		point(x, y);
 	}
 
