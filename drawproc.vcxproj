@@ -86,6 +86,7 @@
     <ClCompile Include="src\devclip2.cpp" />
     <ClCompile Include="src\devdraw.cpp" />
     <ClCompile Include="src\devfont.cpp" />
+    <ClCompile Include="src\devimage.cpp" />
     <ClCompile Include="src\devkbd.cpp" />
     <ClCompile Include="src\devlist.cpp" />
     <ClCompile Include="src\devmouse.cpp" />
@@ -112,6 +113,7 @@
     <ClCompile Include="src\genfont.cpp" />
     <ClCompile Include="src\genmem.cpp" />
     <ClCompile Include="src\global_state.cpp" />
+    <ClCompile Include="src\image_pnm.cpp" />
     <ClCompile Include="src\kbd_win32.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\bezier.cpp" />

@@ -1284,16 +1284,22 @@ void setFont(const uint8_t *fontdata)
 /*
 	Images
 */
-void image(const PImage *img, const float a, const float b, const float c, const float d)
+void image(PSD img, const float a, const float b, const float c, const float d)
 {
-	raster_rgba_blit(gpb, a, b, &img->fb);
+	if (c < 1 || d < 1) {
+		GdBlit(&scrdev, a, b, img->xvirtres, img->yvirtres, img, 0, 0, 0);
+	}
+	else {
+		GdBlit(&scrdev, a, b, c, d, img, 0, 0, 0);
+	}
+	//raster_rgba_blit(gpb, a, b, &img->fb);
 }
 
-PImage * loadImage(const char *filename, const char *extension)
+PSD loadImage(const char *filename, const char *extension)
 {
-	PImage *img = new PImage();
+	//PImage *img = new PImage();
+	//int ret = PPM_read_binary(filename, &img->fb);
+	//return img;
 
-	int ret = PPM_read_binary(filename, &img->fb);
-
-	return img;
+	return GdLoadImageFromFile(filename, 0);
 }

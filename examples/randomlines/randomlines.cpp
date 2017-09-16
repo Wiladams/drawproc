@@ -7,6 +7,7 @@ void setup()
 {
 	createCanvas(640, 480);
 	background(pWhite);
+
 }
 
 void draw()

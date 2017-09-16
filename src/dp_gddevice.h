@@ -2,6 +2,8 @@
 
 #include "dproc_config.h"
 
+#include "dp_bufferio.h"
+
 /*
 	This file contains all the calls that are related to GDI-like drawing.
 */
@@ -164,10 +166,10 @@ DPROC_API extern KBDDEVICE kbddev2;
 
 /* devimage.c */
 #if MW_FEATURE_IMAGES
-DPROC_API extern PSD		GdLoadImageFromFile(char *path, int flags);
+DPROC_API extern PSD		GdLoadImageFromFile(const char *path, int flags);
 DPROC_API extern PSD		GdLoadImageFromBuffer(void *buffer, int size, int flags);
 DPROC_API extern void	GdDrawImageFromFile(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width,
-	DPCOORD height, char *path, int flags);
+	DPCOORD height, const char *path, int flags);
 DPROC_API extern void	GdDrawImageFromBuffer(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width,
 	DPCOORD height, void *buffer, int size, int flags);
 DPROC_API extern void	GdDrawImagePartToFit(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height,
@@ -194,7 +196,7 @@ PSD	GdDecodePNG(buffer_t *src);
 PSD	GdDecodeGIF(buffer_t *src);
 #endif
 #ifdef HAVE_PNM_SUPPORT
-PSD	GdDecodePNM(buffer_t *src);
+PSD	GdDecodePNM(buffer_t &src);
 #endif
 #ifdef HAVE_XPM_SUPPORT
 PSD	GdDecodeXPM(buffer_t *src);

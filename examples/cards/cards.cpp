@@ -2,7 +2,7 @@
 #include "deck.h"
 
 
-COLOR backing = color(127, 255, 127);
+//DPPIXELVAL backing = RGBA(127, 255, 127, 255);
 bool showFullDeck = false;
 
 void keyReleased()
@@ -43,7 +43,7 @@ void drawRandomDeck()
 
 	// blank out the background to get a clean screen to
 	// continue drawing
-	background(backing);
+	background(RGBA(127, 255, 127, 255));
 
 	for (int i = 1; i <= iterations; i++)
 	{

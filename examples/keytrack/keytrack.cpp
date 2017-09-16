@@ -49,10 +49,10 @@ static bool showGrid = false;
 static bool gShowCrosshair = false;
 static bool gShowKeyOutlines = false;
 
-PImage *kbImage;
+//PImage *kbImage;
+PSD kbImage;
 pb_rgba fb;
 DPCLIPRECT keyRect = { 0, 0, 34, 34 };
-
 
 struct keyloc locations[] = {
 	// Row 1 - function keys
@@ -306,7 +306,7 @@ void drawKeyStates()
 	static int KEY_IS_DOWN = 0x8000;
 
 	//fill(pLightGray);
-	fill(COLOR(163, 163, 163, 127));
+	fill(RGBA(163, 163, 163, 127));
 	noStroke();
 	rectMode(CENTER);
 	for (int idx = 0; idx < nkeylocs; idx++)
@@ -336,7 +336,7 @@ void drawGrid()
 		return;
 	}
 
-	stroke(132, 86);
+	stroke(RGBA(132, 132, 132, 86));
 	for (int x = 0; x < width; x++)
 	{
 		if (x % gridSize == 0) {
@@ -363,7 +363,7 @@ void drawMouseInfo()
 
 	if (gShowKeyRect) {
 		// draw the key rectangle
-		fill(COLOR(255, 238, 200, 180));
+		fill(RGBA(255, 238, 200, 180));
 		stroke(pDarkGray);
 		rectMode(CORNER);
 		rect(keyRect.x, keyRect.y, keyRect.width, keyRect.height);
@@ -398,9 +398,9 @@ void draw()
 void setup()
 {
 	// Adjust this path to match where the keyboard image file is
-	kbImage = loadImage("windows-keyboard-60-keys.ppm", nullptr);
-	
-	size(kbImage->fb.frame.width, kbImage->fb.frame.height+4+30);
+	//kbImage = loadImage("windows-keyboard-60-keys.ppm", nullptr);
+	kbImage = GdLoadImageFromFile("windows-keyboard-60-keys.ppm", 0);
+	createCanvas(kbImage->xvirtres, kbImage->yvirtres+4+30);
 	background(pLightGray);
 }
 

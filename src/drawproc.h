@@ -137,8 +137,8 @@ DPROC_API void bezierVertex(const int x1, const int y1, const int x2, const int 
 DPROC_API void endShape(const int kindOfClose = STROKE);
 
 // Images
-DPROC_API void image(const PImage *img, const float a, const float b, const float c = -1, const float d = -1);
-DPROC_API PImage * loadImage(const char *filename, const char *extension = nullptr);
+DPROC_API void image(PSD img, const float a, const float b, const float c = -1, const float d = -1);
+DPROC_API PSD loadImage(const char *filename, const char *extension = nullptr);
 
 // Math
 DPROC_API double dist(int x1, int y1, int x2, int y2);

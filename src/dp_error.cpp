@@ -13,6 +13,8 @@
 #else
 #include <stdio.h>
 #include <string.h>
+#include <io.h>
+
 #if UNIX | DOS_DJGPP
 #include <unistd.h>
 #endif
@@ -39,8 +41,8 @@ GdError(const char *format, ...)
 	pspDebugScreenPrintf("%s\n", buf);
 #else
 #if HAVE_FILEIO
-	vsprintf(buf, format, args);
-	write(2, buf, strlen(buf));
+	//vsprintf(buf, format, args);
+	_write(2, buf, strlen(buf));
 #else
 	/* discard EPRINTF/DPRINTF output!*/
 #endif

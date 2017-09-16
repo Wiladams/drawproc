@@ -17,6 +17,8 @@
 #include <stdint.h>
 
 
+#define HAVE_FILEIO		1
+#define _CRT_SECURE_NO_WARNINGS 1
 
 // the following defines are unset in Arch.rules based on ARCH= setting
 #ifndef HAVE_SELECT
@@ -28,7 +30,7 @@
 #endif
 
 #ifndef HAVE_MMAP
-#define HAVE_MMAP       1       /* =1 has mmap system call*/
+#define HAVE_MMAP       0       /* =1 has mmap system call*/
 #endif
 
 // control whether printf/fprintf required in server and demo programs and C library 
@@ -46,6 +48,8 @@
 #ifndef MW_FEATURE_IMAGES
 #define MW_FEATURE_IMAGES 1		// =1 to enable GdLoadImage/GdDrawImage etc
 #endif
+
+#define HAVE_PNM_SUPPORT 1
 
 #ifndef MW_FEATURE_TIMERS
 #define MW_FEATURE_TIMERS 1		// =1 to include MWTIMER support
