@@ -399,7 +399,7 @@ void setup()
 {
 	// Adjust this path to match where the keyboard image file is
 	//kbImage = loadImage("windows-keyboard-60-keys.ppm", nullptr);
-	kbImage = GdLoadImageFromFile("windows-keyboard-60-keys.ppm", 0);
+	kbImage = GdLoadImageFromFile("d:\\repos\\drawproc\\Debug\\windows-keyboard-60-keys.ppm", 0);
 	createCanvas(kbImage->xvirtres, kbImage->yvirtres+4+30);
 	background(pLightGray);
 }

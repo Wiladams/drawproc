@@ -40,18 +40,18 @@ GdDecodePNM(buffer_t &src)
 	if (!GdImageBufferGetString(src, buf, 4))
 		return NULL;
 
-	if (!strcmp("P1\n", buf)) type = PNM_TYPE_PBM;
-	else if (!strcmp("P2\n", buf)) type = PNM_TYPE_PGM;
-	else if (!strcmp("P3\n", buf)) type = PNM_TYPE_PPM;
-	else if (!strcmp("P4\n", buf)) {
+	if (!strcmp("P1", buf)) type = PNM_TYPE_PBM;
+	else if (!strcmp("P2", buf)) type = PNM_TYPE_PGM;
+	else if (!strcmp("P3", buf)) type = PNM_TYPE_PPM;
+	else if (!strcmp("P4", buf)) {
 		type = PNM_TYPE_PBM;
 		binary = 1;
 	}
-	else if (!strcmp("P5\n", buf)) {
+	else if (!strcmp("P5", buf)) {
 		type = PNM_TYPE_PGM;
 		binary = 1;
 	}
-	else if (!strcmp("P6\n", buf)) {
+	else if (!strcmp("P6", buf)) {
 		type = PNM_TYPE_PPM;
 		binary = 1;
 	}

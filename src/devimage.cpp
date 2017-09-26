@@ -199,11 +199,17 @@ GdLoadImageFromFile(const char *path, int flags)
 	buffer_t src;
 	struct stat s;
 	errno_t err = 0;
+	size_t bytesRead = 0;
 
 	//fd = _open(path, O_RDONLY);
-	err = _sopen_s(&fd, path, O_RDONLY, _SH_DENYRW, 0);
-	if (err != 0 || fstat(fd, &s) < 0) {
+	err = _sopen_s(&fd, path, O_RDONLY| _O_BINARY, _SH_DENYRW, 0);
+	if (err != 0) {
 		EPRINTF("GdLoadImageFromFile: can't open image: %s\n", path);
+		return 0;
+	}
+
+	if (fstat(fd, &s) < 0) {
+		EPRINTF("GdLoadImageFromFile: fstat error open image: %s\n", path);
 		return 0;
 	}
 
@@ -222,7 +228,9 @@ GdLoadImageFromFile(const char *path, int flags)
 		return 0;
 	}
 
-	if (_read(fd, buffer, s.st_size) != s.st_size) {
+	bytesRead = _read(fd, buffer, s.st_size);
+	
+	if (bytesRead != s.st_size ){
 		EPRINTF("GdLoadImageFromFile: Couldn't load image %s\n", path);
 		_close(fd);
 		return 0;

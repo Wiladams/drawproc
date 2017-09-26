@@ -65,12 +65,15 @@ GdImageBufferGetString(buffer_t &buffer, char *dest, size_t size)
 		copysize = buffer.size - buffer.offset;
 
 	for (o = 0, i = buffer.offset; i < buffer.offset + copysize; i++, o++) {
-		if ((dest[o] = buffer.start[i]) == '\n')
+		dest[o] = buffer.start[i];
+		if ((dest[o] == '\n') || (dest[o] =='\r'))
 			break;
 	}
 
 	buffer.offset = i + 1;
-	dest[o + 1] = 0;
+	//dest[o + 1] = 0;
+	// WAA
+	dest[o] = 0;
 
 	return dest;
 }
