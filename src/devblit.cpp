@@ -172,7 +172,9 @@ GdBlit(PSD dstpsd, DPCOORD dstx, DPCOORD dsty, DPCOORD width, DPCOORD height,
 	DPBLITPARMS parms;
 
 	/* Find appropriate blitter based on source data format and rop*/
-	frameblit = GdFindFrameBlit(dstpsd, srcpsd->data_format, rop);
+	// WAA
+//	frameblit = GdFindFrameBlit(dstpsd, srcpsd->data_format, rop);
+	frameblit = GdFindFrameBlit(srcpsd, srcpsd->data_format, rop);
 	if (!frameblit) {
 		DPRINTF("GdBlit: No frameblit found for op %d\n", rop);
 		return;

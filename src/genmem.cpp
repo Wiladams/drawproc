@@ -88,6 +88,8 @@ GdCreatePixmap(PSD rootpsd, DPCOORD width, DPCOORD height, int format, void *pix
 		pixtype = DPPF_TRUECOLOR565;
 		break;
 	case DPIF_RGB888:
+		// WAA - planes == 1 to select proper blit driver
+		planes = 1;
 		bpp = 24;
 		data_format = format;
 		pixtype = DPPF_TRUECOLOR888;
@@ -204,7 +206,7 @@ gen_mapmemgc(PSD mempsd, DPCOORD w, DPCOORD h, int planes, int bpp, int data_for
 	/* assign portrait subdriver or regular fb driver for pixmap drawing*/
 	set_portrait_subdriver(mempsd);
 
-	return 1;
+	return true;
 }
 
 void
