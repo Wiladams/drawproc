@@ -44,7 +44,7 @@ void mouseReleased()
 
 void testHLineBlend()
 {
-	for (DPCOORD y = 0; y < height/2; y++) {
+	for (DPCOORD y = 0; y < (DPCOORD)(height/2); y++) {
 		raster_rgba_hline_blend(gpb, 0, y, width, pRed);
 
 	}
@@ -57,13 +57,13 @@ void testRect()
 	size_t boxwidth = 320;
 	size_t boxheight = 240;
 
-	//GdSetMode(DPROP_SRC_OVER);
-	GdSetMode(DPROP_COPY);
-	GdSetMode(DPROP_SRC);
+	GdSetMode(DPROP_SRC_OVER);
+	//GdSetMode(DPROP_COPY);
+	//GdSetMode(DPROP_SRC);
 	rectMode(CORNER);
 	noStroke();
-	fill(RGBA(255, 0, 0, 127));
 
+	fill(RGBA(255, 0, 0, 127));
 	rect(20, 10, boxwidth, boxheight);
 	//rect((c*tilewidth) + boxwidth, (r*tileheight) + boxheight-1, boxwidth, boxheight);
 
@@ -92,9 +92,9 @@ void testPoints()
 	stroke(pWhite);
 	for (size_t cnt = 1; cnt <= 1000; cnt++)
 	{
-		DPCOORD x = random(width - 1);
-		DPCOORD y = random(height - 1);
-		stroke(RGBA(random(255), random(255), random(255), 255));
+		DPCOORD x = (DPCOORD)random(width - 1.0f);
+		DPCOORD y = (DPCOORD)random(height - 1.0f);
+		stroke(RGBA((int)random(255), (int)random(255), (int)random(255), 255));
 		point(x, y);
 	}
 
@@ -112,7 +112,7 @@ void testText()
 {
 	DPCOORD twidth = 0;
 	DPCOORD theight = 0;
-	DPCOORD pbase;
+	//DPCOORD pbase;
 
 	cfont = GdCreateFont(&scrdev, DPFONT_SYSTEM_VAR, 0, 0, NULL);
 
@@ -134,20 +134,20 @@ void testText()
 
 void testEllipse()
 {
-	DPCOORD rx = 20;
-	DPCOORD ry = 10;
+	float rx = 20;
+	float ry = 10;
 
 	GdSetMode(DPROP_SRC_OVER);
 
 	ellipseMode(RADIUS);
 
-	for (size_t cnt = 1; cnt <= 1000; cnt++) {
-		DPCOORD cx = (DPCOORD)random(10, width-10);
-		DPCOORD cy = (DPCOORD)random(10, height-10);
-		int r = random(255);
-		int g = random(255);
-		int b = random(255);
-		int a = random(64, 200);
+	for (size_t cnt = 1; cnt <= 100; cnt++) {
+		double cx = random(10.0f, width-10.0f);
+		double cy = random(10.0f, height-10.0f);
+		int r = (int)random(255);
+		int g = (int)random(255);
+		int b = (int)random(255);
+		int a = (int)random(64, 200);
 
 
 		noStroke();
@@ -157,15 +157,15 @@ void testEllipse()
 	}
 
 	// red
-	stroke(RGBA(255, 0, 0, 140));
+	fill(RGBA(255, 0, 0, 140));
 	ellipse(270, 140, 100, 100);
 
 	// green
-	stroke(RGBA(0, 255, 0, 140));
+	fill(RGBA(0, 255, 0, 140));
 	ellipse(380, 140, 100, 100);
 
 	// blue
-	stroke(RGBA(0, 0, 255, 140));
+	fill(RGBA(0, 0, 255, 140));
 	ellipse(320, 240, 100, 100);
 
 }

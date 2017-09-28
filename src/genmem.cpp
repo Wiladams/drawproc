@@ -88,8 +88,6 @@ GdCreatePixmap(PSD rootpsd, DPCOORD width, DPCOORD height, int format, void *pix
 		pixtype = DPPF_TRUECOLOR565;
 		break;
 	case DPIF_RGB888:
-		// WAA - planes == 1 to select proper blit driver
-		planes = 1;
 		bpp = 24;
 		data_format = format;
 		pixtype = DPPF_TRUECOLOR888;

@@ -51,7 +51,7 @@ static void win32_update(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD h
 
 
 SCREENDEVICE scrdev = {
-0, 0, 0, 0, 0, 0, 0, NULL, 0, NULL, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 1, 0, 0, 0, NULL, 0, NULL, 0, 0, 0, 0, 0, 0,
 gen_fonts,
 win32_open,
 win32_close,

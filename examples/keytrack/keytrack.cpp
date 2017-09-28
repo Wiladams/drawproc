@@ -49,9 +49,7 @@ static bool showGrid = false;
 static bool gShowCrosshair = false;
 static bool gShowKeyOutlines = false;
 
-//PImage *kbImage;
 PSD kbImage;
-pb_rgba fb;
 DPCLIPRECT keyRect = { 0, 0, 34, 34 };
 
 struct keyloc locations[] = {
@@ -384,7 +382,7 @@ void drawMouseInfo()
 void draw()
 {
 	background(pLightGray);
-	image(kbImage, 0, 0);
+	image(kbImage, 0, 0, 1024, 768);
 
 	drawCrossHairs();
 	drawGrid();
@@ -397,10 +395,15 @@ void draw()
 
 void setup()
 {
+	// Creating the canvas MUST be the very first thing done
+	// But we have a cach 22 here.  We want the window to be the 
+	// size of the image we're loading.
+	// So, we'll cheat and hard code it
+	createCanvas(900, 288 + 4 + 30);
+
 	// Adjust this path to match where the keyboard image file is
 	//kbImage = loadImage("windows-keyboard-60-keys.ppm", nullptr);
 	kbImage = GdLoadImageFromFile("d:\\repos\\drawproc\\Debug\\windows-keyboard-60-keys.ppm", 0);
-	createCanvas(kbImage->xvirtres, kbImage->yvirtres+4+30);
 	background(pLightGray);
 }
 

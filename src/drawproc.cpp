@@ -606,18 +606,16 @@ void noFill()
 void noStroke()
 {
 	GdSetStrokePixelVal(&scrdev, 0);
-	GdSetForegroundPixelVal(&scrdev, 0);
 }
 
 void strokeValues(const float v1, const float v2, const float v3, const float alpha)
 {
-	GdSetForegroundPixelVal(&scrdev, color(v1, v2, v3, alpha));
+	GdSetStrokePixelVal(&scrdev, color(v1, v2, v3, alpha));
 }
 
 void stroke(const DPPIXELVAL value)
 {
 	GdSetStrokePixelVal(&scrdev, value);
-	//GdSetForegroundPixelVal(&scrdev, value);
 }
 
 void noSmooth() {}
@@ -637,7 +635,8 @@ void fillValues(const float v1, const float v2, const float v3, const float alph
 
 void fill(const DPPIXELVAL value)
 {
-	GdSetBackgroundPixelVal(&scrdev, value);
+	GdSetForegroundPixelVal(&scrdev, value);
+	//GdSetBackgroundPixelVal(&scrdev, value);
 }
 
 // 2D primitives
@@ -836,13 +835,14 @@ void rect(const int a, const int b, const int c, const int d)
 	//if ((crect.width == 0) || (crect.height == 0))
 	//	return;
 
-	if (gr_background != 0) {
-		raster_rgba_rect_fill_blend(gpb, crect.left, crect.top, crect.right, crect.bottom, gr_background);
+	if (gr_foreground != 0) {
+	//	raster_rgba_rect_fill_blend(gpb, crect.left, crect.top, crect.right, crect.bottom, gr_foreground);
+		GdFillRect(&scrdev, crect.left, crect.top, crect.right - crect.left, crect.bottom - crect.top);
 	}
 
 	// if the strokeColor != 0 then 
-	// frame the rectangle in the gr_foreground
-	if (gr_foreground != 0) {
+	// frame the rectangle in the gr_stroke pixel val
+	if (gr_stroke != 0) {
 		GdRect(&scrdev, crect.left, crect.top, crect.right-crect.left, crect.bottom-crect.top);
 	}
 }
@@ -1287,7 +1287,7 @@ void setFont(const uint8_t *fontdata)
 void image(PSD img, const float a, const float b, const float c, const float d)
 {
 	if (c < 1 || d < 1) {
-		GdBlit(&scrdev, a, b, img->xvirtres, img->yvirtres, img, 0, 0, 0);
+		GdBlit(&scrdev, (DPCOORD)a, (DPCOORD)b, img->xvirtres, img->yvirtres, img, 0, 0, 0);
 	}
 	else {
 		GdBlit(&scrdev, a, b, c, d, img, 0, 0, 0);
