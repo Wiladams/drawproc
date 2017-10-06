@@ -598,10 +598,7 @@ void backgroundImage(pb_rgba *bg)
 
 
 
-void noFill()
-{
-	GdSetBackgroundPixelVal(&scrdev, 0);
-}
+
 
 void noStroke()
 {
@@ -628,15 +625,19 @@ void strokeWeight(const float weight)
 	gstrokeWeight = weight;
 }
 
+void noFill()
+{
+	fill(0);
+}
+
 void fillValues(const float v1, const float v2, const float v3, const float alpha)
 {
-	GdSetBackgroundPixelVal(&scrdev, color(v1, v2, v3, alpha));
+	GdSetForegroundPixelVal(&scrdev, color(v1, v2, v3, alpha));
 }
 
 void fill(const DPPIXELVAL value)
 {
 	GdSetForegroundPixelVal(&scrdev, value);
-	//GdSetBackgroundPixelVal(&scrdev, value);
 }
 
 // 2D primitives

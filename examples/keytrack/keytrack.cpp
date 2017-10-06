@@ -305,6 +305,8 @@ void drawKeyStates()
 
 	//fill(pLightGray);
 	fill(RGBA(163, 163, 163, 127));
+	GdSetMode(DPROP_SRC_OVER);
+
 	noStroke();
 	rectMode(CENTER);
 	for (int idx = 0; idx < nkeylocs; idx++)
@@ -313,6 +315,9 @@ void drawKeyStates()
 			rect(locations[idx].loc.x, locations[idx].loc.y, locations[idx].loc.width, locations[idx].loc.height);
 		}
 	}
+
+	//GdSetMode(DPROP_COPY);
+
 }
 
 void drawCrossHairs()
@@ -321,7 +326,7 @@ void drawCrossHairs()
 		return;
 	}
 
-	stroke(84);
+	stroke(RGBA(84,84,84,255));
 
 	// horizontal line
 	line(0, mouseY, width - 1, mouseY);
@@ -382,7 +387,7 @@ void drawMouseInfo()
 void draw()
 {
 	background(pLightGray);
-	image(kbImage, 0, 0, 1024, 768);
+	image(kbImage, 0, 0, 900, 288);
 
 	drawCrossHairs();
 	drawGrid();
@@ -404,6 +409,8 @@ void setup()
 	// Adjust this path to match where the keyboard image file is
 	//kbImage = loadImage("windows-keyboard-60-keys.ppm", nullptr);
 	kbImage = GdLoadImageFromFile("d:\\repos\\drawproc\\Debug\\windows-keyboard-60-keys.ppm", 0);
+	//kbImage = GdLoadImageFromFile("d:\\repos\\drawproc\\Debug\\test.ppm", 0);
+	//kbImage = GdLoadImageFromFile("d:\\repos\\drawproc\\Debug\\example.pgm", 0);
 	background(pLightGray);
 }
 

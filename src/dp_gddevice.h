@@ -48,9 +48,10 @@ DPROC_API extern	 void	GdFillPoly(PSD psd, int count, DPPOINT *points);
 DPROC_API extern	 void	GdReadArea(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height, DPPIXELVALHW *pixels);
 DPROC_API extern	 void	GdArea(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height, void *pixels, int pixtype);
 DPROC_API extern	 void	GdTranslateArea(DPCOORD width, DPCOORD height, void *in, int inpixtype,
-	DPCOORD inpitch, void *out, int outpixtype, int outpitch);
-DPROC_API extern	 void	drawpoint(PSD psd, DPCOORD x, DPCOORD y);
-DPROC_API extern	 void	drawrow(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y);
+								DPCOORD inpitch, void *out, int outpixtype, int outpitch);
+DPROC_API extern	 void	drawpoint(PSD psd, DPCOORD x, DPCOORD y, DPPIXELVAL pval);
+DPROC_API extern	 void	drawrow(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL pval);
+DPROC_API extern	 void	drawcol(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2, DPPIXELVAL pval);
 
 
 /* devblit.c*/

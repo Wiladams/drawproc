@@ -5,6 +5,8 @@
 #include "dpdevice.h"
 #include "fblin32.h"
 #include "genfont.h"
+#include "genmem.h"
+
 
 size_t gWidth = 640;
 size_t gHeight = 480;
@@ -14,6 +16,7 @@ PDPFONT cfont = nullptr;
 void testPoints();
 void testHLineBlend();
 void testLines();
+void testPixmap();
 void testRect();
 void testEllipse();
 void testPolygon();
@@ -24,10 +27,11 @@ typedef void(*testcase)();
 
 testcase cases[] = {
 	testPoints,
-	testHLineBlend,
+//	testHLineBlend,
 	testLines,
 	testRect,
 	testEllipse,
+	testPixmap,
 	testPolygon,
 	testText
 };
@@ -50,12 +54,33 @@ void testHLineBlend()
 	}
 }
 
+void testPixmap()
+{
+	// create a pixel map
+	int format = DPIF_RGB888;
+	//int format = 0;		// screen compatible
+	PSD pmd = GdCreatePixmap(&scrdev, width, height, format, nullptr, 0);
+	
+	// do some drawing into it
+	GdSetMode(DPROP_COPY);
+	GdSetForegroundPixelVal(pmd,RGBA(127, 220, 220, 255));
+	GdFillRect(pmd, 10, 10, 620, 460);
+
+	// image it to the screen
+	GdBlit(&scrdev, 0, 0, width, height, pmd, 0, 0, DPROP_COPY);
+
+	// destroy it
+	GdFreePixmap(pmd);
+}
+
 void testRect()
 {
 	DPPIXELVAL color1 = cornsilk;
 	DPPIXELVAL color2 = pGreen;
 	size_t boxwidth = 320;
 	size_t boxheight = 240;
+
+	background(RGBA(255, 255, 255, 255));
 
 	GdSetMode(DPROP_SRC_OVER);
 	//GdSetMode(DPROP_COPY);
@@ -82,6 +107,8 @@ void testPolygon()
 		100,63,
 		10,200
 	};
+
+	background(RGBA(204, 204, 204, 255));
 
 	GdFillPoly(&scrdev,5, pts);
 }

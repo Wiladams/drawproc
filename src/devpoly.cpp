@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "dpdevice.h"
+#include "dp_gddevice.h"
 
 /*
 * Microwindows polygon outline and fill routines.
@@ -30,8 +31,6 @@
 #define BASICPOLYFILL	0	/* very basic, small polygon fill*/
 
 /* extern definitions*/
-void drawpoint(PSD psd, DPCOORD x, DPCOORD y);
-void drawrow(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y);
 extern int gr_mode; 	      // drawing mode
 extern int gr_fillmode;
 
@@ -61,7 +60,7 @@ GdPoly(PSD psd, int count, DPPOINT *points)
 
 	while (count-- > 1) {
 		if (didline && (gr_mode == DPROP_XOR))
-			drawpoint(psd, points->x, points->y);
+			drawpoint(psd, points->x, points->y, gr_stroke);
 		// note: change to drawline*/
 		GdLine(psd, points[0].x, points[0].y, points[1].x, points[1].y, true);
 		points++;
@@ -70,7 +69,7 @@ GdPoly(PSD psd, int count, DPPOINT *points)
 	if (gr_mode == DPROP_XOR) {
 		points--;
 		if (points->x == firstx && points->y == firsty)
-			drawpoint(psd, points->x, points->y);
+			drawpoint(psd, points->x, points->y, gr_stroke);
 	}
 	GdFixCursor(psd);
 }
@@ -413,7 +412,7 @@ GdFillPoly(PSD psd, int count, DPPOINT *pointtable)
 			if (gr_fillmode != MWFILL_SOLID)
 				ts_drawrow(psd, ptsOut->x, ptsOut->x + e, ptsOut->y);
 			else
-				drawrow(psd, ptsOut->x, ptsOut->x + e, ptsOut->y);
+				drawrow(psd, ptsOut->x, ptsOut->x + e, ptsOut->y, gr_foreground);
 		}
 		++ptsOut;
 	}
@@ -524,7 +523,7 @@ GdFillPoly(PSD psd, int count, DPPOINT *points)
 			&minx, &maxx);
 
 		if (minx <= maxx)
-			drawrow(psd, minx, maxx, miny);
+			drawrow(psd, minx, maxx, miny, gr_foreground);
 	}
 	GdFixCursor(psd);
 }
@@ -660,7 +659,7 @@ GdFillPoly(PSD psd, int count, DPPOINT * pointtable)
 			int     r = (int)aet[i].cx;
 #endif
 			if (r > l)
-				drawrow(psd, l, r, y); /* draw line between l and r and not between l and (r-1) */
+				drawrow(psd, l, r, y, gr_foreground); /* draw line between l and r and not between l and (r-1) */
 		}
 
 		/* prepare for the next scan line */

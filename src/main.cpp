@@ -207,8 +207,10 @@ int main(int argc, char **argv)
 	char *moduleName = nullptr;
 
 	if (argc < 2) {
-		moduleName = "nanowindow.dll";
+		//moduleName = "nanowindow.dll";
 		//moduleName = "keytrack.dll";
+		moduleName = "randomrects.dll";
+		//moduleName = "randomlines.dll";
 		//return 1;
 	}
 	else {

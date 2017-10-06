@@ -120,6 +120,11 @@ GdFindFrameBlit(PSD psd, int src_data_format, int op)
 {
 	/* try conversion blits if possible*/
 	switch (src_data_format) {
+	case DPIF_RGB888: 
+		if (psd->BlitCopyRGB888)
+			return psd->BlitCopyRGB888;
+		break;
+
 	case DPIF_RGBA8888:
 		if (op == DPROP_SRC_OVER) {
 			if (psd->BlitSrcOverRGBA8888)
@@ -173,8 +178,8 @@ GdBlit(PSD dstpsd, DPCOORD dstx, DPCOORD dsty, DPCOORD width, DPCOORD height,
 
 	/* Find appropriate blitter based on source data format and rop*/
 	// WAA
-//	frameblit = GdFindFrameBlit(dstpsd, srcpsd->data_format, rop);
-	frameblit = GdFindFrameBlit(srcpsd, srcpsd->data_format, rop);
+	frameblit = GdFindFrameBlit(dstpsd, srcpsd->data_format, rop);
+	//frameblit = GdFindFrameBlit(srcpsd, srcpsd->data_format, rop);
 	if (!frameblit) {
 		DPRINTF("GdBlit: No frameblit found for op %d\n", rop);
 		return;

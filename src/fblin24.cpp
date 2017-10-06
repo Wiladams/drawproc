@@ -74,11 +74,24 @@ linear24_drawhorzline(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL c)
 	DRAWON;
 	if (gr_mode == DPROP_COPY)
 	{
-		while (--w >= 0)
-		{
-			*addr++ = b;
-			*addr++ = g;
-			*addr++ = r;
+		switch (psd->data_format) {
+		case DPIF_BGR888:
+			while (--w >= 0)
+			{
+				*addr++ = b;
+				*addr++ = g;
+				*addr++ = r;
+			}
+			break;
+
+		case DPIF_RGB888:
+			while (--w >= 0)
+			{
+				*addr++ = r;
+				*addr++ = g;
+				*addr++ = b;
+			}
+			break;
 		}
 	}
 	else

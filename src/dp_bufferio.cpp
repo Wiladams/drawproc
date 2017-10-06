@@ -36,7 +36,7 @@ GdImageBufferRead(buffer_t &buffer, void *dest, size_t size)
 	memcpy(dest, buffer.start + buffer.offset, copysize);
 
 	buffer.offset += copysize;
-	
+
 	return copysize;
 }
 
@@ -47,6 +47,11 @@ GdImageBufferGetChar(buffer_t &buffer)
 		return EOF;
 	return buffer.start[buffer.offset++];
 }
+
+// Read a string from a file.  The terminator can be:
+// '\r'		- carriage return alone
+// '\r\n'	- carriage return followed by newline
+// '\n'		- newline alone
 
 char *
 GdImageBufferGetString(buffer_t &buffer, char *dest, size_t size)
@@ -64,15 +69,29 @@ GdImageBufferGetString(buffer_t &buffer, char *dest, size_t size)
 	if (buffer.offset + copysize > buffer.size)
 		copysize = buffer.size - buffer.offset;
 
-	for (o = 0, i = buffer.offset; i < buffer.offset + copysize; i++, o++) {
-		dest[o] = buffer.start[i];
-		if ((dest[o] == '\n') || (dest[o] =='\r'))
+	o = 0;
+	i = buffer.offset;
+	while (i < buffer.offset + copysize) {
+		//for (o = 0, i = buffer.offset; i < buffer.offset + copysize; i++, o++) {
+		if (buffer.start[i] == '\r') {
+			if (buffer.start[i+1] != '\n') {
+				break;
+			}
+			i = i + 1;
+
+			continue;
+		}
+
+		if ((buffer.start[i] == '\n'))
 			break;
+
+		dest[o] = buffer.start[i];
+
+		o = o + 1;
+		i = i + 1;
 	}
 
 	buffer.offset = i + 1;
-	//dest[o + 1] = 0;
-	// WAA
 	dest[o] = 0;
 
 	return dest;

@@ -19,12 +19,13 @@
 
 #include "swap.h"
 #include "dpdevice.h"
+#include "dp_gddevice.h"
 #include "convblit.h"
 
 
-/*static*/ void drawpoint(PSD psd, DPCOORD x, DPCOORD y);
-/*static*/ void drawrow(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y);
-static void drawcol(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2);
+//void drawpoint(PSD psd, DPCOORD x, DPCOORD y, DPPIXELVAL pval);
+//void drawrow(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL pval);
+//void drawcol(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2, DPPIXELVAL pval);
 
 /**
 * Set the drawing mode for future calls.
@@ -230,7 +231,7 @@ GdLine(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2,
 		}
 
 		/* call faster line drawing routine */
-		drawrow(psd, x1, x2, y1);
+		drawrow(psd, x1, x2, y1, gr_stroke);
 		GdFixCursor(psd);
 		return;
 	}
@@ -249,7 +250,7 @@ GdLine(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2,
 		}
 
 		/* call faster line drawing routine */
-		drawcol(psd, x1, y1, y2);
+		drawcol(psd, x1, y1, y2, gr_stroke);
 		GdFixCursor(psd);
 		return;
 	}
@@ -287,7 +288,7 @@ GdLine(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2,
 
 	/* draw first point*/
 	if (GdClipPoint(psd, x1, y1))
-		psd->DrawPixel(psd, x1, y1, gr_foreground);
+		psd->DrawPixel(psd, x1, y1, gr_stroke);
 
 	if (xdelta >= ydelta) {
 		rem = xdelta / 2;
@@ -303,13 +304,13 @@ GdLine(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2,
 
 			if (gr_dashcount) {
 				if ((gr_dashmask & (1 << bit)) && GdClipPoint(psd, x1, y1))
-					psd->DrawPixel(psd, x1, y1, gr_foreground);
+					psd->DrawPixel(psd, x1, y1, gr_stroke);
 
 				bit = (bit + 1) % gr_dashcount;
 			}
 			else {	/* No dashes */
 				if (GdClipPoint(psd, x1, y1))
-					psd->DrawPixel(psd, x1, y1, gr_foreground);
+					psd->DrawPixel(psd, x1, y1, gr_stroke);
 			}
 
 			if (bDrawLastPoint && x1 == x2)
@@ -332,13 +333,13 @@ GdLine(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2,
 			/* If we are trying to draw to a dash mask */
 			if (gr_dashcount) {
 				if ((gr_dashmask & (1 << bit)) && GdClipPoint(psd, x1, y1))
-					psd->DrawPixel(psd, x1, y1, gr_foreground);
+					psd->DrawPixel(psd, x1, y1, gr_stroke);
 
 				bit = (bit + 1) % gr_dashcount;
 			}
 			else {	/* No dashes */
 				if (GdClipPoint(psd, x1, y1))
-					psd->DrawPixel(psd, x1, y1, gr_foreground);
+					psd->DrawPixel(psd, x1, y1, gr_stroke);
 			}
 
 			if (bDrawLastPoint && y1 == y2)
@@ -349,18 +350,18 @@ GdLine(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD x2, DPCOORD y2,
 }
 
 /* Draw a point in the foreground color, applying clipping if necessary*/
-/*static*/ void
-drawpoint(PSD psd, DPCOORD x, DPCOORD y)
+void
+drawpoint(PSD psd, DPCOORD x, DPCOORD y, DPPIXELVAL pval)
 {
 	if (GdClipPoint(psd, x, y))
-		psd->DrawPixel(psd, x, y, gr_foreground);
+		psd->DrawPixel(psd, x, y, pval);
 }
 
 /* Draw a horizontal line from x1 to and including x2 in the
 * foreground color, applying clipping if necessary.
 */
 /*static*/ void
-drawrow(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y)
+drawrow(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y, DPPIXELVAL pval)
 {
 	DPCOORD temp;
 
@@ -386,7 +387,7 @@ drawrow(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y)
 		while (x1 <= x2) {
 			if (GdClipPoint(psd, x1, y)) {
 				temp = DPMIN(clipmaxx, x2);
-				psd->DrawHorzLine(psd, x1, temp, y, gr_foreground);
+				psd->DrawHorzLine(psd, x1, temp, y, pval);
 			}
 			else
 				temp = DPMIN(clipmaxx, x2);
@@ -399,7 +400,7 @@ drawrow(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y)
 		/* We want to draw a dashed line instead */
 		for (p = x1; p <= x2; p++) {
 			if ((gr_dashmask & (1 << bit)) && GdClipPoint(psd, p, y))
-				psd->DrawPixel(psd, p, y, gr_foreground);
+				psd->DrawPixel(psd, p, y, pval);
 
 			bit = (bit + 1) % gr_dashcount;
 		}
@@ -409,8 +410,8 @@ drawrow(PSD psd, DPCOORD x1, DPCOORD x2, DPCOORD y)
 /* Draw a vertical line from y1 to and including y2 in the
 * foreground color, applying clipping if necessary.
 */
-static void
-drawcol(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2)
+void
+drawcol(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2, DPPIXELVAL pval)
 {
 	DPCOORD temp;
 
@@ -434,7 +435,7 @@ drawcol(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2)
 		while (y1 <= y2) {
 			if (GdClipPoint(psd, x, y1)) {
 				temp = DPMIN(clipmaxy, y2);
-				psd->DrawVertLine(psd, x, y1, temp, gr_foreground);
+				psd->DrawVertLine(psd, x, y1, temp, pval);
 			}
 			else
 				temp = DPMIN(clipmaxy, y2);
@@ -447,7 +448,7 @@ drawcol(PSD psd, DPCOORD x, DPCOORD y1, DPCOORD y2)
 		/* We want to draw a dashed line instead */
 		for (p = y1; p <= y2; p++) {
 			if ((gr_dashmask & (1 << bit)) && GdClipPoint(psd, x, p))
-				psd->DrawPixel(psd, x, p, gr_foreground);
+				psd->DrawPixel(psd, x, p, pval);
 
 			bit = (bit + 1) % gr_dashcount;
 		}
@@ -475,16 +476,16 @@ GdRect(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height)
 		return;
 	maxx = x + width - 1;
 	maxy = y + height - 1;
-	drawrow(psd, x, maxx, y);
+	drawrow(psd, x, maxx, y, gr_stroke);
 	if (height > 1)
-		drawrow(psd, x, maxx, maxy);
+		drawrow(psd, x, maxx, maxy, gr_stroke);
 	if (height < 3)
 		return;
 	++y;
 	--maxy;
-	drawcol(psd, x, y, maxy);
+	drawcol(psd, x, y, maxy, gr_stroke);
 	if (width > 1)
-		drawcol(psd, maxx, y, maxy);
+		drawcol(psd, maxx, y, maxy, gr_stroke);
 	GdFixCursor(psd);
 }
 
@@ -538,7 +539,7 @@ GdFillRect(PSD psd, DPCOORD x1, DPCOORD y1, DPCOORD width, DPCOORD height)
 
 	/* The rectangle may be partially obstructed. So do it line by line. */
 	while (y1 <= y2)
-		drawrow(psd, x1, x2, y1++);
+		drawrow(psd, x1, x2, y1++, gr_foreground);
 
 	/* Restore the dash settings */
 	GdSetDash(&dm, &dc);
@@ -1653,7 +1654,7 @@ GdAreaByPoint(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height, void
 		*/
 		if (count == 1) {
 			if (dodraw)
-				drawpoint(psd, x, y);
+				drawpoint(psd, x, y, gr_foreground);
 			if (++x > maxx) {
 				x = minx;
 				y++;
@@ -1670,7 +1671,7 @@ GdAreaByPoint(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height, void
 			if (x + cc - 1 > maxx)
 				cc = maxx - x + 1;
 			if (dodraw)
-				drawrow(psd, x, x + cc - 1, y);
+				drawrow(psd, x, x + cc - 1, y, gr_foreground);
 			count -= cc;
 			x += cc;
 			if (x > maxx) {
@@ -1699,7 +1700,7 @@ GdAreaByPoint(PSD psd, DPCOORD x, DPCOORD y, DPCOORD width, DPCOORD height, void
 		*/
 		if (count > 0) {
 			if (dodraw)
-				drawrow(psd, x, x + count - 1, y);
+				drawrow(psd, x, x + count - 1, y, gr_foreground);
 			x += count;
 		}
 	}

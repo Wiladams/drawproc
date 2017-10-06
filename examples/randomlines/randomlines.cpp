@@ -12,7 +12,7 @@ void setup()
 
 void draw()
 {
-	background(pWhite);
+	background(pLightGray);
 
 	for (int i = 1; i <= 100; i++)
 	{
@@ -25,7 +25,9 @@ void draw()
 		int g = random(255);
 		int b = random(255);
 
-		strokeValues(r, g, b, 255);
+		stroke(RGBA(r, g, b, 255));
+		fill(RGBA(r, g, b, 255));
+
 		strokeWeight(1.0f);
 		line(x1, y1, x2, y2);
 

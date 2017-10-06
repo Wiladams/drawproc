@@ -67,35 +67,7 @@ void renderMesh(GMesh *aModel)
 
 
 
-void draw()
-{
-	background(120);
 
-	ogl_clearzbuffer(zbuffer, width, height);
-
-
-	renderMesh(floorModel);
-	renderMesh(model);
-
-	char str[255];
-	sprintf_s(str, "delta: %d", mouseDelta);
-
-	text(str, 10, 10);
-
-}
-
-void setup()
-{
-	createCanvas(800, 800);
-
-	zbuffer = new float[width*height];
-	loadModels();
-	Viewport = ogl_viewport(width / 8, height / 8, width * 3 / 4, height * 3 / 4);
-	onCameraChange();
-	light_dir = proj<3>((Projection*ModelView*embed<4>(light_dir, 0.f))).normalize();
-
-	//noLoop();
-}
 
 void keyReleased()
 {
@@ -149,4 +121,34 @@ void mouseWheel()
 
 	mouseDelta = 0;
 	onCameraChange();
+}
+
+void draw()
+{
+	background(120);
+
+	ogl_clearzbuffer(zbuffer, width, height);
+
+
+	renderMesh(floorModel);
+	renderMesh(model);
+
+	char str[255];
+	sprintf_s(str, "delta: %d", mouseDelta);
+
+	text(str, 10, 10);
+
+}
+
+void setup()
+{
+	createCanvas(800, 800);
+
+	zbuffer = new float[width*height];
+	loadModels();
+	Viewport = ogl_viewport(width / 8, height / 8, width * 3 / 4, height * 3 / 4);
+	onCameraChange();
+	light_dir = proj<3>((Projection*ModelView*embed<4>(light_dir, 0.f))).normalize();
+
+	//noLoop();
 }

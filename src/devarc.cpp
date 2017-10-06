@@ -292,14 +292,14 @@ draw_line(SLICE *slice, DPCOORD x0, DPCOORD y, DPCOORD x1, int mode)
 				if (gr_fillmode != DPFILL_SOLID && mode)
 					ts_drawpoint(slice->psd, slice->x0, slice->y0);
 				else
-					drawpoint(slice->psd, slice->x0, slice->y0);
+					drawpoint(slice->psd, slice->x0, slice->y0, gr_stroke);
 				return;
 			}
 		}
 		if (gr_fillmode != DPFILL_SOLID && mode)
 			ts_drawrow(slice->psd, slice->x0 + x0, slice->x0 + x1, slice->y0);
 		else
-			drawrow(slice->psd, slice->x0 + x0, slice->x0 + x1, slice->y0);
+			drawrow(slice->psd, slice->x0 + x0, slice->x0 + x1, slice->y0, gr_stroke);
 		return;
 	}
 
@@ -314,7 +314,7 @@ draw_line(SLICE *slice, DPCOORD x0, DPCOORD y, DPCOORD x1, int mode)
 					slice->y0 + y);
 			else
 				drawrow(slice->psd, slice->x0 + x0, slice->x0 + x1,
-					slice->y0 + y);
+					slice->y0 + y, gr_stroke);
 
 			x0 = x2;
 			x1 = x3;
@@ -342,7 +342,7 @@ draw_line(SLICE *slice, DPCOORD x0, DPCOORD y, DPCOORD x1, int mode)
 	if (gr_fillmode != DPFILL_SOLID && mode)
 		ts_drawrow(slice->psd, slice->x0 + x0, slice->x0 + x1, slice->y0 + y);
 	else
-		drawrow(slice->psd, slice->x0 + x0, slice->x0 + x1, slice->y0 + y);
+		drawrow(slice->psd, slice->x0 + x0, slice->x0 + x1, slice->y0 + y, gr_stroke);
 }
 
 /*
@@ -372,8 +372,8 @@ drawarcsegment(SLICE *slice, DPCOORD xp, DPCOORD yp, int drawon)
 		}
 		else {
 			GdSetDash(&dm, &dc); /* Must turn off the dash settings because of drawrow() */
-			drawrow(slice->psd, slice->x0 - xp, slice->x0 + xp, slice->y0 - yp);
-			drawrow(slice->psd, slice->x0 - xp, slice->x0 + xp, slice->y0 + yp);
+			drawrow(slice->psd, slice->x0 - xp, slice->x0 + xp, slice->y0 - yp, gr_foreground);
+			drawrow(slice->psd, slice->x0 - xp, slice->x0 + xp, slice->y0 + yp, gr_foreground);
 			GdSetDash(&dm, &dc);
 		}
 
@@ -382,10 +382,10 @@ drawarcsegment(SLICE *slice, DPCOORD xp, DPCOORD yp, int drawon)
 	case DPELLIPSE:
 		if (!drawon) return;
 		/* set four points symmetrically situated around a point*/
-		drawpoint(slice->psd, slice->x0 + xp, slice->y0 + yp);
-		drawpoint(slice->psd, slice->x0 - xp, slice->y0 + yp);
-		drawpoint(slice->psd, slice->x0 + xp, slice->y0 - yp);
-		drawpoint(slice->psd, slice->x0 - xp, slice->y0 - yp);
+		drawpoint(slice->psd, slice->x0 + xp, slice->y0 + yp, gr_stroke);
+		drawpoint(slice->psd, slice->x0 - xp, slice->y0 + yp, gr_stroke);
+		drawpoint(slice->psd, slice->x0 + xp, slice->y0 - yp, gr_stroke);
+		drawpoint(slice->psd, slice->x0 - xp, slice->y0 - yp, gr_stroke);
 		return;
 
 	case DPPIE:
