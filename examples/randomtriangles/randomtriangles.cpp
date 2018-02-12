@@ -19,12 +19,12 @@ void keyTyped()
 
 void draw()
 {
-	background(pWhite);
+	background(pLightGray);
 
 	if (outlineOnly)
 		noFill();
 
-	for (int cnt = 5001; cnt; cnt--)
+	for (int cnt = 1001; cnt; cnt--)
 	{
 		uint8_t r = random(255);
 		uint8_t g = random(255);
@@ -32,8 +32,8 @@ void draw()
 
 		//int x1 = random(maxsize, width - 1 - (maxsize*2));
 		//int y1 = random(maxsize, height - 1 -(maxsize * 2));
-		DPCOORD x1 = random(maxsize, width - 1 - (maxsize * 1));
-		DPCOORD y1 = random(maxsize, height - 1 - (maxsize * 1));
+		DPCOORD x1 = randomRange(maxsize, width - 1 - (maxsize * 1));
+		DPCOORD y1 = randomRange(maxsize, height - 1 - (maxsize * 1));
 
 
 		int minx = x1 - maxsize;
@@ -65,5 +65,5 @@ void draw()
 void setup()
 {
 	createCanvas(1024, 768);
-	background(pWhite);
+	background(pBlack);
 }

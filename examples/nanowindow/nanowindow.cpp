@@ -169,12 +169,12 @@ void testEllipse()
 	ellipseMode(RADIUS);
 
 	for (size_t cnt = 1; cnt <= 100; cnt++) {
-		double cx = random(10.0f, width-10.0f);
-		double cy = random(10.0f, height-10.0f);
+		double cx = randomRange(10.0f, width-10.0f);
+		double cy = randomRange(10.0f, height-10.0f);
 		int r = (int)random(255);
 		int g = (int)random(255);
 		int b = (int)random(255);
-		int a = (int)random(64, 200);
+		int a = (int)randomRange(64, 200);
 
 
 		noStroke();

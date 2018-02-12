@@ -150,17 +150,6 @@ bool GsInitialize(const size_t lwidth, const size_t lheight)
 	return true;
 }
 
-/*
-void * SetWindowSize(const size_t lwidth, const size_t lheight)
-{
-	width = lwidth;
-	height = lheight;
-
-	GsInitialize(lwidth, lheight);
-
-	return scrdev.addr;
-}
-*/
 
 void setDrawInLoop(bool doDraw)
 {
@@ -207,10 +196,12 @@ int main(int argc, char **argv)
 	char *moduleName = nullptr;
 
 	if (argc < 2) {
+		moduleName = "checkerboard.dll";
 		//moduleName = "nanowindow.dll";
 		//moduleName = "keytrack.dll";
-		moduleName = "randomrects.dll";
+		//moduleName = "randomrects.dll";
 		//moduleName = "randomlines.dll";
+		//moduleName = "randomtriangles.dll";
 		//return 1;
 	}
 	else {

@@ -17,9 +17,9 @@ class SortRoutineGraphic : public AView
 public:
 	SortRoutineGraphic(sorter * routine, const int x, const int y, const int gWidth, const int gHeight)
 		:AView(x, y, gWidth, gHeight),
-		fSorter(routine),
-		fOrigin(x, y, gWidth, gHeight)
+		fSorter(routine)
 	{
+		fOrigin = { x, y, gWidth, gHeight };
 		reset();
 	}
 

@@ -16,14 +16,14 @@ void draw()
 
 	for (int i = 1; i <= 100; i++)
 	{
-		int x1 = random(width - 1);
-		int y1 = random(height - 1);
-		int x2 = random(width - 1);
-		int y2 = random(height - 1);
+		int x1 = random(float(width - 1));
+		int y1 = random(float(height - 1));
+		int x2 = random(float(width - 1));
+		int y2 = random(float(height - 1));
 
-		int r = random(255);
-		int g = random(255);
-		int b = random(255);
+		int r = int(random(255));
+		int g = int(random(255));
+		int b = int(random(255));
 
 		stroke(RGBA(r, g, b, 255));
 		fill(RGBA(r, g, b, 255));

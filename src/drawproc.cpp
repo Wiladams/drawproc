@@ -357,7 +357,7 @@ double dist(int x1, int y1, int x2, int y2)
 	return sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
 }
 
-double random(const float low, const float high)
+double randomRange(const float low, const float high)
 {
 	double frac = (double)rand() / RAND_MAX;
 	double ret = low + frac * (high - low);
@@ -367,7 +367,7 @@ double random(const float low, const float high)
 
 double random(const float rndMax)
 {
-	return random(0, rndMax);
+	return randomRange(0, rndMax);
 }
 
 // color setting

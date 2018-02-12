@@ -28,8 +28,8 @@ void draw()
 	{
 		int x1 = random(width - 1);
 		int y1 = random(height - 1);
-		int lwidth = random(4, 64);
-		int lheight = random(4, 64);
+		int lwidth = randomRange(4, 64);
+		int lheight = randomRange(4, 64);
 		int r = random(255);
 		int g = random(255);
 		int b = random(255);

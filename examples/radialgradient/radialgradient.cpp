@@ -15,7 +15,7 @@ void setup() {
 void drawGradient(float x, float y) 
 {
 	int radius = dim / 2;
-	float h = ceil(random(0, 360));
+	float h = ceil(randomRange(0, 360));
 
 	ellipseMode(RADIUS);
 	//colorMode(COLOR_MODE_HSB, 360, 100, 100);

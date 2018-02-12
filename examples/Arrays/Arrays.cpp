@@ -106,7 +106,7 @@ void setup() {
 	int index = 0;
 	for (int y = 0; y < highCount; y++) {
 		for (int x = 0; x < wideCount; x++) {
-			mods[index++] = Module(x*unit, y*unit, unit / 2, unit / 2, random(0.05, 0.8), unit);
+			mods[index++] = Module(x*unit, y*unit, unit / 2, unit / 2, randomRange(0.05, 0.8), unit);
 		}
 	}
 
