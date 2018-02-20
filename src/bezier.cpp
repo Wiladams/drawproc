@@ -108,6 +108,38 @@ void bez3_quadratic(const Pt3 *controls, const int m, Pt3 * curve)
 	bez3_curve(controls, 3, m, curve);
 }
 
+// Value of curve at parametric position 'u'
+// control points are P0, P1, P2, P3
+float bezier_cubic_point(const float u, float p0, float p1, float p2, float p3)
+{
+	float oneminusu = 1 - u;
+	float BEZ03 = powf(oneminusu, 3);				// (1-u)^3
+	float BEZ13 = 3 * u*(oneminusu * oneminusu);	// 3u(1-u)^2
+	float BEZ23 = 3 * u*u * oneminusu;				// 3u^2(1-u)
+	float BEZ33 = u * u*u;							// u^3
+
+	return BEZ03 * p0 + BEZ13 * p1 + BEZ23 * p2 + BEZ33 * p3;
+}
+
+// First derivative of curve at parametric position u
+// Describes tangent at that point
+// control points are P0, P1, P2, P3
+// B(t) = 3(1-u)^2(P1-P0) + 6(1-u)u(P2-P1) + 3u^2(P3-P2)
+float bezier_cubic_first_derivative(const float u, const float P0, const float P1, const float P2, const float P3)
+{
+	float oneminus = 1 - u;
+	return 3 * (oneminus*oneminus)*(P1 - P0) +
+		6 * (oneminus)*u*(P2 - P1) +
+		3 * (u*u)*(P3 - P2);
+}
+
+// describes how quickly the tangent is changing
+float bezier_cubic_second_derivative(const float u, const float P0, const float P1, const float P2, const float P3)
+{
+	return 6 * (1 - u)*(P2 - 2 * P1 + P0) +
+		6 * u*(P3 - (2 * P2) + P1);
+}
+
 void bez3_cubic(const Pt3 *controls, const int m, Pt3 * curve)
 {
 	bez3_curve(controls, 4, m, curve);

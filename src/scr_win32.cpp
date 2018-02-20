@@ -281,13 +281,14 @@ HWND CreateWindowHandle(size_t lwidth, size_t lheight)
 	int x = CW_USEDEFAULT;
 	int y = CW_USEDEFAULT;
 	HWND hWndParent = NULL;
+	HWND winHandle = NULL;
 	HMENU hMenu = NULL;
 
 	if (!winclassatom) {
 		return NULL;
 	}
 
-	RECT clientRECT = { 0, 0, lwidth, lheight };
+	RECT clientRECT = { 0, 0, (LONG)lwidth, (LONG)lheight };
 	BOOL err = AdjustWindowRect(&clientRECT, WS_CAPTION, 0);
 
 	// The following sequence of messages will come in through the callback
@@ -297,7 +298,7 @@ HWND CreateWindowHandle(size_t lwidth, size_t lheight)
 	// WM_NCCALCSIZE
 	// WM_CREATE
 	HMODULE hInst = ::GetModuleHandleA(NULL);
-	winRootWindow = ::CreateWindowExA(
+	winHandle = ::CreateWindowExA(
 		0,
 		CLASS_NAME,
 		szTitle,
@@ -307,6 +308,8 @@ HWND CreateWindowHandle(size_t lwidth, size_t lheight)
 		hMenu,
 		hInst,
 		NULL);
+
+	return winHandle;
 }
 
 HDC CreateOffscreenDC(HWND hWnd, const size_t width, const size_t height, void **data)

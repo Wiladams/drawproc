@@ -1291,7 +1291,7 @@ void image(PSD img, const float a, const float b, const float c, const float d)
 		GdBlit(&scrdev, (DPCOORD)a, (DPCOORD)b, img->xvirtres, img->yvirtres, img, 0, 0, 0);
 	}
 	else {
-		GdBlit(&scrdev, a, b, c, d, img, 0, 0, 0);
+		GdBlit(&scrdev, (DPCOORD)a, (DPCOORD)b, (DPCOORD)c, (DPCOORD)d, img, 0, 0, 0);
 	}
 	//raster_rgba_blit(gpb, a, b, &img->fb);
 }

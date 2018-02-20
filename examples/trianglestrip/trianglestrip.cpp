@@ -1,7 +1,7 @@
 #include "drawproc.h"
 
-int cx;
-int cy;
+int cx=0;
+int cy=0;
 float outsideRadius = 150;
 float insideRadius = 100;
 int drawModes = 2;
@@ -15,12 +15,6 @@ void mousePressed()
 	}
 }
 
-void setup() {
-	createCanvas(640, 360);
-
-	cx = width / 2;
-	cy = height / 2;
-}
 
 void drawFan()
 {
@@ -67,4 +61,12 @@ void draw() {
 	else if (currentMode == 2) {
 		drawFan();
 	}
+}
+
+
+void setup() {
+	createCanvas(640, 360);
+
+	cx = width / 2;
+	cy = height / 2;
 }

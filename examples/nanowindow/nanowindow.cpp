@@ -6,7 +6,7 @@
 #include "fblin32.h"
 #include "genfont.h"
 #include "genmem.h"
-
+#include "bezier.h"
 
 size_t gWidth = 640;
 size_t gHeight = 480;
@@ -16,6 +16,7 @@ PDPFONT cfont = nullptr;
 void testPoints();
 void testHLineBlend();
 void testLines();
+void testBezier();
 void testPixmap();
 void testRect();
 void testEllipse();
@@ -29,6 +30,7 @@ testcase cases[] = {
 	testPoints,
 //	testHLineBlend,
 	testLines,
+	testBezier,
 	testRect,
 	testEllipse,
 	testPixmap,
@@ -134,6 +136,54 @@ void testLines()
 	scrdev.DrawVertLine(&scrdev, 300, 10, 200, RGB2PIXEL8888(64, 127, 255));
 	scrdev.FillRect(&scrdev, 10, 20, 200, 200, RGB2PIXEL8888(125, 255, 255));
 }
+
+void testBezier()
+{
+	// Do some control points
+	background(pLightGray);
+
+	stroke(pBlack);
+
+	float p0x = 100; float p0y = 10;
+	float p1x = 105; float p1y = 200;
+	float p2x = 300; float p2y = 200;
+	float p3x = 400; float p3y = 10;
+	
+	float lpx = bezier_cubic_point(0, p0x, p1x, p2x, p3x);
+	float lpy = bezier_cubic_point(0, p0y, p1y, p2y, p3y);
+
+	int i = 1;
+	while (i <= 60) {
+		float u = i / 60.0f;
+
+		float px = bezier_cubic_point(u, p0x, p1x, p2x, p3x);
+		float py = bezier_cubic_point(u, p0y, p1y, p2y, p3y);
+
+		line(lpx, lpy, px, py);
+		lpx = px;
+		lpy = py;
+
+		//point(px, py);
+		i++;
+	}
+	
+	// Ellipses at control points
+	fill(pRed);
+	ellipseMode(RADIUS);
+	ellipse(p0x,p0y, 2, 2);
+	ellipse(p3x, p3y, 2, 2);
+
+	fill(pBlue);
+	ellipse(p1x, p1y, 2, 2);
+	ellipse(p2x, p2y, 2, 2);
+
+	// Draw lines between control points for visualization
+	stroke(pYellow);
+	line(p0x, p0y, p1x, p1y);
+	line(p1x, p1y, p2x, p2y);
+	line(p2x, p2y, p3x, p3y);
+}
+
 
 void testText()
 {

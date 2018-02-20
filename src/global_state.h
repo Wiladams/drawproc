@@ -52,6 +52,7 @@ DPROC_API extern	 int gTextSize;
 DPROC_API extern	 int gTextAlignX;
 DPROC_API extern	 int gTextAlignY;
 
+DPROC_API extern	int gShapeKind;
 
 // From nanowindow
 DPROC_API extern DPPIXELVAL gr_stroke;		// pixel value used for strokes

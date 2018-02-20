@@ -57,11 +57,29 @@ void bez3_curve(const Pt3 *controls, const int nControls, const int m, Pt3 * cur
 //
 void bez3_quadratic(const Pt3 *controls, const int m, Pt3 *curve);
 
+
 //
-// cubic bezier
+// Cubic Bezier
+// 4 control points
+//
+// bezier_cubic_point
+// 
+// Calculates the value of the bezier curve at a given parametric position on the
+// curve.  In this case, the curve is a single dimension.
+DPROC_API float bezier_cubic_point(const float u, float p0, float p1, float p2, float p3);
+DPROC_API float bezier_cubic_first_derivative(const float u, const float p0, const float p1, const float p2, const float p3);
+DPROC_API float bezier_cubic_second_derivative(const float u, const float p0, const float p1, const float p2, const float p3);
+
+// bez3_cubic
+// Fill an array with points specified by the number of
+// desired segments 'm'
+// 
 // controls		- 4 control points
 // m			- number of segments in curve
-// curve		- array containing calculated points along curve
+// curve		- array which will contain calculated points along curve
+//
+// Note: Ideally, we'd be able to specify an amount of 'smoothness', and use more
+// segments where the curve is changing rapidly, and fewer where it's changing slowly.
 //
 void bez3_cubic(const Pt3 *controls, const int m, Pt3 * curve);
 
