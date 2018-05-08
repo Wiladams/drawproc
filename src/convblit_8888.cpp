@@ -184,6 +184,13 @@ void convblit_copy_rgba8888_rgba8888(PSD psd, PDPBLITPARMS gc)
 	convblit_8888(psd, gc, COPY, 4, R, G, B, A, 4, R, G, B, A, psd->portrait);
 }
 
+/* Copy 32bpp XXXX image to 32bpp XXXX image*/
+// same as convblit_copy_rgba8888_rgba8888
+void convblit_copy_8888_8888(PSD psd, PDPBLITPARMS gc)
+{
+	convblit_8888(psd, gc, COPY, 4, R, G, B, A, 4, R, G, B, A, psd->portrait);
+}
+
 /* Conversion blit copy 24bpp RGB image to 32bpp RGBA image*/
 void convblit_copy_rgb888_rgba8888(PSD psd, PDPBLITPARMS gc)
 {
@@ -211,11 +218,7 @@ void convblit_copy_rgb888_bgra8888(PSD psd, PDPBLITPARMS gc)
 	convblit_8888(psd, gc, COPY, 3, R, G, B, -1, 4, B, G, R, A, psd->portrait);
 }
 
-/* Copy 32bpp XXXX image to 32bpp XXXX image*/
-void convblit_copy_8888_8888(PSD psd, PDPBLITPARMS gc)
-{
-	convblit_8888(psd, gc, COPY, 4, R, G, B, A, 4, R, G, B, A, psd->portrait);
-}
+
 
 /*---------- 24bpp BGR output ----------*/
 
