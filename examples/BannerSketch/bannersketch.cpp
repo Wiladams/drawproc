@@ -71,9 +71,9 @@ void setup() {
 	for (int j = 0; j< count; j++) {
 		e[j][0] = random(width); // X 
 		e[j][1] = random(height); // Y
-		e[j][2] = random(minSize, maxSize); // Radius        
-		e[j][3] = random(-.12, .12); // X Speed
-		e[j][4] = random(-.12, .12); // Y Speed
+		e[j][2] = randomRange(minSize, maxSize); // Radius        
+		e[j][3] = randomRange(-.12, .12); // X Speed
+		e[j][4] = randomRange(-.12, .12); // Y Speed
 	}
 }
 

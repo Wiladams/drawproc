@@ -22,7 +22,7 @@
     <ProjectGuid>{7A34E780-6140-429C-A9A4-6A955A1A067F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>view3d</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
